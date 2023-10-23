@@ -1,5 +1,6 @@
 import AdminRepository from "../infrastructure/repository/adminRepository";
 import UserRepository from "../infrastructure/repository/userRepository";
+import ClubRepository from "../infrastructure/repository/clubRepository";
 import Admin from "../domain/admin";
 import Encrypt from "../infrastructure/utils/bcryptPassword";
 import JWTToken from "../infrastructure/utils/generateToken";
@@ -7,11 +8,13 @@ import JWTToken from "../infrastructure/utils/generateToken";
 class AdminUseCase {
     private AdminRepository: AdminRepository;
     private UserRepository: UserRepository;
+    private ClubRepository: ClubRepository;
     private Encrypt: Encrypt;
     private JWTToken: JWTToken;
-    constructor(AdminRepository: AdminRepository, Encrypt: Encrypt, JWTToken: JWTToken, UserRepository: UserRepository) {
+    constructor(AdminRepository: AdminRepository, Encrypt: Encrypt, JWTToken: JWTToken, UserRepository: UserRepository, ClubRepository: ClubRepository) {
         this.AdminRepository = AdminRepository;
         this.UserRepository = UserRepository;
+        this.ClubRepository = ClubRepository;
         this.Encrypt = Encrypt;
         this.JWTToken = JWTToken;
     }
@@ -38,10 +41,10 @@ class AdminUseCase {
     }
 
     async getUsers() {
-        const userList = await this.UserRepository.findAllUsers();
+        const usersList = await this.UserRepository.findAllUsers();
         return {
             status: 200,
-            data: userList
+            data: usersList
         };
     }
 
@@ -56,6 +59,28 @@ class AdminUseCase {
             };
         } else {
             throw new Error('User not found!');
+        }
+    }
+
+    async getClubs() {
+        const clubsList = await this.ClubRepository.findAllClubs();
+        return {
+            status: 200,
+            data: clubsList
+        };
+    }
+
+    async blockClub(_id: string) {
+        const club = await this.ClubRepository.findById(_id);
+        if (club) {
+            club.isBlocked = !club.isBlocked;
+            const updatedClub = await this.ClubRepository.save(club);
+            return {
+                status: 200,
+                data: updatedClub
+            };
+        } else {
+            throw new Error('Club not found!');
         }
     }
 }

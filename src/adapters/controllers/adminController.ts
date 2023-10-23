@@ -57,6 +57,28 @@ class AdminController {
             res.status(400).json(err.message);
         }
     }
+
+    async getClubs(req: Request, res: Response) {
+        try {
+            const clubs = await this.adminCase.getClubs();
+            res.status(clubs.status).json(clubs.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async blockClub(req: Request, res: Response) {
+        try {
+            const clubId = req.query.id as string;
+            const club = await this.adminCase.blockClub(clubId);
+            res.status(club.status).json(club.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
 }
 
 export default AdminController;

@@ -18,6 +18,11 @@ class ClubRepository implements ClubRepo {
         const club = await ClubModel.findById({ _id });
         return club;
     }
+
+    async findAllClubs(): Promise<{}[] | null> {
+        const club = await ClubModel.find({}).select('-password');
+        return club;
+    }
 }
 
 export default ClubRepository;
