@@ -31,6 +31,7 @@ class UserUseCase {
     async login(user: User) {
         const userData = await this.UserRepository.findByEmail(user.email);
         if (userData) {
+            if (userData.isBlocked) throw new Error('User is blocked by admin!');
             const passwordMatch = await this.Encrypt.compare(user.password, userData.password);
             if (passwordMatch) {
                 const userId = userData?._id;
@@ -53,12 +54,12 @@ class UserUseCase {
 
     async profile(_id: string) {
         const user = await this.UserRepository.findById(_id);
-        if(user){
+        if (user) {
             return {
-                status:200,
-                data:user
-            }
-        }else{
+                status: 200,
+                data: user
+            };
+        } else {
             throw new Error('User not found!');
         }
     }

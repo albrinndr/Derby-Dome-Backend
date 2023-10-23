@@ -16,5 +16,6 @@ const controller = new ClubController(clubCase);
 const router = express.Router();
 
 router.post('/signup', (req, res) => controller.signup(req, res));
+router.post('/login', (req, res) => controller.login(req, res));
 
 export default router;

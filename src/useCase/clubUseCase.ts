@@ -28,7 +28,30 @@ class ClubUseCase {
         }
     }
 
-    
+    async login(club: Club) {
+        const clubData = await this.ClubRepository.findByEmail(club.email);
+        if (clubData) {
+            if (clubData.isBlocked) throw new Error('Club is blocked by admin!');
+            
+            const passwordMatch = await this.Encrypt.compare(club.password, clubData.password);
+            if (passwordMatch) {
+                const clubId = clubData?._id;
+                let token = '';
+                if (clubId) token = this.JWTToken.generateToken(clubId);
+                return {
+                    status: 200,
+                    data: {
+                        club: clubData,
+                        token
+                    }
+                };
+            } else {
+                throw new Error('Invalid email or password!');
+            }
+        } else {
+            throw new Error('Invalid email or password!');
+        }
+    }
 }
 
 export default ClubUseCase;
