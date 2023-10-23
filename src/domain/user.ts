@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongoose';
-
 interface User {
     _id: string;
     name?: string;

@@ -56,7 +56,7 @@ class UserController {
 
     async updateProfile(req: Request, res: Response) {
         try {
-            const user = await this.userCase.updateProfile(req.body);
+            const user = await this.userCase.updateProfile(req.body, req.body.newPassword);
             res.status(user.status).json(user.data);
         } catch (error) {
             const err: Error = error as Error;

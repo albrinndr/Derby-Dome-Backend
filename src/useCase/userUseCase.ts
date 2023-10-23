@@ -63,13 +63,21 @@ class UserUseCase {
     //     }
     // }
 
-    async updateProfile(user: User) {
+    async updateProfile(user: User, newPassword?: string) {
+        console.log(user.name);
+        console.log(newPassword);
+
         const userData = await this.UserRepository.findById(user._id);
         if (userData) {
             userData.name = user.name || userData.name;
             userData.phone = user.phone || userData.phone;
             if (user.password) {
-                userData.password = await this.Encrypt.generateHash(user.password) || userData.password;
+                const passwordMatch = await this.Encrypt.compare(user.password, userData.password);
+                if (passwordMatch && newPassword) {
+                    userData.password = await this.Encrypt.generateHash(newPassword);
+                } else {
+                    throw new Error('Password does not match!');
+                }
             }
             const updatedUser = await this.UserRepository.save(userData);
             return {
