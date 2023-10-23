@@ -51,17 +51,17 @@ class UserUseCase {
         }
     }
 
-    // async profile(_id: string) {
-    //     const user = await this.UserRepository.findById(_id);
-    //     if(user){
-    //         return {
-    //             status:200,
-    //             data:user
-    //         }
-    //     }else{
-    //         throw new Error('User not found!');
-    //     }
-    // }
+    async profile(_id: string) {
+        const user = await this.UserRepository.findById(_id);
+        if(user){
+            return {
+                status:200,
+                data:user
+            }
+        }else{
+            throw new Error('User not found!');
+        }
+    }
 
     async updateProfile(user: User, newPassword?: string) {
         console.log(user.name);
