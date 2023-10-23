@@ -18,6 +18,12 @@ class UserRepository implements UserRepo {
         const user = await UserModel.findById({ _id });
         return user;
     }
+
+    async findAllUsers(): Promise<{}[] | null> {
+        const users = await UserModel.find({}).select('-password');;
+        return users;
+    }
+
 }
 
 export default UserRepository;
