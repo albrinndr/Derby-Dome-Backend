@@ -4,6 +4,7 @@ dotenv.config();
 import cookieParser from 'cookie-parser';
 
 import userRoutes from '../routes/userRoutes';
+import clubRoutes from '../routes/clubRoutes';
 
 export const createServer = () => {
     try {
@@ -15,6 +16,7 @@ export const createServer = () => {
         app.use(cookieParser());
 
         app.use('/api/user', userRoutes);
+        app.use('/api/club', clubRoutes);
 
         return app;
     } catch (error) {

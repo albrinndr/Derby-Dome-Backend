@@ -37,11 +37,16 @@ class UserController {
     }
 
     async logout(req: Request, res: Response) {
-        res.cookie('userJWT', '', {
-            httpOnly: true,
-            expires: new Date(0)
-        });
-        res.status(200).json({ message: 'User logged out' });
+        try {
+            res.cookie('userJWT', '', {
+                httpOnly: true,
+                expires: new Date(0)
+            });
+            res.status(200).json({ message: 'User logged out' });
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
     }
 
     async profile(req: Request, res: Response) {
