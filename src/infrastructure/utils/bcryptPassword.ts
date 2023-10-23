@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import HashPassword from '../useCase/interface/hashPassword';
+import HashPassword from '../../useCase/interface/hashPassword';
 
 class Encrypt implements HashPassword {
     async generateHash(password: string): Promise<string> {

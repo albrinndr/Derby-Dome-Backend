@@ -2,10 +2,10 @@ import { ObjectId } from 'mongoose';
 
 interface User {
     _id?: ObjectId;
-    name: string;
+    name?: string;
     email: string;
     password: string;
-    phone: string;
+    phone?: string;
     isBlocked?: boolean;
     cart?: {
     }[];
