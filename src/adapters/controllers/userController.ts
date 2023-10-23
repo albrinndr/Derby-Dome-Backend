@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
 import UserUseCase from "../../useCase/userUseCase";
-import JWTToken from "../../infrastructure/utils/generateToken";
 
 
 class UserController {
     private userCase: UserUseCase;
-    private JWTToken: JWTToken;
-    constructor(userCase: UserUseCase, JWTToken: JWTToken) {
+    constructor(userCase: UserUseCase) {
         this.userCase = userCase;
-        this.JWTToken = JWTToken;
     }
 
     async signup(req: Request, res: Response) {
@@ -20,13 +17,19 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
     async login(req: Request, res: Response) {
         try {
             const user = await this.userCase.login(req.body);
-            const userId = user.data?._id;
-            const userName = user.data?.name;
-            if (userId && userName) this.JWTToken.generateToken(res, userId, userName);
-            res.status(user.status).json(user.data);
+
+            if (user.data.token != '') {
+                res.cookie('userJWT', user.data.token, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    maxAge: 30 * 24 * 60 * 60 * 1000
+                });
+            }
+            res.status(user.status).json(user.data.user);
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);

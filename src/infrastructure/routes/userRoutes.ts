@@ -10,8 +10,8 @@ import JWTToken from '../utils/generateToken';
 const repository = new UserRepository();
 const encrypt = new Encrypt();
 const jwt = new JWTToken();
-const userCase = new UserUseCase(repository, encrypt);
-const controller = new UserController(userCase, jwt);
+const userCase = new UserUseCase(repository, encrypt, jwt);
+const controller = new UserController(userCase);
 
 const router = express.Router();
 

@@ -1,13 +1,16 @@
 import User from "../domain/user";
 import Encrypt from "../infrastructure/utils/bcryptPassword";
 import UserRepository from "../infrastructure/repository/userRepository";
+import JWTToken from "../infrastructure/utils/generateToken";
 
 class UserUseCase {
     private UserRepository: UserRepository;
     private Encrypt: Encrypt;
-    constructor(UserRepository: UserRepository, Encrypt: Encrypt) {
+    private JWTToken: JWTToken;
+    constructor(UserRepository: UserRepository, Encrypt: Encrypt, JWTToken: JWTToken) {
         this.UserRepository = UserRepository;
         this.Encrypt = Encrypt;
+        this.JWTToken = JWTToken;
     }
 
     async signUp(user: User) {
@@ -30,9 +33,15 @@ class UserUseCase {
         if (userData) {
             const passwordMatch = await this.Encrypt.compare(user.password, userData.password);
             if (passwordMatch) {
+                const userId = userData?._id;
+                let token = '';
+                if (userId) token = this.JWTToken.generateToken(userId);
                 return {
                     status: 200,
-                    data: userData
+                    data: {
+                        user: userData,
+                        token
+                    }
                 };
             } else {
                 throw new Error('Invalid email or password!');
