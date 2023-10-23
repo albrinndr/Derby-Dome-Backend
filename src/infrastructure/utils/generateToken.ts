@@ -3,7 +3,7 @@ import JWT from '../../useCase/interface/jwt';
 import { ObjectId } from 'mongoose';
 
 class JWTToken implements JWT {
-    generateToken(userId: ObjectId): string {
+    generateToken(userId: string): string {
         const KEY = process.env.JWT_SECRET;
         if (KEY) {
             const token: string = jwt.sign({ userId }, KEY);

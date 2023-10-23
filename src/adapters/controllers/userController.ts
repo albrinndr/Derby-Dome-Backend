@@ -43,6 +43,26 @@ class UserController {
         });
         res.status(200).json({ message: 'User logged out' });
     }
+
+    // async profile(req: Request, res: Response) {
+    //     try {
+    //         const user = await this.userCase.profile(req.body);
+    //         res.status(user.status).json(user.data);
+    //     } catch (error) {
+    //         const err: Error = error as Error;
+    //         res.status(400).json(err.message);
+    //     }
+    // }
+
+    async updateProfile(req: Request, res: Response) {
+        try {
+            const user = await this.userCase.updateProfile(req.body);
+            res.status(user.status).json(user.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default UserController;

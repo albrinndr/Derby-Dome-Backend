@@ -13,6 +13,11 @@ class UserRepository implements UserRepo {
         const user = await UserModel.findOne({ email });
         return user;
     }
+
+    async findById(_id: string): Promise<User | null> {
+        const user = await UserModel.findById({ _id });
+        return user;
+    }
 }
 
 export default UserRepository;

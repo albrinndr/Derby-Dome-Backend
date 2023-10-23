@@ -50,6 +50,36 @@ class UserUseCase {
             throw new Error('Invalid email or password!');
         }
     }
+
+    // async profile(_id: string) {
+    //     const user = await this.UserRepository.findById(_id);
+    //     if(user){
+    //         return {
+    //             status:200,
+    //             data:user
+    //         }
+    //     }else{
+    //         throw new Error('User not found!');
+    //     }
+    // }
+
+    async updateProfile(user: User) {
+        const userData = await this.UserRepository.findById(user._id);
+        if (userData) {
+            userData.name = user.name || userData.name;
+            userData.phone = user.phone || userData.phone;
+            if (user.password) {
+                userData.password = await this.Encrypt.generateHash(user.password) || userData.password;
+            }
+            const updatedUser = await this.UserRepository.save(userData);
+            return {
+                status: 200,
+                data: updatedUser
+            };
+        } else {
+            throw new Error('User not found!');
+        }
+    }
 }
 
 export default UserUseCase;
