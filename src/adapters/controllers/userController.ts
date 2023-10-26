@@ -1,17 +1,52 @@
 import { Request, Response } from "express";
 import UserUseCase from "../../useCase/userUseCase";
+import GenerateEmail from "../../infrastructure/utils/sendMail";
+import GenerateOtp from "../../infrastructure/utils/generateOtp";
 
 
 class UserController {
     private userCase: UserUseCase;
-    constructor(userCase: UserUseCase) {
+    private GenerateEmail: GenerateEmail;
+    private GenerateOtp: GenerateOtp;
+    constructor(userCase: UserUseCase, GenerateEmail: GenerateEmail, GenerateOtp: GenerateOtp) {
         this.userCase = userCase;
+        this.GenerateOtp = GenerateOtp;
+        this.GenerateEmail = GenerateEmail;
     }
 
-    async signup(req: Request, res: Response) {
+    async signUp(req: Request, res: Response) {
         try {
-            const user = await this.userCase.signUp(req.body);
-            res.status(user.status).json(user.data);
+            const verifyUser = await this.userCase.verifyUser(req.body.email);
+            if (verifyUser.data) {
+                req.app.locals.userData = req.body;
+                const otp = this.GenerateOtp.createOtp();
+                req.app.locals.otp = otp;
+                this.GenerateEmail.sendMail(req.body.email, otp);
+
+                setTimeout(() => {
+                    req.app.locals.otp = this.GenerateOtp.createOtp();
+                }, 5 * 60000);
+
+                res.status(verifyUser.status).json('Verification otp sent to your email!');
+            } else {
+                res.status(verifyUser.status).json('Email already exists!');
+            }
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async userVerification(req: Request, res: Response) {
+        try {
+            if (req.body.otp == req.app.locals.otp) {
+                const user = await this.userCase.signUp(req.app.locals.userData);
+                req.app.locals.userData = null;
+                res.status(user.status).json(user.data);
+            } else {
+                throw new Error('Invalid otp');
+            }
+
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);

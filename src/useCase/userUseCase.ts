@@ -7,25 +7,36 @@ class UserUseCase {
     private UserRepository: UserRepository;
     private Encrypt: Encrypt;
     private JWTToken: JWTToken;
+
     constructor(UserRepository: UserRepository, Encrypt: Encrypt, JWTToken: JWTToken) {
         this.UserRepository = UserRepository;
         this.Encrypt = Encrypt;
         this.JWTToken = JWTToken;
+
+    }
+
+    async verifyUser(email: string) {
+        const userExists = await this.UserRepository.findByEmail(email);
+        if (userExists) {
+            return {
+                status: 400,
+                data: false
+            };
+        }
+        return {
+            status: 200,
+            data: true
+        };
     }
 
     async signUp(user: User) {
-        const userExists = await this.UserRepository.findByEmail(user.email);
-        if (userExists) {
-            throw new Error('User Already Exists!');
-        } else {
-            const hashedPassword = await this.Encrypt.generateHash(user.password);
-            const newUser = { ...user, password: hashedPassword };
-            await this.UserRepository.save(newUser);
-            return {
-                status: 200,
-                data: newUser
-            };
-        }
+        const hashedPassword = await this.Encrypt.generateHash(user.password);
+        const newUser = { ...user, password: hashedPassword };
+        await this.UserRepository.save(newUser);
+        return {
+            status: 200,
+            data: newUser
+        };
     }
 
     async login(user: User) {
