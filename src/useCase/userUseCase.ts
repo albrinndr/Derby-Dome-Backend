@@ -41,12 +41,22 @@ class UserUseCase {
 
     async login(user: User) {
         const userData = await this.UserRepository.findByEmail(user.email);
+        let token = '';
         if (userData) {
-            if (userData.isBlocked) throw new Error('User is blocked by admin!');
+            if (userData.isBlocked) {
+                return {
+                    status: 400,
+                    data: {
+                        user: 'User is blocked by admin!',
+                        token: ''
+                    }
+                };
+            }
+
             const passwordMatch = await this.Encrypt.compare(user.password, userData.password);
+           
             if (passwordMatch) {
                 const userId = userData?._id;
-                let token = '';
                 if (userId) token = this.JWTToken.generateToken(userId);
                 return {
                     status: 200,
@@ -56,10 +66,23 @@ class UserUseCase {
                     }
                 };
             } else {
-                throw new Error('Invalid email or password!');
+                return {
+                    status: 400,
+                    data: {
+                        user: 'Invalid email or password!',
+                        token
+                    }
+                };
+
             }
         } else {
-            throw new Error('Invalid email or password!');
+            return {
+                status: 400,
+                data: {
+                    user: 'Invalid email or password!',
+                    token
+                }
+            };
         }
     }
 
@@ -85,7 +108,10 @@ class UserUseCase {
                 if (passwordMatch && newPassword) {
                     userData.password = await this.Encrypt.generateHash(newPassword);
                 } else {
-                    throw new Error('Password does not match!');
+                    return {
+                        status: 200,
+                        data: 'Password does not match!'
+                    };
                 }
             }
             const updatedUser = await this.UserRepository.save(userData);

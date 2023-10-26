@@ -33,10 +33,22 @@ class AdminUseCase {
                     }
                 };
             } else {
-                throw new Error('Invalid email or password!');
+                return {
+                    status: 400,
+                    data: {
+                        admin: 'Invalid email or password!',
+                        token: null
+                    }
+                };
             }
         } else {
-            throw new Error('Invalid email or password!');
+            return {
+                status: 400,
+                data: {
+                    admin: 'Invalid email or password!',
+                    token: null
+                }
+            };
         }
     }
 
@@ -58,7 +70,10 @@ class AdminUseCase {
                 data: updatedUser
             };
         } else {
-            throw new Error('User not found!');
+            return {
+                status: 400,
+                data: 'User not found!'
+            };
         }
     }
 
@@ -80,7 +95,10 @@ class AdminUseCase {
                 data: updatedClub
             };
         } else {
-            throw new Error('Club not found!');
+            return {
+                status: 400,
+                data: 'Club not found!'
+            };
         }
     }
 }

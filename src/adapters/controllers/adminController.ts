@@ -11,11 +11,13 @@ class AdminController {
         try {
             const admin = await this.adminCase.login(req.body);
 
-            res.cookie('adminJWT', admin.data.token, {
-                httpOnly: true,
-                sameSite: 'strict',
-                maxAge: 30 * 24 * 60 * 60 * 1000
-            });
+            if (admin.data.token) {
+                res.cookie('adminJWT', admin.data.token, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    maxAge: 30 * 24 * 60 * 60 * 1000
+                });
+            }
             res.status(admin.status).json(admin.data.admin);
         } catch (error) {
             const err: Error = error as Error;
