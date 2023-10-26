@@ -19,13 +19,19 @@ class UserUseCase {
         const userExists = await this.UserRepository.findByEmail(email);
         if (userExists) {
             return {
-                status: 400,
-                data: false
+                status: 200,
+                data: {
+                    status: false,
+                    message: "User already exists!"
+                }
             };
         }
         return {
             status: 200,
-            data: true
+            data: {
+                status: true,
+                message: 'Verification otp sent to your email!'
+            }
         };
     }
 
@@ -54,7 +60,7 @@ class UserUseCase {
             }
 
             const passwordMatch = await this.Encrypt.compare(user.password, userData.password);
-           
+
             if (passwordMatch) {
                 const userId = userData?._id;
                 if (userId) token = this.JWTToken.generateToken(userId);

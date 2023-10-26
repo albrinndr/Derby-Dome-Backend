@@ -17,7 +17,7 @@ class UserController {
     async signUp(req: Request, res: Response) {
         try {
             const verifyUser = await this.userCase.verifyUser(req.body.email);
-            if (verifyUser.data) {
+            if (verifyUser.data.status === true) {
                 req.app.locals.userData = req.body;
                 const otp = this.GenerateOtp.createOtp();
                 req.app.locals.otp = otp;
@@ -27,9 +27,9 @@ class UserController {
                     req.app.locals.otp = this.GenerateOtp.createOtp();
                 }, 5 * 60000);
 
-                res.status(verifyUser.status).json('Verification otp sent to your email!');
+                res.status(verifyUser.status).json(verifyUser.data);
             } else {
-                res.status(verifyUser.status).json('Email already exists!');
+                res.status(verifyUser.status).json(verifyUser.data);
             }
         } catch (error) {
             const err: Error = error as Error;

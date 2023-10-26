@@ -44,7 +44,7 @@ class GenerateEmail implements SENDMAIL {
         };
         mailTransporter.sendMail(details, (err) => {
             if (err) {
-                throw new Error('Unexpected error occurred! Please try again');
+                return console.log(err.message);
             }
         });
     }
