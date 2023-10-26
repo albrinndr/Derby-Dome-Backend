@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 import userRoutes from '../routes/userRoutes';
 import clubRoutes from '../routes/clubRoutes';
@@ -15,6 +16,7 @@ export const createServer = () => {
         app.use(express.urlencoded({ extended: true }));
 
         app.use(cookieParser());
+        app.use(cors());
 
         app.use('/api/user', userRoutes);
         app.use('/api/club', clubRoutes);
