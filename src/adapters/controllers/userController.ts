@@ -44,7 +44,7 @@ class UserController {
                 req.app.locals.userData = null;
                 res.status(user.status).json(user.data);
             } else {
-                throw new Error('Invalid otp');
+                res.status(200).json({ status: false, message: 'Invalid otp' });
             }
 
         } catch (error) {
