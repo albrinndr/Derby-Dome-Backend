@@ -15,11 +15,11 @@ class UserUseCase {
 
     }
 
-    async verifyUser(email: string) {
+    async signUp(email: string) {
         const userExists = await this.UserRepository.findByEmail(email);
         if (userExists) {
             return {
-                status: 200,
+                status: 400,
                 data: {
                     status: false,
                     message: "User already exists!"
@@ -35,7 +35,7 @@ class UserUseCase {
         };
     }
 
-    async signUp(user: User) {
+    async verifyUser(user: User) {
         const hashedPassword = await this.Encrypt.generateHash(user.password);
         const newUser = { ...user, password: hashedPassword };
         await this.UserRepository.save(newUser);

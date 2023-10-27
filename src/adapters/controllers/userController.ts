@@ -16,7 +16,7 @@ class UserController {
 
     async signUp(req: Request, res: Response) {
         try {
-            const verifyUser = await this.userCase.verifyUser(req.body.email);
+            const verifyUser = await this.userCase.signUp(req.body.email);
             if (verifyUser.data.status === true) {
                 req.app.locals.userData = req.body;
                 const otp = this.GenerateOtp.createOtp();
@@ -40,11 +40,11 @@ class UserController {
     async userVerification(req: Request, res: Response) {
         try {
             if (req.body.otp == req.app.locals.otp) {
-                const user = await this.userCase.signUp(req.app.locals.userData);
+                const user = await this.userCase.verifyUser(req.app.locals.userData);
                 req.app.locals.userData = null;
                 res.status(user.status).json(user.data);
             } else {
-                res.status(200).json({ status: false, message: 'Invalid otp' });
+                res.status(400).json({ status: false, message: 'Invalid otp' });
             }
 
         } catch (error) {
