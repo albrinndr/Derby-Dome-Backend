@@ -25,7 +25,7 @@ class UserController {
 
                 setTimeout(() => {
                     req.app.locals.otp = this.GenerateOtp.createOtp();
-                }, 5 * 60000);
+                }, 3 * 60000);
 
                 res.status(verifyUser.status).json(verifyUser.data);
             } else {
@@ -52,6 +52,22 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
+    async resendOtp(req: Request, res: Response) {
+        try {
+            const otp = this.GenerateOtp.createOtp();
+            req.app.locals.otp = otp;
+            this.GenerateEmail.sendMail(req.app.locals.userData.email, otp);
+
+            setTimeout(() => {
+                req.app.locals.otp = this.GenerateOtp.createOtp();
+            }, 3 * 60000);
+            res.status(200).json({message:'Otp has been sent!'})
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     async login(req: Request, res: Response) {
         try {

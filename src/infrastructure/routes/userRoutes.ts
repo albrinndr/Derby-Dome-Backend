@@ -15,12 +15,13 @@ const jwt = new JWTToken();
 const otp = new GenerateOtp();
 const email = new GenerateEmail();
 const userCase = new UserUseCase(repository, encrypt, jwt);
-const controller = new UserController(userCase,email,otp);
+const controller = new UserController(userCase, email, otp);
 
 const router = express.Router();
 
 router.post('/signUp', (req, res) => controller.signUp(req, res));
 router.post('/verify', (req, res) => controller.userVerification(req, res));
+router.post('/resendOtp', (req, res) => controller.resendOtp(req, res));
 router.post('/login', (req, res) => controller.login(req, res));
 router.post('/logout', (req, res) => controller.logout(req, res));
 
