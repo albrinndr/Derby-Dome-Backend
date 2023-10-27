@@ -7,6 +7,7 @@ import cors from 'cors';
 import userRoutes from '../routes/userRoutes';
 import clubRoutes from '../routes/clubRoutes';
 import adminRoutes from '../routes/adminRoutes';
+import path from 'path';
 
 export const createServer = () => {
     try {
@@ -14,6 +15,7 @@ export const createServer = () => {
 
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
+        app.use(express.static(path.join(__dirname, '../public')))
 
         app.use(cookieParser());
         app.use(cors());

@@ -19,6 +19,8 @@ class ClubController {
     async signup(req: Request, res: Response) {
         try {
             const verifyClub = await this.clubCase.signUp(req.body.email);
+            console.log(req.file)
+
 
             if (verifyClub.data.status === true) {
                 req.app.locals.clubData = req.body;

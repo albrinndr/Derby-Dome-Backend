@@ -1,4 +1,5 @@
 import express from 'express';
+import {ImageUpload} from '../config/multer';
 
 import ClubController from '../../adapters/controllers/clubController';
 import ClubRepository from '../repository/clubRepository';
@@ -16,11 +17,11 @@ const otp = new GenerateOtp();
 const email = new GenerateEmail();
 
 const clubCase = new ClubUseCase(repository, encrypt, token);
-const controller = new ClubController(clubCase,email,otp);
+const controller = new ClubController(clubCase, email, otp);
 
 const router = express.Router();
 
-router.post('/signup', (req, res) => controller.signup(req, res));
+router.post('/signup', ImageUpload.single('image'), (req, res) => controller.signup(req, res));
 router.post('/verify', (req, res) => controller.clubVerification(req, res));
 router.post('/resendOtp', (req, res) => controller.resendOtp(req, res));
 router.post('/login', (req, res) => controller.login(req, res));
