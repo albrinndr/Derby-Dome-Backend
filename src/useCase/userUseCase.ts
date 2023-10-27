@@ -41,7 +41,7 @@ class UserUseCase {
         await this.UserRepository.save(newUser);
         return {
             status: 200,
-            data: { status: true, message: newUser }
+            data: { status: true, message: 'User Registration successful!' }
         };
     }
 
