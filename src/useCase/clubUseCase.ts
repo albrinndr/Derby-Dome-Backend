@@ -13,26 +13,44 @@ class ClubUseCase {
         this.JWTToken = JWTToken;
     }
 
-    async signUp(club: Club) {
-        const clubExists = await this.ClubRepository.findByEmail(club.email);
+
+    async signUp(email: string) {
+        const clubExists = await this.ClubRepository.findByEmail(email);
         if (clubExists) {
-            throw new Error('Club Already Exists!');
-        } else {
-            const hashedPassword = await this.Encrypt.generateHash(club.password);
-            const newClub = { ...club, password: hashedPassword };
-            await this.ClubRepository.save(newClub);
             return {
-                status: 200,
-                data: newClub
+                status: 400,
+                data: {
+                    status: false,
+                    message: "Club already exists!"
+                }
             };
         }
+        return {
+            status: 200,
+            data: {
+                status: true,
+                message: 'Verification otp sent to your email!'
+            }
+        };
+    }
+
+    async verifyClub(club: Club) {
+        const hashedPassword = await this.Encrypt.generateHash(club.password);
+        const newClub = { ...club, password: hashedPassword };
+        await this.ClubRepository.save(newClub);
+        return {
+            status: 200,
+            data: {
+                message: "Club registration successful!"
+            }
+        };
     }
 
     async login(club: Club) {
         const clubData = await this.ClubRepository.findByEmail(club.email);
         let token = '';
         if (clubData) {
-            if (clubData.isBlocked){
+            if (clubData.isBlocked) {
                 return {
                     status: 400,
                     data: {
@@ -41,7 +59,7 @@ class ClubUseCase {
                     }
                 };
             }
-            
+
             const passwordMatch = await this.Encrypt.compare(club.password, clubData.password);
             if (passwordMatch) {
                 const clubId = clubData?._id;

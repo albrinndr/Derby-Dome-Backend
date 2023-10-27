@@ -22,7 +22,7 @@ class UserController {
                 const otp = this.GenerateOtp.createOtp();
                 req.app.locals.otp = otp;
                 this.GenerateEmail.sendMail(req.body.email, otp);
-
+                console.log(otp);
                 setTimeout(() => {
                     req.app.locals.otp = this.GenerateOtp.createOtp();
                 }, 3 * 60000);
@@ -58,13 +58,15 @@ class UserController {
             const otp = this.GenerateOtp.createOtp();
             req.app.locals.otp = otp;
             this.GenerateEmail.sendMail(req.app.locals.userData.email, otp);
+            console.log(otp);
 
             setTimeout(() => {
                 req.app.locals.otp = this.GenerateOtp.createOtp();
             }, 3 * 60000);
-            res.status(200).json({message:'Otp has been sent!'})
+            res.status(200).json({ message: 'Otp has been sent!' });
         } catch (error) {
-            console.log(error);
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
         }
     }
 
