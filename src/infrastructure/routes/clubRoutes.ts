@@ -1,5 +1,5 @@
 import express from 'express';
-import {ImageUpload} from '../config/multer';
+import { ImageUpload } from '../config/multer';
 
 import ClubController from '../../adapters/controllers/clubController';
 import ClubRepository from '../repository/clubRepository';
@@ -8,6 +8,7 @@ import JWTToken from '../utils/generateToken';
 import Encrypt from '../utils/bcryptPassword';
 import GenerateEmail from '../utils/sendMail';
 import GenerateOtp from '../utils/generateOtp';
+import CloudinaryUpload from '../utils/cloudinaryUpload';
 
 
 const repository = new ClubRepository();
@@ -15,9 +16,10 @@ const encrypt = new Encrypt();
 const token = new JWTToken();
 const otp = new GenerateOtp();
 const email = new GenerateEmail();
+const cloudinary = new CloudinaryUpload();
 
 const clubCase = new ClubUseCase(repository, encrypt, token);
-const controller = new ClubController(clubCase, email, otp);
+const controller = new ClubController(clubCase, email, otp, cloudinary);
 
 const router = express.Router();
 

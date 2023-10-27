@@ -1,26 +1,31 @@
 import { Request, Response } from "express";
+import fs from 'fs';
 import ClubUseCase from "../../useCase/clubUseCase";
 import GenerateEmail from "../../infrastructure/utils/sendMail";
 import GenerateOtp from "../../infrastructure/utils/generateOtp";
+import CloudinaryUpload from "../../infrastructure/utils/cloudinaryUpload";
 
 
 class ClubController {
     private clubCase: ClubUseCase;
     private GenerateEmail: GenerateEmail;
     private GenerateOtp: GenerateOtp;
+    private CloudinaryUpload: CloudinaryUpload;
 
-    constructor(clubCase: ClubUseCase, GenerateEmail: GenerateEmail, GenerateOtp: GenerateOtp) {
+    constructor(clubCase: ClubUseCase, GenerateEmail: GenerateEmail, GenerateOtp: GenerateOtp, CloudinaryUpload: CloudinaryUpload) {
         this.clubCase = clubCase;
         this.GenerateOtp = GenerateOtp;
         this.GenerateEmail = GenerateEmail;
+        this.CloudinaryUpload = CloudinaryUpload;
 
     }
 
     async signup(req: Request, res: Response) {
         try {
             const verifyClub = await this.clubCase.signUp(req.body.email);
-            console.log(req.file)
-
+            if (req.file) {
+                req.app.locals.image = req.file.path;
+            }
 
             if (verifyClub.data.status === true) {
                 req.app.locals.clubData = req.body;
@@ -34,6 +39,13 @@ class ClubController {
 
                 res.status(verifyClub.status).json(verifyClub.data);
             } else {
+                if (req.file) {
+                    fs.unlink(req.file.path, (err) => {
+                        if (err) {
+                            console.error('Error deleting file:', err);
+                        }
+                    });
+                }
                 res.status(verifyClub.status).json(verifyClub.data);
             }
 
@@ -45,8 +57,13 @@ class ClubController {
     async clubVerification(req: Request, res: Response) {
         try {
             if (req.body.otp == req.app.locals.clubOtp) {
-                const user = await this.clubCase.verifyClub(req.app.locals.clubData);
+                const img = await this.CloudinaryUpload.upload(req.app.locals.image, 'club-logos');
+                const clubData = req.app.locals.clubData;
+                clubData.image = img.secure_url;
+
+                const user = await this.clubCase.verifyClub(clubData);
                 req.app.locals.clubData = null;
+                req.app.locals.image = null;
                 res.status(user.status).json(user.data);
             } else {
                 res.status(400).json({ status: false, message: 'Invalid otp' });
