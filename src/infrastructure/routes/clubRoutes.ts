@@ -9,6 +9,7 @@ import Encrypt from '../utils/bcryptPassword';
 import GenerateEmail from '../utils/sendMail';
 import GenerateOtp from '../utils/generateOtp';
 import CloudinaryUpload from '../utils/cloudinaryUpload';
+import { protect } from '../middleware/clubAuth';
 
 
 const repository = new ClubRepository();
@@ -28,6 +29,9 @@ router.post('/verify', (req, res) => controller.clubVerification(req, res));
 router.post('/resendOtp', (req, res) => controller.resendOtp(req, res));
 router.post('/login', (req, res) => controller.login(req, res));
 router.post('/logout', (req, res) => controller.logout(req, res));
+
+router.get('/profile', protect, (req, res) => controller.profile(req, res));
+router.put('/profile', protect, ImageUpload.single('image'),(req, res) => controller.updateProfile(req, res));
 
 
 export default router;

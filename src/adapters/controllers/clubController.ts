@@ -122,6 +122,44 @@ class ClubController {
             res.status(400).json(err.message);
         }
     }
+
+    async profile(req: Request, res: Response) {
+        try {
+            const clubId = req.clubId || '';
+            const club = await this.clubCase.profile(clubId);
+            res.status(club.status).json(club.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async updateProfile(req: Request, res: Response) {
+        try {
+            if (req.file) {
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'club-logos');
+                const imgUrl = img.secure_url;
+                const data = {
+                    name: req.body.name,
+                    phone: req.body.phone,
+                    email: req.body.email,
+                    password: req.body.password,
+                    image: imgUrl,
+                    _id: req.clubId || ''
+                };
+                const club = await this.clubCase.updateProfile(req.clubId || '', data, req.body.newPassword);
+                res.status(club.status).json(club.data);
+            }else{
+                console.log(req.body)
+                const club = await this.clubCase.updateProfile(req.clubId || '', req.body, req.body.newPassword);
+                res.status(club.status).json(club.data);
+            }
+           
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default ClubController;

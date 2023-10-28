@@ -90,6 +90,51 @@ class ClubUseCase {
             };
         }
     }
+
+    async profile(_id: string) {
+        const club = await this.ClubRepository.findById(_id);
+        if (club) {
+            return {
+                status: 200,
+                data: club
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: 'Club not found' }
+            };
+        }
+    }
+
+    async updateProfile(id: string, club: Club, newPassword?: string) {
+        const clubData = await this.ClubRepository.findById(id);
+        if (clubData) {
+            clubData.name = club.name || clubData.name;
+            clubData.phone = club.phone || clubData.phone;
+            clubData.image = club.image || clubData.image;
+            if (club.password) {
+                const passwordMatch = await this.Encrypt.compare(club.password, clubData.password);
+                if (passwordMatch && newPassword) {
+                    clubData.password = await this.Encrypt.generateHash(newPassword);
+                } else {
+                    return {
+                        status: 400,
+                        data: { message: 'Password does not match!' }
+                    };
+                }
+            }
+            const updatedClub = await this.ClubRepository.save(clubData);
+            return {
+                status: 200,
+                data: updatedClub
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: 'Club not found' }
+            };
+        }
+    }
 }
 
 export default ClubUseCase;
