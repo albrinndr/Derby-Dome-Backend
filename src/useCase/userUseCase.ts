@@ -100,12 +100,15 @@ class UserUseCase {
                 data: user
             };
         } else {
-            throw new Error('User not found!');
+            return {
+                status: 400,
+                data: { message: 'User not found' }
+            };
         }
     }
 
-    async updateProfile(user: User, newPassword?: string) {
-        const userData = await this.UserRepository.findById(user._id);
+    async updateProfile(id:string,user: User, newPassword?: string) {
+        const userData = await this.UserRepository.findById(id);
         if (userData) {
             userData.name = user.name || userData.name;
             userData.phone = user.phone || userData.phone;
@@ -115,8 +118,8 @@ class UserUseCase {
                     userData.password = await this.Encrypt.generateHash(newPassword);
                 } else {
                     return {
-                        status: 200,
-                        data: 'Password does not match!'
+                        status: 400,
+                        data: { message: 'Password does not match!' }
                     };
                 }
             }
@@ -126,7 +129,10 @@ class UserUseCase {
                 data: updatedUser
             };
         } else {
-            throw new Error('User not found!');
+            return {
+                status: 400,
+                data: { message: 'User not found' }
+            };
         }
     }
 }

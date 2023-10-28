@@ -106,7 +106,6 @@ class UserController {
 
     async profile(req: Request, res: Response) {
         try {
-            console.log(req.userId);
             // const userId = req.query.id as string;
             const userId = req.userId || '';
             const user = await this.userCase.profile(userId);
@@ -119,7 +118,7 @@ class UserController {
 
     async updateProfile(req: Request, res: Response) {
         try {
-            const user = await this.userCase.updateProfile(req.body, req.body.newPassword);
+            const user = await this.userCase.updateProfile(req.userId || '', req.body, req.body.newPassword);
             res.status(user.status).json(user.data);
         } catch (error) {
             const err: Error = error as Error;
