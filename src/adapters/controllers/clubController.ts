@@ -103,7 +103,20 @@ class ClubController {
                     maxAge: 30 * 24 * 60 * 60 * 1000
                 });
             }
-            res.status(club.status).json(club.data.club);
+            res.status(club.status).json(club.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async logout(req: Request, res: Response) {
+        try {
+            res.cookie('clubJWT', '', {
+                httpOnly: true,
+                expires: new Date(0)
+            });
+            res.status(200).json({ message: 'Club logged out' });
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);

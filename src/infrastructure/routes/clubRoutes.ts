@@ -27,5 +27,7 @@ router.post('/signup', ImageUpload.single('image'), (req, res) => controller.sig
 router.post('/verify', (req, res) => controller.clubVerification(req, res));
 router.post('/resendOtp', (req, res) => controller.resendOtp(req, res));
 router.post('/login', (req, res) => controller.login(req, res));
+router.post('/logout', (req, res) => controller.logout(req, res));
+
 
 export default router;

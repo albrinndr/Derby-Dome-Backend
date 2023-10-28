@@ -54,7 +54,7 @@ class ClubUseCase {
                 return {
                     status: 400,
                     data: {
-                        club: 'Club is blocked by admin!',
+                        message: 'Club is blocked by admin!',
                         token: ''
                     }
                 };
@@ -75,7 +75,7 @@ class ClubUseCase {
                 return {
                     status: 400,
                     data: {
-                        club: 'Invalid email or password!',
+                        message: 'Invalid email or password!',
                         token: ''
                     }
                 };
@@ -84,7 +84,7 @@ class ClubUseCase {
             return {
                 status: 400,
                 data: {
-                    club: 'Invalid email or password!',
+                    message: 'Invalid email or password!',
                     token: ''
                 }
             };
