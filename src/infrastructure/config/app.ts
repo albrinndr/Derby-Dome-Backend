@@ -15,10 +15,9 @@ export const createServer = () => {
 
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
-        app.use(express.static(path.join(__dirname, '../public')))
-
+        app.use(express.static(path.join(__dirname, '../public')));
         app.use(cookieParser());
-        app.use(cors());
+        app.use(cors({origin: process.env.CORS_URL,credentials: true,}));
 
         app.use('/api/user', userRoutes);
         app.use('/api/club', clubRoutes);

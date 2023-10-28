@@ -53,7 +53,7 @@ class UserUseCase {
                 return {
                     status: 400,
                     data: {
-                        user: 'User is blocked by admin!',
+                        message: 'User is blocked by admin!',
                         token: ''
                     }
                 };
@@ -67,7 +67,7 @@ class UserUseCase {
                 return {
                     status: 200,
                     data: {
-                        user: userData,
+                        message: userData,
                         token
                     }
                 };
@@ -75,7 +75,7 @@ class UserUseCase {
                 return {
                     status: 400,
                     data: {
-                        user: 'Invalid email or password!',
+                        message: 'Invalid email or password!',
                         token
                     }
                 };
@@ -85,7 +85,7 @@ class UserUseCase {
             return {
                 status: 400,
                 data: {
-                    user: 'Invalid email or password!',
+                    message: 'Invalid email or password!',
                     token
                 }
             };

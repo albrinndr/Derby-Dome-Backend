@@ -79,10 +79,12 @@ class UserController {
                 res.cookie('userJWT', user.data.token, {
                     httpOnly: true,
                     sameSite: 'strict',
+                    secure: process.env.NODE_ENV !== 'development',
                     maxAge: 30 * 24 * 60 * 60 * 1000
                 });
             }
-            res.status(user.status).json(user.data.user);
+            
+            res.status(user.status).json(user.data);
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);
