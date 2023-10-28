@@ -10,11 +10,6 @@ class JWTToken implements JWT {
             return token;
         }
         throw new Error('JWT key is not defined!');
-        // res.cookie(value, token, {
-        //     httpOnly: true,
-        //     sameSite: 'strict',
-        //     maxAge: 30 * 24 * 60 * 60 * 1000
-        // });
     }
 }
 

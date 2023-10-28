@@ -83,7 +83,7 @@ class UserController {
                     maxAge: 30 * 24 * 60 * 60 * 1000
                 });
             }
-            
+
             res.status(user.status).json(user.data);
         } catch (error) {
             const err: Error = error as Error;
@@ -106,7 +106,9 @@ class UserController {
 
     async profile(req: Request, res: Response) {
         try {
-            const userId = req.query.id as string;
+            console.log(req.userId);
+            // const userId = req.query.id as string;
+            const userId = req.userId || '';
             const user = await this.userCase.profile(userId);
             res.status(user.status).json(user.data);
         } catch (error) {

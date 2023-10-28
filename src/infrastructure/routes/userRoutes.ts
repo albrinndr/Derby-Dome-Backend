@@ -7,7 +7,7 @@ import Encrypt from '../utils/bcryptPassword';
 import JWTToken from '../utils/generateToken';
 import GenerateEmail from '../utils/sendMail';
 import GenerateOtp from '../utils/generateOtp';
-
+import { protect } from '../middleware/userAuth';
 
 const repository = new UserRepository();
 const encrypt = new Encrypt();
@@ -25,7 +25,7 @@ router.post('/resendOtp', (req, res) => controller.resendOtp(req, res));
 router.post('/login', (req, res) => controller.login(req, res));
 router.post('/logout', (req, res) => controller.logout(req, res));
 
-router.get('/profile', (req, res) => controller.profile(req, res));
-router.put('/profile', (req, res) => controller.updateProfile(req, res));
+router.get('/profile', protect, (req, res) => controller.profile(req, res));
+router.put('/profile', protect, (req, res) => controller.updateProfile(req, res));
 
 export default router;
