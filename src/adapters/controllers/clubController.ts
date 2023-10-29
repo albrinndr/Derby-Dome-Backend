@@ -50,7 +50,8 @@ class ClubController {
             }
 
         } catch (error) {
-
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
         }
     }
 
@@ -149,11 +150,11 @@ class ClubController {
                 };
                 const club = await this.clubCase.updateProfile(req.clubId || '', data, req.body.newPassword);
                 res.status(club.status).json(club.data);
-            }else{
+            } else {
                 const club = await this.clubCase.updateProfile(req.clubId || '', req.body, req.body.newPassword);
                 res.status(club.status).json(club.data);
             }
-           
+
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);
