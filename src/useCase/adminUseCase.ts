@@ -13,6 +13,7 @@ type UserType = {
     isBlocked: boolean;
     createdAt: string | Date;
     image?: string;
+    isGoogle?:boolean
 };
 
 class AdminUseCase {
@@ -76,6 +77,7 @@ class AdminUseCase {
                     email: user.email || '',
                     phone: user.phone || '',
                     isBlocked: user.isBlocked || false,
+                    isGoogle:user.isGoogle,
                     createdAt: formattedDate
                 };
             });

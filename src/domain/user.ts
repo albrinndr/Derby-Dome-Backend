@@ -8,6 +8,7 @@ interface User {
     cart?: {
     }[];
     wallet?: number | null;
+    isGoogle?: boolean;
 }
 
 export default User;

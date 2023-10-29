@@ -17,7 +17,13 @@ class UserController {
     async signUp(req: Request, res: Response) {
         try {
             const verifyUser = await this.userCase.signUp(req.body.email);
-            if (verifyUser.data.status === true) {
+
+            if (verifyUser.data.status === true && req.body.isGoogle) {
+                const user = await this.userCase.verifyUser(req.body);
+                console.log(user.data)
+                res.status(user.status).json(user.data);
+            }
+            else if (verifyUser.data.status === true) {
                 req.app.locals.userData = req.body;
                 const otp = this.GenerateOtp.createOtp();
                 req.app.locals.otp = otp;

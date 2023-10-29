@@ -107,7 +107,7 @@ class UserUseCase {
         }
     }
 
-    async updateProfile(id:string,user: User, newPassword?: string) {
+    async updateProfile(id: string, user: User, newPassword?: string) {
         const userData = await this.UserRepository.findById(id);
         if (userData) {
             userData.name = user.name || userData.name;
