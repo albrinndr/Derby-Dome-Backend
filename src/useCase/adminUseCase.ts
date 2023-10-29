@@ -5,13 +5,14 @@ import Admin from "../domain/admin";
 import Encrypt from "../infrastructure/utils/bcryptPassword";
 import JWTToken from "../infrastructure/utils/generateToken";
 
-type User = {
+type UserType = {
     _id: string;
     name: string;
     email: string;
     phone: string;
     isBlocked: boolean;
     createdAt: string | Date;
+    image?: string;
 };
 
 class AdminUseCase {
@@ -63,10 +64,10 @@ class AdminUseCase {
 
     async getUsers() {
         const usersList = await this.UserRepository.findAllUsers();
-        let filteredUsersList: User[] = [];
+        let filteredUsersList: UserType[] = [];
         if (usersList) {
             filteredUsersList = usersList.map((user: any) => {
-                const date = new Date(user.createdAt as string); 
+                const date = new Date(user.createdAt as string);
                 const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
                 const formattedDate = date.toLocaleDateString('en-US', options);
                 return {
@@ -105,9 +106,27 @@ class AdminUseCase {
 
     async getClubs() {
         const clubsList = await this.ClubRepository.findAllClubs();
+        let filteredClubsList: UserType[] = [];
+        if (clubsList) {
+            filteredClubsList = clubsList.map((club: any) => {
+                const date = new Date(club.createdAt as string);
+                const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = date.toLocaleDateString('en-US', options);
+                return {
+                    _id: club._id || '',
+                    name: club.name || '',
+                    email: club.email || '',
+                    phone: club.phone || '',
+                    isBlocked: club.isBlocked || false,
+                    createdAt: formattedDate,
+                    image:club.image
+                };
+            });
+        }
+
         return {
             status: 200,
-            data: clubsList
+            data: filteredClubsList
         };
     }
 
