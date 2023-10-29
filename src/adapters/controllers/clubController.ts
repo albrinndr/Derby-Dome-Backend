@@ -150,7 +150,6 @@ class ClubController {
                 const club = await this.clubCase.updateProfile(req.clubId || '', data, req.body.newPassword);
                 res.status(club.status).json(club.data);
             }else{
-                console.log(req.body)
                 const club = await this.clubCase.updateProfile(req.clubId || '', req.body, req.body.newPassword);
                 res.status(club.status).json(club.data);
             }

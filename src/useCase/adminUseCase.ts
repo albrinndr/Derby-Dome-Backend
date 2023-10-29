@@ -28,7 +28,7 @@ class AdminUseCase {
                 return {
                     status: 200,
                     data: {
-                        admin: adminData,
+                        message: 'Logged In',
                         token
                     }
                 };
@@ -36,7 +36,7 @@ class AdminUseCase {
                 return {
                     status: 400,
                     data: {
-                        admin: 'Invalid email or password!',
+                        message: 'Invalid email or password!',
                         token: null
                     }
                 };
@@ -45,7 +45,7 @@ class AdminUseCase {
             return {
                 status: 400,
                 data: {
-                    admin: 'Invalid email or password!',
+                    message: 'Invalid email or password!',
                     token: null
                 }
             };
@@ -72,7 +72,7 @@ class AdminUseCase {
         } else {
             return {
                 status: 400,
-                data: 'User not found!'
+                data:{message: 'User not found!'}
             };
         }
     }
@@ -97,7 +97,7 @@ class AdminUseCase {
         } else {
             return {
                 status: 400,
-                data: 'Club not found!'
+                data:{message: 'Club not found!'}
             };
         }
     }

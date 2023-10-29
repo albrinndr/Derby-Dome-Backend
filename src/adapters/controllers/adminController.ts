@@ -18,7 +18,7 @@ class AdminController {
                     maxAge: 30 * 24 * 60 * 60 * 1000
                 });
             }
-            res.status(admin.status).json(admin.data.admin);
+            res.status(admin.status).json(admin.data);
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);
