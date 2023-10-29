@@ -5,6 +5,15 @@ import Admin from "../domain/admin";
 import Encrypt from "../infrastructure/utils/bcryptPassword";
 import JWTToken from "../infrastructure/utils/generateToken";
 
+type User = {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    isBlocked: boolean;
+    createdAt: string | Date;
+};
+
 class AdminUseCase {
     private AdminRepository: AdminRepository;
     private UserRepository: UserRepository;
@@ -54,9 +63,26 @@ class AdminUseCase {
 
     async getUsers() {
         const usersList = await this.UserRepository.findAllUsers();
+        let filteredUsersList: User[] = [];
+        if (usersList) {
+            filteredUsersList = usersList.map((user: any) => {
+                const date = new Date(user.createdAt as string); 
+                const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = date.toLocaleDateString('en-US', options);
+                return {
+                    _id: user._id || '',
+                    name: user.name || '',
+                    email: user.email || '',
+                    phone: user.phone || '',
+                    isBlocked: user.isBlocked || false,
+                    createdAt: formattedDate
+                };
+            });
+        }
+
         return {
             status: 200,
-            data: usersList
+            data: filteredUsersList
         };
     }
 
@@ -72,7 +98,7 @@ class AdminUseCase {
         } else {
             return {
                 status: 400,
-                data:{message: 'User not found!'}
+                data: { message: 'User not found!' }
             };
         }
     }
@@ -97,7 +123,7 @@ class AdminUseCase {
         } else {
             return {
                 status: 400,
-                data:{message: 'Club not found!'}
+                data: { message: 'Club not found!' }
             };
         }
     }
