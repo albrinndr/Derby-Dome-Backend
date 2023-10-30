@@ -53,7 +53,7 @@ class UserUseCase {
                 return {
                     status: 400,
                     data: {
-                        message: 'User is blocked by admin!',
+                        message: 'You have been blocked by admin!',
                         token: ''
                     }
                 };
