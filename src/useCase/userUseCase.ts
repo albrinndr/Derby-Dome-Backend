@@ -112,6 +112,7 @@ class UserUseCase {
         if (userData) {
             userData.name = user.name || userData.name;
             userData.phone = user.phone || userData.phone;
+            userData.profilePic = user.profilePic || userData.profilePic;
             if (user.password) {
                 const passwordMatch = await this.Encrypt.compare(user.password, userData.password);
                 if (passwordMatch && newPassword) {

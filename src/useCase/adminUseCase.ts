@@ -13,7 +13,8 @@ type UserType = {
     isBlocked: boolean;
     createdAt: string | Date;
     image?: string;
-    isGoogle?:boolean
+    isGoogle?: boolean;
+    profilePic?: string;
 };
 
 class AdminUseCase {
@@ -77,8 +78,9 @@ class AdminUseCase {
                     email: user.email || '',
                     phone: user.phone || '',
                     isBlocked: user.isBlocked || false,
-                    isGoogle:user.isGoogle,
-                    createdAt: formattedDate
+                    isGoogle: user.isGoogle,
+                    createdAt: formattedDate,
+                    profilePic: user.profilePic
                 };
             });
         }
@@ -121,7 +123,7 @@ class AdminUseCase {
                     phone: club.phone || '',
                     isBlocked: club.isBlocked || false,
                     createdAt: formattedDate,
-                    image:club.image
+                    image: club.image
                 };
             });
         }

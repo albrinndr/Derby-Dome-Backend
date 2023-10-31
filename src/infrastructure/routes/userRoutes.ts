@@ -1,4 +1,6 @@
 import express from 'express';
+import { ImageUpload } from '../middleware/multer';
+
 import UserController from '../../adapters/controllers/userController';
 import UserUseCase from '../../useCase/userUseCase';
 import UserRepository from '../repository/userRepository';
@@ -24,7 +26,7 @@ const cloudinary = new CloudinaryUpload();
 const userCase = new UserUseCase(repository, encrypt, jwt);
 const bannerCase = new BannerUseCase(bannerRepository);
 
-const controller = new UserController(userCase, email, otp);
+const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
 
 
@@ -37,8 +39,8 @@ router.post('/login', (req, res) => controller.login(req, res));
 router.post('/logout', (req, res) => controller.logout(req, res));
 
 router.get('/profile', protect, (req, res) => controller.profile(req, res));
-router.put('/profile', protect, (req, res) => controller.updateProfile(req, res));
+router.put('/profile', protect, ImageUpload.single('profilePic'), (req, res) => controller.updateProfile(req, res));
 
-router.get('/banner', (req, res) => bannerController.getBanners(req,res));
+router.get('/banner', (req, res) => bannerController.getBanners(req, res));
 
 export default router;

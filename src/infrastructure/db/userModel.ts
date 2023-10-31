@@ -11,7 +11,8 @@ const userSchema: Schema = new Schema<User & Document>({
     cart: [{
     }],
     wallet: { type: Number, default: 0 },
-    isGoogle: { type: Boolean, default: false }
+    isGoogle: { type: Boolean, default: false },
+    profilePic: { type: String, default: 'https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375_640.png' }
 }, {
     timestamps: true
 });

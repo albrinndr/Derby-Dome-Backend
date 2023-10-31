@@ -10,7 +10,7 @@ import { protect } from '../middleware/adminAuth';
 import BannerRepository from '../repository/bannerRepository';
 import BannerUseCase from '../../useCase/bannerUseCase';
 import BannerController from '../../adapters/controllers/bannerController';
-import { ImageUpload } from '../config/multer';
+import { ImageUpload } from '../middleware/multer';
 import CloudinaryUpload from '../utils/cloudinaryUpload';
 
 const encrypt = new Encrypt();
@@ -26,7 +26,7 @@ const adminCase = new AdminUseCase(adminRepository, encrypt, jwt, userRepository
 const bannerCase = new BannerUseCase(bannerRepository);
 
 const controller = new AdminController(adminCase);
-const bannerController = new BannerController(bannerCase,cloudinary);
+const bannerController = new BannerController(bannerCase, cloudinary);
 const router = express.Router();
 
 router.post('/login', (req, res) => controller.login(req, res));
@@ -39,6 +39,6 @@ router.get('/clubs', protect, (req, res) => controller.getClubs(req, res));
 router.put('/clubs/action', protect, (req, res) => controller.blockClub(req, res));
 
 router.get('/banner', protect, (req, res) => bannerController.getBanners(req, res));
-router.put('/banner', protect, ImageUpload.single('image'),(req, res) => bannerController.updateBanner(req, res));
+router.put('/banner', protect, ImageUpload.single('image'), (req, res) => bannerController.updateBanner(req, res));
 
 export default router;

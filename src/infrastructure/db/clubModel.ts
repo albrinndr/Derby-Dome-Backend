@@ -12,10 +12,10 @@ const userSchema: Schema = new Schema<Club & Document>({
     cart: [{
     }],
     wallet: { type: Number, default: 0 },
-    address:{type:String,required:true},
-    contactPerson:{type:String,required:true},
-    description:{type:String,required:true},
-    poster:{type:String}
+    address: { type: String, required: true },
+    contactPerson: { type: String, required: true },
+    description: { type: String, required: true },
+    poster: { type: String }
 }, {
     timestamps: true
 });

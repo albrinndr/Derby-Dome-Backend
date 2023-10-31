@@ -1,5 +1,5 @@
 import express from 'express';
-import { ImageUpload } from '../config/multer';
+import { ImageUpload } from '../middleware/multer';
 
 import ClubController from '../../adapters/controllers/clubController';
 import ClubRepository from '../repository/clubRepository';
@@ -31,7 +31,7 @@ router.post('/login', (req, res) => controller.login(req, res));
 router.post('/logout', (req, res) => controller.logout(req, res));
 
 router.get('/profile', protect, (req, res) => controller.profile(req, res));
-router.put('/profile', protect, ImageUpload.single('image'),(req, res) => controller.updateProfile(req, res));
+router.put('/profile', protect, ImageUpload.single('image'), (req, res) => controller.updateProfile(req, res));
 
 
 export default router;

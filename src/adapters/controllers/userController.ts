@@ -2,16 +2,21 @@ import { Request, Response } from "express";
 import UserUseCase from "../../useCase/userUseCase";
 import GenerateEmail from "../../infrastructure/utils/sendMail";
 import GenerateOtp from "../../infrastructure/utils/generateOtp";
+import CloudinaryUpload from "../../infrastructure/utils/cloudinaryUpload";
 
 
 class UserController {
     private userCase: UserUseCase;
     private GenerateEmail: GenerateEmail;
     private GenerateOtp: GenerateOtp;
-    constructor(userCase: UserUseCase, GenerateEmail: GenerateEmail, GenerateOtp: GenerateOtp) {
+    private CloudinaryUpload: CloudinaryUpload;
+
+    constructor(userCase: UserUseCase, GenerateEmail: GenerateEmail, GenerateOtp: GenerateOtp, CloudinaryUpload: CloudinaryUpload) {
         this.userCase = userCase;
         this.GenerateOtp = GenerateOtp;
         this.GenerateEmail = GenerateEmail;
+        this.CloudinaryUpload = CloudinaryUpload;
+
     }
 
     async signUp(req: Request, res: Response) {
@@ -20,7 +25,7 @@ class UserController {
 
             if (verifyUser.data.status === true && req.body.isGoogle) {
                 const user = await this.userCase.verifyUser(req.body);
-                console.log(user.data)
+                console.log(user.data);
                 res.status(user.status).json(user.data);
             }
             else if (verifyUser.data.status === true) {
@@ -124,8 +129,18 @@ class UserController {
 
     async updateProfile(req: Request, res: Response) {
         try {
-            const user = await this.userCase.updateProfile(req.userId || '', req.body, req.body.newPassword);
-            res.status(user.status).json(user.data);
+            if (req.file) {
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'profile-picture');
+                const imgUrl = img.secure_url;
+                console.log(imgUrl);
+                const data = req.body;
+                data.profilePic = imgUrl;
+                const user = await this.userCase.updateProfile(req.userId || '', data, req.body.newPassword);
+                res.status(user.status).json(user.data);
+            } else {
+                const user = await this.userCase.updateProfile(req.userId || '', req.body, req.body.newPassword);
+                res.status(user.status).json(user.data);
+            }
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);

@@ -9,6 +9,7 @@ interface User {
     }[];
     wallet?: number | null;
     isGoogle?: boolean;
+    profilePic?:string
 }
 
 export default User;
