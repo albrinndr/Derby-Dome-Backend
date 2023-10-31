@@ -146,7 +146,10 @@ class ClubController {
                     email: req.body.email,
                     password: req.body.password,
                     image: imgUrl,
-                    _id: req.clubId || ''
+                    _id: req.clubId || '',
+                    address:req.body.address,
+                    contactPerson:req.body.contactPerson,
+                    description:req.body.description
                 };
                 const club = await this.clubCase.updateProfile(req.clubId || '', data, req.body.newPassword);
                 res.status(club.status).json(club.data);

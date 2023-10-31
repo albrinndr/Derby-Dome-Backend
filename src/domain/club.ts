@@ -9,6 +9,10 @@ interface Club {
     cart?: {
     }[];
     wallet?: number | null;
+    contactPerson?: string,
+    address?: string,
+    description?: string;
+    poster?:string
 }
 
 export default Club;

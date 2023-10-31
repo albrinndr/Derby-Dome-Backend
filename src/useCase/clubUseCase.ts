@@ -112,6 +112,9 @@ class ClubUseCase {
             clubData.name = club.name || clubData.name;
             clubData.phone = club.phone || clubData.phone;
             clubData.image = club.image || clubData.image;
+            clubData.address = club.address || clubData.address;
+            clubData.contactPerson = club.contactPerson || clubData.contactPerson;
+            clubData.description = clubData.description || clubData.description;
             if (club.password) {
                 const passwordMatch = await this.Encrypt.compare(club.password, clubData.password);
                 if (passwordMatch && newPassword) {
