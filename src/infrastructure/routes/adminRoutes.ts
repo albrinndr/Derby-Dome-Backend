@@ -3,35 +3,37 @@ import AdminRepository from '../repository/adminRepository';
 import UserRepository from '../repository/userRepository';
 import ClubRepository from '../repository/clubRepository';
 import BannerRepository from '../repository/bannerRepository';
-import MatchTimeRepository from '../repository/matchTimeRepository';
+import StadiumRepository from '../repository/stadiumRepository';
 import AdminUseCase from '../../useCase/adminUseCase';
 import BannerUseCase from '../../useCase/bannerUseCase';
-import MatchTimeUseCase from '../../useCase/matchTimeUseCase';
+import StadiumUseCase from '../../useCase/stadiumUseCase';
 import AdminController from '../../adapters/controllers/adminController';
 import BannerController from '../../adapters/controllers/bannerController';
-import MatchTimeController from '../../adapters/controllers/matchTimeController';
+import StadiumController from '../../adapters/controllers/stadiumController';
 import JWTToken from '../utils/generateToken';
 import Encrypt from '../utils/bcryptPassword';
 import CloudinaryUpload from '../utils/cloudinaryUpload';
 import { protect } from '../middleware/adminAuth';
 import { ImageUpload } from '../middleware/multer';
+import ScheduleTask from '../utils/scheduleTask';
 
 const encrypt = new Encrypt();
 const jwt = new JWTToken();
 const cloudinary = new CloudinaryUpload();
+const schedule = new ScheduleTask();
 const adminRepository = new AdminRepository();
 const userRepository = new UserRepository();
 const clubRepository = new ClubRepository();
 const bannerRepository = new BannerRepository();
-const matchTimeRepository = new MatchTimeRepository();
+const stadiumRepository = new StadiumRepository();
 
 const adminCase = new AdminUseCase(adminRepository, encrypt, jwt, userRepository, clubRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
-const matchTimeCase = new MatchTimeUseCase(matchTimeRepository);
+const stadiumCase = new StadiumUseCase(stadiumRepository, schedule);
 
 const controller = new AdminController(adminCase);
 const bannerController = new BannerController(bannerCase, cloudinary);
-const matchTimeController = new MatchTimeController(matchTimeCase);
+const stadiumController = new StadiumController(stadiumCase);
 const router = express.Router();
 
 router.post('/login', (req, res) => controller.login(req, res));
@@ -46,6 +48,8 @@ router.put('/clubs/action', protect, (req, res) => controller.blockClub(req, res
 router.get('/banner', protect, (req, res) => bannerController.getBanners(req, res));
 router.put('/banner', protect, ImageUpload.single('image'), (req, res) => bannerController.updateBanner(req, res));
 
-router.post('/matchTime', protect, (req, res) => matchTimeController.addNewTime(req, res));
+router.post('/matchTime', protect, (req, res) => stadiumController.addNewTime(req, res));
+router.get('/matchTimes', protect, (req, res) => stadiumController.getAllTimes(req, res));
+router.put('/updateTimePrice', protect, (req, res) => stadiumController.updateTimePrice(req, res));
 
 export default router;
