@@ -51,5 +51,7 @@ router.put('/banner', protect, ImageUpload.single('image'), (req, res) => banner
 router.post('/matchTime', protect, (req, res) => stadiumController.addNewTime(req, res));
 router.get('/matchTimes', protect, (req, res) => stadiumController.getAllTimes(req, res));
 router.put('/updateTimePrice', protect, (req, res) => stadiumController.updateTimePrice(req, res));
+router.put('/deleteMatchPrice/:id', protect, (req, res) => stadiumController.deleteMatchTime(req, res));
+
 
 export default router;

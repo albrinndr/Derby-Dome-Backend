@@ -37,7 +37,6 @@ class StadiumUseCase {
     async updateTimePrice(timeData: Time) {
         const time = await this.StadiumRepository.findTimeById(timeData.id);
         if (time) {
-            console.log(timeData.id);
             await this.StadiumRepository.updateNewPrice(timeData.id, timeData.price);
             this.ScheduleTask.scheduleTimePrice(() => this.StadiumRepository.updatePrice(timeData.id, timeData.price));
             return {
@@ -50,6 +49,25 @@ class StadiumUseCase {
                 data: { message: 'Invalid data provided' }
             };
         }
+    }
+
+    async deleteMatchTime(id: string) {
+        const time = await this.StadiumRepository.findTimeById(id);
+        if (time) {
+            await this.StadiumRepository.setMatchDelete(id);
+            this.ScheduleTask.scheduleTimePrice(() => this.StadiumRepository.deleteMatchTime(id));
+
+            return {
+                status: 200,
+                data: { message: 'Changes applied!' }
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: 'Invalid data provided' }
+            };
+        }
+
     }
 }
 

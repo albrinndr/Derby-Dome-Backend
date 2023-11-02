@@ -53,7 +53,7 @@ class StadiumRepository implements StadiumRepo {
             {
                 $set: {
                     'timings.$.newPrice': price,
-                    'timings.$.changeDate':new Date(new Date().setDate(new Date().getDate() + 12))
+                    'timings.$.changeDate': new Date(new Date().setDate(new Date().getDate() + 12))
                 }
             }
         );
@@ -64,6 +64,27 @@ class StadiumRepository implements StadiumRepo {
             { 'timings._id': id },
             { $set: { 'timings.$.price': price } }
         );
+    }
+
+    async setMatchDelete(id: string): Promise<any> {
+        await StadiumModel.findOneAndUpdate(
+            { 'timings._id': id },
+            {
+                $set: {
+                    'timings.$.delete': true,
+                    'timings.$.changeDate': new Date(new Date().setDate(new Date().getDate() + 12))
+
+                }
+            }
+        );
+    }
+
+    async deleteMatchTime(id: string): Promise<any> {
+        await StadiumModel.updateOne(
+            { 'timings._id': id },
+            { $pull: { timings: { _id: id } } }
+        );
+
     }
 }
 

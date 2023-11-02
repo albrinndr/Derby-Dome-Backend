@@ -36,6 +36,16 @@ class MatchTimeController {
             res.status(400).json(err.message);
         }
     }
+
+    async deleteMatchTime(req: Request, res: Response) {
+        try {
+            const updated = await this.MatchTimeCase.deleteMatchTime(req.params.id);
+            res.status(updated.status).json(updated.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default MatchTimeController;

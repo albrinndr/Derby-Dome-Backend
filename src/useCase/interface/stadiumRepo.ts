@@ -7,5 +7,7 @@ interface StadiumRepo {
     updateNewPrice(id: string, price: number): Promise<any>;
     updatePrice(id: string, price: number): Promise<any>;
     findTimeById(id: string): Promise<Stadium | null>;
+    setMatchDelete(id: string): Promise<any>;
+    deleteMatchTime(id: string): Promise<any>;
 }
 export default StadiumRepo;

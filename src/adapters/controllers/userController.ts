@@ -25,7 +25,6 @@ class UserController {
 
             if (verifyUser.data.status === true && req.body.isGoogle) {
                 const user = await this.userCase.verifyUser(req.body);
-                console.log(user.data);
                 res.status(user.status).json(user.data);
             }
             else if (verifyUser.data.status === true) {
