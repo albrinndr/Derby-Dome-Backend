@@ -163,6 +163,23 @@ class ClubController {
             res.status(400).json(err.message);
         }
     }
+
+    async updateBackgroundImg(req: Request, res: Response) {
+        try {
+            const id = req.clubId || '';
+            if (req.file) {
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'club-logos');
+                const backgroundUrl = img.secure_url;
+                const updated = await this.clubCase.backgroundUpdate(id, backgroundUrl);
+                res.status(updated.status).json(updated.data);
+            } else {
+                res.status(400).json({ message: 'Upload a banner image!' });
+            }
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default ClubController;

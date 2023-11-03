@@ -12,7 +12,7 @@ interface Club {
     contactPerson?: string,
     address?: string,
     description?: string;
-    poster?:string
+    bgImg?:string
 }
 
 export default Club;

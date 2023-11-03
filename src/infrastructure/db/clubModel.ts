@@ -15,7 +15,7 @@ const userSchema: Schema = new Schema<Club & Document>({
     address: { type: String, required: true },
     contactPerson: { type: String, required: true },
     description: { type: String, required: true },
-    poster: { type: String }
+    bgImg: { type: String, default: 'https://res.cloudinary.com/ddzzicdji/image/upload/v1699006744/club-banners/vdwaui8m3bom4cmgohdy.webp' }
 }, {
     timestamps: true
 });

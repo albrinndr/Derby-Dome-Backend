@@ -138,6 +138,23 @@ class ClubUseCase {
             };
         }
     }
+
+    async backgroundUpdate(id: string, bgImg: string) {
+        const clubData = await this.ClubRepository.findById(id);
+        if (clubData) {
+            clubData.bgImg = bgImg;
+            const updatedClub = await this.ClubRepository.save(clubData);
+            return {
+                status: 200,
+                data: { bgImg: updatedClub.bgImg }
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: 'Club not found' }
+            };
+        }
+    }
 }
 
 export default ClubUseCase;

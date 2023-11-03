@@ -32,6 +32,8 @@ router.post('/logout', (req, res) => controller.logout(req, res));
 
 router.get('/profile', protect, (req, res) => controller.profile(req, res));
 router.put('/profile', protect, ImageUpload.single('image'), (req, res) => controller.updateProfile(req, res));
+router.put('/background', protect, ImageUpload.single('image'), (req, res) => controller.updateBackgroundImg(req, res));
+
 
 
 export default router;
