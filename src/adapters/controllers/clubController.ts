@@ -168,7 +168,7 @@ class ClubController {
         try {
             const id = req.clubId || '';
             if (req.file) {
-                const img = await this.CloudinaryUpload.upload(req.file.path, 'club-logos');
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'club-banners');
                 const backgroundUrl = img.secure_url;
                 const updated = await this.clubCase.backgroundUpdate(id, backgroundUrl);
                 res.status(updated.status).json(updated.data);

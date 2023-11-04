@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
-import MatchTimeUseCase from "../../useCase/stadiumUseCase";
+import StadiumUseCase from "../../useCase/stadiumUseCase";
 
 class MatchTimeController {
-    private MatchTimeCase: MatchTimeUseCase;
-    constructor(MatchTimeCase: MatchTimeUseCase) {
-        this.MatchTimeCase = MatchTimeCase;
+    private StadiumCase: StadiumUseCase;
+    constructor(StadiumCase: StadiumUseCase) {
+        this.StadiumCase = StadiumCase;
     }
 
     async addNewTime(req: Request, res: Response) {
         try {
-            const timeData = await this.MatchTimeCase.addNewTime(req.body);
+            const timeData = await this.StadiumCase.addNewTime(req.body);
             res.status(timeData.status).json(timeData.data);
         } catch (error) {
             const err: Error = error as Error;
@@ -19,7 +19,7 @@ class MatchTimeController {
 
     async getAllTimes(req: Request, res: Response) {
         try {
-            const times = await this.MatchTimeCase.getAllTimes();
+            const times = await this.StadiumCase.getAllTimes();
             res.status(times.status).json(times.data);
         } catch (error) {
             const err: Error = error as Error;
@@ -29,7 +29,7 @@ class MatchTimeController {
 
     async updateTimePrice(req: Request, res: Response) {
         try {
-            const updated = await this.MatchTimeCase.updateTimePrice(req.body);
+            const updated = await this.StadiumCase.updateTimePrice(req.body);
             res.status(updated.status).json(updated.data);
         } catch (error) {
             const err: Error = error as Error;
@@ -39,7 +39,7 @@ class MatchTimeController {
 
     async deleteMatchTime(req: Request, res: Response) {
         try {
-            const updated = await this.MatchTimeCase.deleteMatchTime(req.params.id);
+            const updated = await this.StadiumCase.deleteMatchTime(req.params.id);
             res.status(updated.status).json(updated.data);
         } catch (error) {
             const err: Error = error as Error;
@@ -49,7 +49,7 @@ class MatchTimeController {
 
     async setSeatPrice(req: Request, res: Response) {
         try {
-            const result = await this.MatchTimeCase.setSeatPrice(req.body);
+            const result = await this.StadiumCase.setSeatPrice(req.body);
             res.status(result.status).json(result.data);
         } catch (error) {
             const err: Error = error as Error;
@@ -59,7 +59,7 @@ class MatchTimeController {
 
     async getAllSeats(req: Request, res: Response) {
         try {
-            const result = await this.MatchTimeCase.getSeats();
+            const result = await this.StadiumCase.getSeats();
             res.status(result.status).json(result.data);
         } catch (error) {
             const err: Error = error as Error;
