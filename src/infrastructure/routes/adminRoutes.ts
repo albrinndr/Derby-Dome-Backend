@@ -16,6 +16,7 @@ import CloudinaryUpload from '../utils/cloudinaryUpload';
 import { protect } from '../middleware/adminAuth';
 import { ImageUpload } from '../middleware/multer';
 import ScheduleTask from '../utils/scheduleTask';
+import FixtureRepository from '../repository/fixtureRepository';
 
 const encrypt = new Encrypt();
 const jwt = new JWTToken();
@@ -26,10 +27,11 @@ const userRepository = new UserRepository();
 const clubRepository = new ClubRepository();
 const bannerRepository = new BannerRepository();
 const stadiumRepository = new StadiumRepository();
+const fixtureRepository = new FixtureRepository();
 
 const adminCase = new AdminUseCase(adminRepository, encrypt, jwt, userRepository, clubRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
-const stadiumCase = new StadiumUseCase(stadiumRepository, schedule);
+const stadiumCase = new StadiumUseCase(stadiumRepository, schedule, fixtureRepository);
 
 const controller = new AdminController(adminCase);
 const bannerController = new BannerController(bannerCase, cloudinary);

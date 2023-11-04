@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import StadiumUseCase from "../../useCase/stadiumUseCase";
 
-class MatchTimeController {
+class StadiumController {
     private StadiumCase: StadiumUseCase;
     constructor(StadiumCase: StadiumUseCase) {
         this.StadiumCase = StadiumCase;
@@ -68,4 +68,4 @@ class MatchTimeController {
     }
 }
 
-export default MatchTimeController;
+export default StadiumController;

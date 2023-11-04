@@ -9,7 +9,7 @@ class StadiumRepository implements StadiumRepo {
             stadium.timings.push({
                 time: time.time,
                 price: time.price,
-                // newPrice: time.newPrice,
+                // newPrice: time.price,
                 // delete: time.delete,
                 showDate: time.showDate,
             });
@@ -20,7 +20,7 @@ class StadiumRepository implements StadiumRepo {
                 timings: [{
                     time: time.time,
                     price: time.price,
-                    // newPrice: time.newPrice,
+                    // newPrice: time.price,
                     // delete: time.delete,
                     showDate: time.showDate,
                 }]
@@ -38,7 +38,12 @@ class StadiumRepository implements StadiumRepo {
 
     async findAllTime(): Promise<{}[] | null> {
         const matchTimings = await StadiumModel.aggregate([{ $project: { _id: 0, timings: 1 } }]);
-        return matchTimings[0].timings;
+        // return matchTimings[0].timings;
+        if (matchTimings && matchTimings[0] && matchTimings[0].timings) {
+            return matchTimings[0].timings;
+        } else {
+            return [];
+        }
     }
 
     async findTimeById(id: string): Promise<Stadium | null> {
