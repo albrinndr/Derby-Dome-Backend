@@ -5,9 +5,7 @@ const StadiumSchema: Schema = new Schema<Stadium & Document>({
     timings: [{
         time: { type: String, required: true },
         price: { type: Number, required: true },
-        newPrice: { type: Number },
-        delete: { type: Boolean, default: false },
-        changeDate: { type: Date, default: new Date(new Date().setDate(new Date().getDate() + 12)) }
+        showDate: { type: Date, default: new Date(new Date().setDate(new Date().getDate() + 17)) }
     }],
     seats: [{
         stand: { type: String },

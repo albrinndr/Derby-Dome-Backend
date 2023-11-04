@@ -9,9 +9,9 @@ class StadiumRepository implements StadiumRepo {
             stadium.timings.push({
                 time: time.time,
                 price: time.price,
-                newPrice: time.newPrice,
-                delete: time.delete,
-                changeDate: time.changeDate,
+                // newPrice: time.newPrice,
+                // delete: time.delete,
+                showDate: time.showDate,
             });
             await stadium.save();
             return stadium;
@@ -20,9 +20,9 @@ class StadiumRepository implements StadiumRepo {
                 timings: [{
                     time: time.time,
                     price: time.price,
-                    newPrice: time.newPrice,
-                    delete: time.delete,
-                    changeDate: time.changeDate,
+                    // newPrice: time.newPrice,
+                    // delete: time.delete,
+                    showDate: time.showDate,
                 }]
             });
             await stadium.save();
@@ -47,17 +47,17 @@ class StadiumRepository implements StadiumRepo {
         return null;
     }
 
-    async updateNewPrice(id: string, price: number): Promise<any> {
-        await StadiumModel.findOneAndUpdate(
-            { 'timings._id': id },
-            {
-                $set: {
-                    'timings.$.newPrice': price,
-                    'timings.$.changeDate': new Date(new Date().setDate(new Date().getDate() + 12))
-                }
-            }
-        );
-    }
+    // async updateNewPrice(id: string, price: number): Promise<any> {
+    //     await StadiumModel.findOneAndUpdate(
+    //         { 'timings._id': id },
+    //         {
+    //             $set: {
+    //                 'timings.$.newPrice': price,
+    //                 'timings.$.showDate': new Date(new Date().setDate(new Date().getDate() + 12))
+    //             }
+    //         }
+    //     );
+    // }
 
     async updatePrice(id: string, price: number): Promise<any> {
         await StadiumModel.findOneAndUpdate(
@@ -66,18 +66,18 @@ class StadiumRepository implements StadiumRepo {
         );
     }
 
-    async setMatchDelete(id: string): Promise<any> {
-        await StadiumModel.findOneAndUpdate(
-            { 'timings._id': id },
-            {
-                $set: {
-                    'timings.$.delete': true,
-                    'timings.$.changeDate': new Date(new Date().setDate(new Date().getDate() + 12))
+    // async setMatchDelete(id: string): Promise<any> {
+    //     await StadiumModel.findOneAndUpdate(
+    //         { 'timings._id': id },
+    //         {
+    //             $set: {
+    //                 'timings.$.delete': true,
+    //                 'timings.$.showDate': new Date(new Date().setDate(new Date().getDate() + 12))
 
-                }
-            }
-        );
-    }
+    //             }
+    //         }
+    //     );
+    // }
 
     async deleteMatchTime(id: string): Promise<any> {
         await StadiumModel.updateOne(

@@ -4,10 +4,10 @@ import ScheduleTask from "../infrastructure/utils/scheduleTask";
 
 class StadiumUseCase {
     private StadiumRepository: StadiumRepository;
-    private ScheduleTask: ScheduleTask;
+    // private ScheduleTask: ScheduleTask;
     constructor(StadiumRepository: StadiumRepository, ScheduleTask: ScheduleTask) {
         this.StadiumRepository = StadiumRepository;
-        this.ScheduleTask = ScheduleTask;
+        // this.ScheduleTask = ScheduleTask;
     }
     async addNewTime(timeData: Time) {
         const timeExists = await this.StadiumRepository.findByTime(timeData.time);
@@ -37,8 +37,8 @@ class StadiumUseCase {
     async updateTimePrice(timeData: Time) {
         const time = await this.StadiumRepository.findTimeById(timeData.id);
         if (time) {
-            await this.StadiumRepository.updateNewPrice(timeData.id, timeData.price);
-            this.ScheduleTask.scheduleTimePrice(() => this.StadiumRepository.updatePrice(timeData.id, timeData.price));
+            await this.StadiumRepository.updatePrice(timeData.id, timeData.price);
+            // this.ScheduleTask.scheduleTimePrice(() => this.StadiumRepository.updatePrice(timeData.id, timeData.price));
             return {
                 status: 200,
                 data: { message: 'Changes applied!' }
@@ -54,12 +54,12 @@ class StadiumUseCase {
     async deleteMatchTime(id: string) {
         const time = await this.StadiumRepository.findTimeById(id);
         if (time) {
-            await this.StadiumRepository.setMatchDelete(id);
-            this.ScheduleTask.scheduleTimePrice(() => this.StadiumRepository.deleteMatchTime(id));
+            await this.StadiumRepository.deleteMatchTime(id);
+            // this.ScheduleTask.scheduleTimePrice(() => this.StadiumRepository.deleteMatchTime(id));
 
             return {
                 status: 200,
-                data: { message: 'Changes applied!' }
+                data: { message: 'Time removed!' }
             };
         } else {
             return {
