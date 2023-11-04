@@ -1,4 +1,4 @@
-import { Time } from "../domain/stadium";
+import { Seats, Time } from "../domain/stadium";
 import StadiumRepository from "../infrastructure/repository/stadiumRepository";
 import ScheduleTask from "../infrastructure/utils/scheduleTask";
 
@@ -68,6 +68,22 @@ class StadiumUseCase {
             };
         }
 
+    }
+
+    async setSeatPrice(seatData: Seats) {
+        await this.StadiumRepository.seatPriceSave(seatData.stand, seatData.price);
+        return {
+            status: 200,
+            data: { message: 'Seat price updated!' }
+        };
+    }
+
+    async getSeats() {
+        const result = await this.StadiumRepository.getAllSeats();
+        return {
+            status: 200,
+            data: result
+        };
     }
 }
 

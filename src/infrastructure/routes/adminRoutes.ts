@@ -53,5 +53,8 @@ router.get('/matchTimes', protect, (req, res) => stadiumController.getAllTimes(r
 router.put('/updateTimePrice', protect, (req, res) => stadiumController.updateTimePrice(req, res));
 router.put('/deleteMatchPrice/:id', protect, (req, res) => stadiumController.deleteMatchTime(req, res));
 
+router.post('/seatPrice', protect, (req, res) => stadiumController.setSeatPrice(req, res));
+router.get('/getSeats', protect, (req, res) => stadiumController.getAllSeats(req, res));
+
 
 export default router;

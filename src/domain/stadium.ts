@@ -7,6 +7,11 @@ export interface Time {
     changeDate?: Date;
 }
 
+export interface Seats {
+    stand: string,
+    price: number;
+}
+
 interface Stadium {
     timings: [{
         time: string,
@@ -14,6 +19,10 @@ interface Stadium {
         delete?: boolean,
         newPrice?: number,
         changeDate?: Date;
+    }],
+    seats: [{
+        stand: string,
+        price: number;
     }];
 }
 export default Stadium;

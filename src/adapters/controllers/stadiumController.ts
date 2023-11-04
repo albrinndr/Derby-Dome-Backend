@@ -46,6 +46,26 @@ class MatchTimeController {
             res.status(400).json(err.message);
         }
     }
+
+    async setSeatPrice(req: Request, res: Response) {
+        try {
+            const result = await this.MatchTimeCase.setSeatPrice(req.body);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async getAllSeats(req: Request, res: Response) {
+        try {
+            const result = await this.MatchTimeCase.getSeats();
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default MatchTimeController;

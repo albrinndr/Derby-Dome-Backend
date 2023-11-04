@@ -86,6 +86,47 @@ class StadiumRepository implements StadiumRepo {
         );
 
     }
+
+    //////////////////////////////////seat price///////////////
+
+    async seatPriceSave(stand: string, price: number): Promise<any> {
+        const stadium = await StadiumModel.findOne();
+        if (stadium) {
+            const result = await StadiumModel.findOne({ 'seats.stand': stand });
+            if (result) {
+                await StadiumModel.updateOne(
+                    { 'seats.stand': stand },
+                    { $set: { 'seats.$.price': price } }
+                );
+            } else {
+                await StadiumModel.updateOne({},
+                    {
+                        $push: {
+                            seats: { stand: stand, price: price }
+                        }
+                    }
+                );
+            }
+        } else {
+            const stadium = new StadiumModel({
+                seats: [{
+                    stand: stand,
+                    price: price
+                }]
+            });
+            await stadium.save();
+        }
+
+    }
+
+    async getAllSeats(): Promise<any> {
+        const seats = await StadiumModel.aggregate([{ $project: { _id: 0, seats: 1 } }]);
+        if (seats && seats[0] && seats[0].seats) {
+            return seats[0].seats;
+        } else {
+            return [];
+        }
+    }
 }
 
 export default StadiumRepository;

@@ -9,5 +9,6 @@ interface StadiumRepo {
     findTimeById(id: string): Promise<Stadium | null>;
     setMatchDelete(id: string): Promise<any>;
     deleteMatchTime(id: string): Promise<any>;
+    seatPriceSave(name: string, price: number): Promise<any>;
 }
 export default StadiumRepo;

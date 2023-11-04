@@ -8,6 +8,10 @@ const StadiumSchema: Schema = new Schema<Stadium & Document>({
         newPrice: { type: Number },
         delete: { type: Boolean, default: false },
         changeDate: { type: Date, default: new Date(new Date().setDate(new Date().getDate() + 12)) }
+    }],
+    seats: [{
+        stand: { type: String },
+        price: { type: Number }
     }]
 }, {
     timestamps: true
