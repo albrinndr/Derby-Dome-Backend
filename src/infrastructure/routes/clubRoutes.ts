@@ -29,7 +29,7 @@ const clubCase = new ClubUseCase(repository, encrypt, token);
 const fixtureCase = new FixtureUseCase(fixtureRepository, repository, stadiumRepository);
 
 const controller = new ClubController(clubCase, email, otp, cloudinary);
-const fixtureController = new FixtureController(fixtureCase);
+const fixtureController = new FixtureController(fixtureCase, cloudinary);
 
 const router = express.Router();
 
@@ -44,6 +44,7 @@ router.put('/profile', protect, ImageUpload.single('image'), (req, res) => contr
 router.put('/background', protect, ImageUpload.single('image'), (req, res) => controller.updateBackgroundImg(req, res));
 
 router.post('/fixtureFormContent', protect, (req, res) => fixtureController.getFixtureFormContent(req, res));
+router.post('/createNewFixture', protect, ImageUpload.single('image'), (req, res) => fixtureController.createNewFixture(req, res));
 
 
 export default router;

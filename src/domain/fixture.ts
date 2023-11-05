@@ -1,12 +1,15 @@
 interface Fixture {
-    id: string;
-    clubId: string;
+    clubId?: string;
     awayTeamId?: string;
     awayTeam?: string;
-    date: Date;
-    time: string;
-    poster: string;
+    awayTeamLogo?: string;
+    date?: Date;
+    time?: string;
     dateTime?: Date;
+    poster?: string;
+    status?: string;
+    rescheduled?: boolean;
+    price?: number;
 }
 
 export default Fixture;

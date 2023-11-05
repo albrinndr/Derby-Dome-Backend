@@ -1,14 +1,18 @@
 import mongoose, { ObjectId, Schema, Document } from "mongoose";
+import { TransformStreamDefaultController } from "stream/web";
 
 interface Fixture extends Document {
     clubId: ObjectId;
-    awayTeamId: ObjectId;
+    awayTeamId: ObjectId;   
     awayTeam: string;
     awayTeamLogo: string;
     date: Date;
     time: string;
     dateTime: Date;
     poster: string;
+    status: string;
+    rescheduled: boolean;
+    price:number
 }
 
 
@@ -20,7 +24,10 @@ const FixtureSchema = new Schema<Fixture>({
     date: { type: Date, required: true },
     time: { type: String, required: true },
     dateTime: { type: Date },
-    poster: { type: String }
+    poster: { type: String },
+    status: { type: String, default: 'active' },
+    rescheduled: { type: Boolean, default: false },
+    price:{type:Number,required:true}
 }, {
     timestamps: true
 });
