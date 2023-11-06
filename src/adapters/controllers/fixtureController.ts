@@ -41,6 +41,28 @@ class FixtureController {
             res.status(400).json(err.message);
         }
     }
+
+    async getClubFixtures(req: Request, res: Response) {
+        try {
+            const id = req.clubId || '';
+            const fixtures = await this.FixtureCase.clubFixtures(id);
+            res.status(fixtures.status).json(fixtures.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async cancelFixture(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+            const result = await this.FixtureCase.cancelFixture(id);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default FixtureController;

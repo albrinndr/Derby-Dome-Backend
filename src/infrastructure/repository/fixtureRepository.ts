@@ -4,7 +4,7 @@ import FixtureModel from "../db/fixtureModel";
 
 class FixtureRepository implements FixtureRepo {
     async findAllFixtures(): Promise<{}[]> {
-        const data = await FixtureModel.find({}).populate('awayTeamId')
+        const data = await FixtureModel.find({}).populate('awayTeamId');
         if (data && data.length > 0) return data;
         return [];
     }
@@ -13,6 +13,18 @@ class FixtureRepository implements FixtureRepo {
         const newFixture = new FixtureModel(fixture);
         await newFixture.save();
         return newFixture;
+    }
+
+    async findFixturesByClubId(id: string): Promise<{}[]> {
+        const fixtures = await FixtureModel.find({ clubId: id, status: 'active' });
+        if (fixtures && fixtures.length > 0) return fixtures;
+        return [];
+    }
+
+    async findFixtureByIdAndCancel(id: string): Promise<boolean> {
+        const result = await FixtureModel.findByIdAndUpdate({ _id: id }, { $set: { status: 'cancelled' } });
+        if (result) return true;
+        return false;
     }
 }
 

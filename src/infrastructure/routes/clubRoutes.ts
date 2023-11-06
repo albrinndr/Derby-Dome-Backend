@@ -46,5 +46,8 @@ router.put('/background', protect, ImageUpload.single('image'), (req, res) => co
 router.post('/fixtureFormContent', protect, (req, res) => fixtureController.getFixtureFormContent(req, res));
 router.post('/createNewFixture', protect, ImageUpload.single('image'), (req, res) => fixtureController.createNewFixture(req, res));
 
+router.get('/getFixtures', protect, (req, res) => fixtureController.getClubFixtures(req, res));
+router.put('/cancelFixture/:id', protect, (req, res) => fixtureController.cancelFixture(req, res));
+
 
 export default router;

@@ -1,4 +1,5 @@
 interface Fixture {
+    title?: string;
     clubId?: string;
     awayTeamId?: string;
     awayTeam?: string;

@@ -40,19 +40,19 @@ class FixtureUseCase {
 
         if (allFixtures.length) {
             allFixtures.forEach((fixture: any) => {
-                if (allClubs && fixture.awayTeamId && fixture.awayTeamId._id) {
+                if (allClubs && fixture.awayTeamId && fixture.awayTeamId._id && fixture.status == "active") {
                     allClubs = allClubs.filter((club: any) => {
                         club._id.toString() != fixture.awayTeamId._id.toString();
                     });
                 }
 
-                if (allTimes) {
+                if (allTimes && fixture.status == "active") {
                     allTimes = allTimes.filter((time: any) => time.time != fixture.time);
                 }
             });
         }
 
-       
+
 
         if (!allTimes || allTimes.length < 1) {
             return {
@@ -95,6 +95,29 @@ class FixtureUseCase {
             return {
                 status: 200,
                 data: newFixture
+            };
+        }
+    }
+
+    async clubFixtures(id: string) {
+        const fixtures = await this.FixtureRepository.findFixturesByClubId(id);
+        return {
+            status: 200,
+            data: fixtures
+        };
+    }
+
+    async cancelFixture(id: string) {
+        const cancelled = await this.FixtureRepository.findFixtureByIdAndCancel(id);
+        if (cancelled) {
+            return {
+                status: 200,
+                data: 'Fixture has been cancelled!'
+            };
+        } else {
+            return {
+                status: 400,
+                data: 'Invalid fixture'
             };
         }
     }
