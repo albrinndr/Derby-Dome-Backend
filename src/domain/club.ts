@@ -1,3 +1,19 @@
+export interface Team {
+    team?: {
+        manager?: {
+            name: string,
+            image: string;
+        };
+        players?: {
+            name: string,
+            shirtNo: number;
+            position: string;
+            image: string;
+            startingXI: boolean;
+        }[];
+    };
+}
+
 interface Club {
     _id: string;
     name?: string;
@@ -12,7 +28,20 @@ interface Club {
     contactPerson?: string,
     address?: string,
     description?: string;
-    bgImg?:string
+    bgImg?: string;
+    team?: {
+        manager?: {
+            name: string,
+            image: string;
+        };
+        players?: {
+            name: string,
+            shirtNo: number;
+            position: string;
+            image: string;
+            startingXI: boolean;
+        }[];
+    };
 }
 
 export default Club;

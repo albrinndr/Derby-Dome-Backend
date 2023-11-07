@@ -1,4 +1,4 @@
-import Club from "../../domain/club";
+import Club, { Team } from "../../domain/club";
 import ClubModel from "../db/clubModel";
 import ClubRepo from "../../useCase/interface/clubRepo";
 
@@ -22,6 +22,14 @@ class ClubRepository implements ClubRepo {
     async findAllClubs(): Promise<{}[] | null> {
         const club = await ClubModel.find({}).select('-password');
         return club;
+    }
+
+    async findTeamById(clubId: string): Promise<Team | {}> {
+        const club = await ClubModel.findOne({ _id: clubId }).select('team').exec();
+        if (club && club.team) {
+            return club.team;
+        }
+        return {};
     }
 }
 

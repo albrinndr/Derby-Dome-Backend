@@ -49,5 +49,6 @@ router.post('/createNewFixture', protect, ImageUpload.single('image'), (req, res
 router.get('/getFixtures', protect, (req, res) => fixtureController.getClubFixtures(req, res));
 router.put('/cancelFixture/:id', protect, (req, res) => fixtureController.cancelFixture(req, res));
 
+router.get('/getTeam', protect, (req, res) => controller.getTeamData(req, res));
 
 export default router;

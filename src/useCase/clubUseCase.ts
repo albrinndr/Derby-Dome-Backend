@@ -155,6 +155,14 @@ class ClubUseCase {
             };
         }
     }
+
+    async getTeamData(id: string) {
+        const team = await this.ClubRepository.findTeamById(id);
+        return {
+            status: 200,
+            data: team
+        };
+    }
 }
 
 export default ClubUseCase;

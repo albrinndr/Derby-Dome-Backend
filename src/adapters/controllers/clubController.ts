@@ -180,6 +180,17 @@ class ClubController {
             res.status(400).json(err.message);
         }
     }
+
+    async getTeamData(req: Request, res: Response) {
+        try {
+            const id = req.clubId || '';
+            const team = await this.clubCase.getTeamData(id);
+            res.status(team.status).json(team.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default ClubController;
