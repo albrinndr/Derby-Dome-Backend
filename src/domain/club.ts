@@ -1,8 +1,8 @@
 export interface Team {
     team?: {
         manager?: {
-            name: string,
-            image: string;
+            name?: string,
+            image?: string;
         };
         players?: {
             name: string,
@@ -13,6 +13,20 @@ export interface Team {
         }[];
     };
 }
+
+export interface Manager {
+    name?: string,
+    image?: string;
+}
+
+export interface Player {
+    name?: string,
+    shirtNo?: number;
+    position?: string;
+    image?: string;
+    startingXI?: boolean;
+}
+
 
 interface Club {
     _id: string;

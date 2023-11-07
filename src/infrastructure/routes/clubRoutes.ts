@@ -19,6 +19,7 @@ import FixtureController from '../../adapters/controllers/fixtureController';
 const repository = new ClubRepository();
 const fixtureRepository = new FixtureRepository();
 const stadiumRepository = new StadiumRepository();
+
 const encrypt = new Encrypt();
 const token = new JWTToken();
 const otp = new GenerateOtp();
@@ -50,5 +51,8 @@ router.get('/getFixtures', protect, (req, res) => fixtureController.getClubFixtu
 router.put('/cancelFixture/:id', protect, (req, res) => fixtureController.cancelFixture(req, res));
 
 router.get('/getTeam', protect, (req, res) => controller.getTeamData(req, res));
+router.post('/addManager', protect, ImageUpload.single('image'), (req, res) => controller.addTeamManager(req, res));
+router.put('/editManager', protect, ImageUpload.single('image'), (req, res) => controller.editTeamManager(req, res));
+// router.post('/addPlayer', protect);
 
 export default router;

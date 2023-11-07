@@ -191,6 +191,52 @@ class ClubController {
             res.status(400).json(err.message);
         }
     }
+
+    async addTeamManager(req: Request, res: Response) {
+        try {
+            if (req.file) {
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'club-banners');
+                const managerImg = img.secure_url;
+                const data = { name: req.body.name, image: managerImg };
+                const id = req.clubId || '';
+                const result = await this.clubCase.addClubManager(id, data);
+                res.status(result.status).json(result.data);
+            } else {
+                res.status(400).json({ message: 'Upload manager photo' });
+            }
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async editTeamManager(req: Request, res: Response) {
+        try {
+            const data = { name: req.body.name, image: '' };
+            const id = req.clubId || '';
+            if (req.file) {
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'club-banners');
+                const managerImg = img.secure_url;
+                data.image = managerImg;
+            }
+            const result = await this.clubCase.editClubManager(id, data);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    // async addNewPlayer(req: Request, res: Response) {
+    //     try {
+    //         const id = req.clubId || '';
+    //         const result = await this.clubCase.addNewPlayer(id, req.body);
+    //         res.status(result.status).json(result.data);
+    //     } catch (error) {
+    //         const err: Error = error as Error;
+    //         res.status(400).json(err.message);
+    //     }
+    // }
 }
 
 export default ClubController;

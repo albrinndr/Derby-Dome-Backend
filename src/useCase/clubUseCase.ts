@@ -1,4 +1,4 @@
-import Club from "../domain/club";
+import Club, { Manager, Player } from "../domain/club";
 import ClubRepository from "../infrastructure/repository/clubRepository";
 import JWTToken from "../infrastructure/utils/generateToken";
 import Encrypt from "../infrastructure/utils/bcryptPassword";
@@ -163,6 +163,37 @@ class ClubUseCase {
             data: team
         };
     }
+
+    async addClubManager(id: string, data: Manager) {
+        const manager = await this.ClubRepository.addManager(id, data);
+        return {
+            status: 200,
+            data: manager
+        };
+    }
+
+    async editClubManager(id: string, data: Manager) {
+        const manager = await this.ClubRepository.editManager(id, data);
+        return {
+            status: 200,
+            data: manager
+        };
+    }
+
+    // async addNewPlayer(id: string, data: Player) {
+    //     const result = await this.ClubRepository.addPlayer(id, data);
+    //     if (!result) {
+    //         return {
+    //             status: 400,
+    //             data: { message: "Shirt no. already exists!" }
+    //         };
+    //     } else {
+    //         return {
+    //             status: 200,
+    //             data: result
+    //         };
+    //     }
+    // }
 }
 
 export default ClubUseCase;

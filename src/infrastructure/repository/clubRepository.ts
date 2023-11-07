@@ -1,4 +1,4 @@
-import Club, { Team } from "../../domain/club";
+import Club, { Manager, Player, Team } from "../../domain/club";
 import ClubModel from "../db/clubModel";
 import ClubRepo from "../../useCase/interface/clubRepo";
 
@@ -31,6 +31,64 @@ class ClubRepository implements ClubRepo {
         }
         return {};
     }
+
+    async addManager(clubId: string, data: Manager): Promise<any> {
+        const { name, image } = data;
+        const club = await ClubModel.findOneAndUpdate(
+            { _id: clubId },
+            { $set: { "team.manager.name": name, "team.manager.image": image } },
+            { new: true }
+        );
+        return club;
+    }
+
+    async editManager(clubId: string, data: Manager): Promise<any> {
+        if (data.image) {
+            const club = await ClubModel.findOneAndUpdate(
+                { _id: clubId },
+                { $set: { "team.manager.name": data.name, "team.manager.image": data.image } },
+                { new: true }
+            );
+            return club;
+        } else {
+            const club = await ClubModel.findOneAndUpdate(
+                { _id: clubId },
+                { $set: { "team.manager.name": data.name } },
+                { new: true }
+            );
+            return club;
+        }
+    }
+
+    // async addPlayer(clubId: string, data: Player): Promise<any> {
+    //     const player = await ClubModel.findOne({ _id: clubId, 'team.players.shirtNo': data.shirtNo }, 'team.players.$').exec();
+
+    //     if (player) {
+    //         return false;
+    //     }
+
+    //     const club = await ClubModel.findOne({ _id: clubId }, 'team.players').exec();
+    //     if (club && club.team && club.team.players) {
+    //         const playerData = {
+    //             name: data.name,
+    //             shirtNo: data.shirtNo,
+    //             position: data.position,
+    //             image: data.image,
+    //             startingXI: false
+    //         };
+    //         if (club.team.players.length < 12) {
+    //             playerData.startingXI = true;
+
+    //         }
+            
+    //         const updatedClub = await ClubModel.findOneAndUpdate(
+    //             { _id: clubId },
+    //             { $push: { 'team.players': playerData } },
+    //             { new: true }
+    //         );
+    //         return updatedClub;
+    //     }
+    // }
 }
 
 export default ClubRepository;
