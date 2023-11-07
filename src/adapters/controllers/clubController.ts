@@ -268,6 +268,18 @@ class ClubController {
             res.status(400).json(err.message);
         }
     }
+
+    async deletePlayer(req: Request, res: Response) {
+        try {
+            const clubId = req.clubId || '';
+            const result = await this.clubCase.deleteClubPlayer(clubId, req.params.id);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
 }
 
 export default ClubController;

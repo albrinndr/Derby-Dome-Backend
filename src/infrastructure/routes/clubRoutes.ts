@@ -55,5 +55,6 @@ router.post('/addManager', protect, ImageUpload.single('image'), (req, res) => c
 router.put('/editManager', protect, ImageUpload.single('image'), (req, res) => controller.editTeamManager(req, res));
 router.post('/addPlayer', protect, ImageUpload.single('image'), (req, res) => controller.addNewPlayer(req, res));
 router.put('/editPlayer', protect, ImageUpload.single('image'), (req, res) => controller.editPlayer(req, res));
+router.delete('/deletePlayer/:id', protect, (req, res) => controller.deletePlayer(req, res));
 
 export default router;

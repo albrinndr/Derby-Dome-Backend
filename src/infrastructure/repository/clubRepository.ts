@@ -76,9 +76,11 @@ class ClubRepository implements ClubRepo {
                 image: data.image,
                 startingXI: false
             };
-            if (club.team.players.length < 12) {
+            if (club.team.players.length < 11) {
                 playerData.startingXI = true;
-
+            }
+            if (club.team.players.length >= 23) {
+                return 'Limit';
             }
 
             const updatedClub = await ClubModel.findOneAndUpdate(
@@ -124,6 +126,15 @@ class ClubRepository implements ClubRepo {
                 { new: true }
             );
         }
+        return updatedPlayer;
+    }
+
+    async deletePlayer(clubId: string, playerId: string): Promise<any> {
+        let updatedPlayer = await ClubModel.findOneAndUpdate(
+            { _id: clubId },
+            { $pull: { 'team.players': { _id: playerId } } },
+            { new: true }
+        );
         return updatedPlayer;
     }
 }

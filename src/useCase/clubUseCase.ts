@@ -187,7 +187,13 @@ class ClubUseCase {
                 status: 400,
                 data: { message: "Shirt no. already exists!" }
             };
-        } else {
+        } else if (result === 'Limit') {
+            return {
+                status: 400,
+                data: { message: "Max player limit reached!" }
+            };
+        }
+        else {
             return {
                 status: 200,
                 data: result
@@ -213,6 +219,21 @@ class ClubUseCase {
             return {
                 status: 200,
                 data: result
+            };
+        }
+    }
+
+    async deleteClubPlayer(clubId: string, playerId: string) {
+        const result = await this.ClubRepository.deletePlayer(clubId, playerId);
+        if (result) {
+            return {
+                status: 200,
+                data: "Player removed!"
+            };
+        } else {
+            return {
+                status: 400,
+                data: "An error occurred"
             };
         }
     }

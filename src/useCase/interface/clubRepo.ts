@@ -11,6 +11,7 @@ interface ClubRepo {
     editManager(clubId: string, data: Manager): Promise<any>;
     addPlayer(clubId: string, data: Player): Promise<any>;
     editPlayer(clubId: string, playerId: string, data: Player): Promise<any>;
+    deletePlayer(clubId: string, playerId: string): Promise<any>;
 }
 
 export default ClubRepo;
