@@ -53,6 +53,7 @@ router.put('/cancelFixture/:id', protect, (req, res) => fixtureController.cancel
 router.get('/getTeam', protect, (req, res) => controller.getTeamData(req, res));
 router.post('/addManager', protect, ImageUpload.single('image'), (req, res) => controller.addTeamManager(req, res));
 router.put('/editManager', protect, ImageUpload.single('image'), (req, res) => controller.editTeamManager(req, res));
-// router.post('/addPlayer', protect);
+router.post('/addPlayer', protect, ImageUpload.single('image'), (req, res) => controller.addNewPlayer(req, res));
+router.put('/editPlayer', protect, ImageUpload.single('image'), (req, res) => controller.editPlayer(req, res));
 
 export default router;

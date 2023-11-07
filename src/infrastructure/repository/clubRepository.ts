@@ -60,35 +60,72 @@ class ClubRepository implements ClubRepo {
         }
     }
 
-    // async addPlayer(clubId: string, data: Player): Promise<any> {
-    //     const player = await ClubModel.findOne({ _id: clubId, 'team.players.shirtNo': data.shirtNo }, 'team.players.$').exec();
+    async addPlayer(clubId: string, data: Player): Promise<any> {
+        const player = await ClubModel.findOne({ _id: clubId, 'team.players.shirtNo': data.shirtNo }, 'team.players.$').exec();
 
-    //     if (player) {
-    //         return false;
-    //     }
+        if (player) {
+            return false;
+        }
 
-    //     const club = await ClubModel.findOne({ _id: clubId }, 'team.players').exec();
-    //     if (club && club.team && club.team.players) {
-    //         const playerData = {
-    //             name: data.name,
-    //             shirtNo: data.shirtNo,
-    //             position: data.position,
-    //             image: data.image,
-    //             startingXI: false
-    //         };
-    //         if (club.team.players.length < 12) {
-    //             playerData.startingXI = true;
+        const club = await ClubModel.findOne({ _id: clubId }, 'team.players').exec();
+        if (club && club.team && club.team.players) {
+            const playerData = {
+                name: data.name,
+                shirtNo: data.shirtNo,
+                position: data.position,
+                image: data.image,
+                startingXI: false
+            };
+            if (club.team.players.length < 12) {
+                playerData.startingXI = true;
 
-    //         }
-            
-    //         const updatedClub = await ClubModel.findOneAndUpdate(
-    //             { _id: clubId },
-    //             { $push: { 'team.players': playerData } },
-    //             { new: true }
-    //         );
-    //         return updatedClub;
-    //     }
-    // }
+            }
+
+            const updatedClub = await ClubModel.findOneAndUpdate(
+                { _id: clubId },
+                { $push: { 'team.players': playerData } },
+                { new: true }
+            );
+            return updatedClub;
+        }
+    }
+
+    async editPlayer(clubId: string, playerId: string, data: Player): Promise<any> {
+        const player = await ClubModel.findOne({
+            _id: clubId,
+            'team.players': {
+                $elemMatch: { $and: [{ _id: { $ne: playerId } }, { shirtNo: data.shirtNo }] }
+            }
+        });
+
+        if (player) {
+            return false;
+        }
+
+        let updatedPlayer = await ClubModel.findOneAndUpdate(
+            { _id: clubId, 'team.players._id': playerId },
+            {
+                $set: {
+                    'team.players.$.name': data.name,
+                    'team.players.$.shirtNo': data.shirtNo,
+                    'team.players.$.position': data.position,
+                }
+            },
+            { new: true }
+        );
+        if (data.image) {
+            updatedPlayer = await ClubModel.findOneAndUpdate(
+                { _id: clubId, 'team.players._id': playerId },
+                {
+                    $set: {
+                        'team.players.$.image': data.image,
+                    }
+                },
+                { new: true }
+            );
+        }
+        return updatedPlayer;
+    }
 }
 
 export default ClubRepository;

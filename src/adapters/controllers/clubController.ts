@@ -195,7 +195,7 @@ class ClubController {
     async addTeamManager(req: Request, res: Response) {
         try {
             if (req.file) {
-                const img = await this.CloudinaryUpload.upload(req.file.path, 'club-banners');
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'team');
                 const managerImg = img.secure_url;
                 const data = { name: req.body.name, image: managerImg };
                 const id = req.clubId || '';
@@ -215,7 +215,7 @@ class ClubController {
             const data = { name: req.body.name, image: '' };
             const id = req.clubId || '';
             if (req.file) {
-                const img = await this.CloudinaryUpload.upload(req.file.path, 'club-banners');
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'team');
                 const managerImg = img.secure_url;
                 data.image = managerImg;
             }
@@ -227,16 +227,47 @@ class ClubController {
         }
     }
 
-    // async addNewPlayer(req: Request, res: Response) {
-    //     try {
-    //         const id = req.clubId || '';
-    //         const result = await this.clubCase.addNewPlayer(id, req.body);
-    //         res.status(result.status).json(result.data);
-    //     } catch (error) {
-    //         const err: Error = error as Error;
-    //         res.status(400).json(err.message);
-    //     }
-    // }
+    async addNewPlayer(req: Request, res: Response) {
+        try {
+            const id = req.clubId || '';
+            const data = { ...req.body, image: '' };
+            if (req.file) {
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'team');
+                const player = img.secure_url;
+                data.image = player;
+            }
+            const result = await this.clubCase.addNewPlayer(id, data);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async editPlayer(req: Request, res: Response) {
+        try {
+            const id = req.clubId || '';
+            const playerId = req.body.id;
+            const data = {
+                name: req.body.name,
+                shirtNo: req.body.shirtNo,
+                position: req.body.position
+            };
+            if (req.file) {
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'team');
+                const playerImg = img.secure_url;
+                const playerData = { ...data, image: playerImg };
+                const result = await this.clubCase.editPlayer(id, playerId, playerData);
+                res.status(result.status).json(result.data);
+            } else {
+                const result = await this.clubCase.editPlayer(id, playerId, data);
+                res.status(result.status).json(result.data);
+            }
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default ClubController;

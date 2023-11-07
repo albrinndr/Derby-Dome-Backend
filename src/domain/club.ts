@@ -20,6 +20,7 @@ export interface Manager {
 }
 
 export interface Player {
+    _id?: string;
     name?: string,
     shirtNo?: number;
     position?: string;

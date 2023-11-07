@@ -9,7 +9,8 @@ interface ClubRepo {
     findTeamById(clubId: string): Promise<Team | {}>;
     addManager(clubId: string, data: Manager): Promise<any>;
     editManager(clubId: string, data: Manager): Promise<any>;
-    // addPlayer(clubId: string, data: Player): Promise<any>;
+    addPlayer(clubId: string, data: Player): Promise<any>;
+    editPlayer(clubId: string, playerId: string, data: Player): Promise<any>;
 }
 
 export default ClubRepo;

@@ -180,20 +180,42 @@ class ClubUseCase {
         };
     }
 
-    // async addNewPlayer(id: string, data: Player) {
-    //     const result = await this.ClubRepository.addPlayer(id, data);
-    //     if (!result) {
-    //         return {
-    //             status: 400,
-    //             data: { message: "Shirt no. already exists!" }
-    //         };
-    //     } else {
-    //         return {
-    //             status: 200,
-    //             data: result
-    //         };
-    //     }
-    // }
+    async addNewPlayer(id: string, data: Player) {
+        const result = await this.ClubRepository.addPlayer(id, data);
+        if (!result) {
+            return {
+                status: 400,
+                data: { message: "Shirt no. already exists!" }
+            };
+        } else {
+            return {
+                status: 200,
+                data: result
+            };
+        }
+    }
+
+    async editPlayer(clubId: string, playerId: string, data: Player) {
+        const result = await this.ClubRepository.editPlayer(clubId, playerId, data);
+        if (result === null) {
+            return {
+                status: 400,
+                data: { message: "Invalid player id" }
+            };
+        }
+        if (result === false) {
+            return {
+                status: 400,
+                data: { message: "Shirt no. already exists!" }
+            };
+
+        } else {
+            return {
+                status: 200,
+                data: result
+            };
+        }
+    }
 }
 
 export default ClubUseCase;
