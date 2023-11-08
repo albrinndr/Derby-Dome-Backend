@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import UserUseCase from "../../useCase/userUseCase";
-import GenerateEmail from "../../infrastructure/utils/sendMail";
-import GenerateOtp from "../../infrastructure/utils/generateOtp";
+import GenerateEmail from "../../infrastructure/services/sendMail";
+import GenerateOtp from "../../infrastructure/services/generateOtp";
 import CloudinaryUpload from "../../infrastructure/utils/cloudinaryUpload";
 
 

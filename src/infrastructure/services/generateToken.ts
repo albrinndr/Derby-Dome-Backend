@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import JWT from '../../useCase/interface/jwt';
-import { ObjectId } from 'mongoose';
 
 class JWTToken implements JWT {
     generateToken(userId: string): string {

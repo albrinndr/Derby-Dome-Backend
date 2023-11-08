@@ -1,7 +1,7 @@
 import Club, { Manager, Player } from "../domain/club";
 import ClubRepository from "../infrastructure/repository/clubRepository";
-import JWTToken from "../infrastructure/utils/generateToken";
-import Encrypt from "../infrastructure/utils/bcryptPassword";
+import JWTToken from "../infrastructure/services/generateToken";
+import Encrypt from "../infrastructure/services/bcryptPassword";
 
 class ClubUseCase {
     private ClubRepository: ClubRepository;

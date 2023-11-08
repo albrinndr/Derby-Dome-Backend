@@ -10,12 +10,12 @@ import StadiumUseCase from '../../useCase/stadiumUseCase';
 import AdminController from '../../adapters/controllers/adminController';
 import BannerController from '../../adapters/controllers/bannerController';
 import StadiumController from '../../adapters/controllers/stadiumController';
-import JWTToken from '../utils/generateToken';
-import Encrypt from '../utils/bcryptPassword';
+import JWTToken from '../services/generateToken';
+import Encrypt from '../services/bcryptPassword';
 import CloudinaryUpload from '../utils/cloudinaryUpload';
 import { protect } from '../middleware/adminAuth';
 import { ImageUpload } from '../middleware/multer';
-import ScheduleTask from '../utils/scheduleTask';
+import ScheduleTask from '../services/scheduleTask';
 import FixtureRepository from '../repository/fixtureRepository';
 
 const encrypt = new Encrypt();

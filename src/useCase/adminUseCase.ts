@@ -2,8 +2,8 @@ import AdminRepository from "../infrastructure/repository/adminRepository";
 import UserRepository from "../infrastructure/repository/userRepository";
 import ClubRepository from "../infrastructure/repository/clubRepository";
 import Admin from "../domain/admin";
-import Encrypt from "../infrastructure/utils/bcryptPassword";
-import JWTToken from "../infrastructure/utils/generateToken";
+import Encrypt from "../infrastructure/services/bcryptPassword";
+import JWTToken from "../infrastructure/services/generateToken";
 
 type UserType = {
     _id: string;

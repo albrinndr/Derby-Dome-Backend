@@ -1,7 +1,7 @@
 import User from "../domain/user";
-import Encrypt from "../infrastructure/utils/bcryptPassword";
+import Encrypt from "../infrastructure/services/bcryptPassword";
 import UserRepository from "../infrastructure/repository/userRepository";
-import JWTToken from "../infrastructure/utils/generateToken";
+import JWTToken from "../infrastructure/services/generateToken";
 
 class UserUseCase {
     private UserRepository: UserRepository;

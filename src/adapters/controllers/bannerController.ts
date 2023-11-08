@@ -25,7 +25,7 @@ class BannerController {
     async updateBanner(req: Request, res: Response) {
         try {
             if (req.file) {
-                const img = await this.CloudinaryUpload.upload(req.file.path,'banners');
+                const img = await this.CloudinaryUpload.upload(req.file.path, 'banners');
                 const imgUrl = img.secure_url;
                 const reqData = {
                     image: imgUrl,

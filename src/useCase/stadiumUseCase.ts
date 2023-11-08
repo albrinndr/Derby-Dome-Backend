@@ -1,7 +1,7 @@
 import { Seats, Time } from "../domain/stadium";
 import FixtureRepository from "../infrastructure/repository/fixtureRepository";
 import StadiumRepository from "../infrastructure/repository/stadiumRepository";
-import ScheduleTask from "../infrastructure/utils/scheduleTask";
+import ScheduleTask from "../infrastructure/services/scheduleTask";
 
 class StadiumUseCase {
     private StadiumRepository: StadiumRepository;
@@ -17,7 +17,7 @@ class StadiumUseCase {
         if (!timeExists) {
             let values = { ...timeData };
             const fixtureData = await this.FixtureRepository.findAllFixtures();
-            if(fixtureData.length===0) values = {...timeData,showDate:new Date(new Date().setDate(new Date().getDate() + 10))}
+            if (fixtureData.length === 0) values = { ...timeData, showDate: new Date(new Date().setDate(new Date().getDate() + 10)) };
             const newTime = await this.StadiumRepository.saveTime(values);
             return {
                 status: 200,

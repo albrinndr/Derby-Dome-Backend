@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import fs from 'fs';
 import ClubUseCase from "../../useCase/clubUseCase";
-import GenerateEmail from "../../infrastructure/utils/sendMail";
-import GenerateOtp from "../../infrastructure/utils/generateOtp";
+import GenerateEmail from "../../infrastructure/services/sendMail";
+import GenerateOtp from "../../infrastructure/services/generateOtp";
 import CloudinaryUpload from "../../infrastructure/utils/cloudinaryUpload";
 
 
