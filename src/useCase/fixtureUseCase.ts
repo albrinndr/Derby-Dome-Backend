@@ -52,6 +52,7 @@ class FixtureUseCase {
             });
         }
 
+        const clubXIExists = await this.ClubRepository.findTeamPlayerCount(clubId);
 
 
         if (!allTimes || allTimes.length < 1) {
@@ -62,7 +63,7 @@ class FixtureUseCase {
         }
         return {
             status: 200,
-            data: { times: allTimes, clubs: allClubs }
+            data: { times: allTimes, clubs: allClubs, team: clubXIExists }
         };
     }
 

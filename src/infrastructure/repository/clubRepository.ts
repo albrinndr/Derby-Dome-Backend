@@ -158,6 +158,20 @@ class ClubRepository implements ClubRepo {
         );
         return player2Update;
     }
+
+    async findTeamPlayerCount(clubId: string): Promise<boolean> {
+        const club = await ClubModel.findOne({ _id: clubId }, 'team.players').exec();
+        if (club && club.team && club.team.players) {
+            if (club.team.players.length >= 11) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+    }
 }
 
 export default ClubRepository;
