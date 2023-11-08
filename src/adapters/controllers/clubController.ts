@@ -280,6 +280,19 @@ class ClubController {
         }
     }
 
+    async changeStartingXI(req: Request, res: Response) {
+        try {
+            const clubId = req.clubId || "";
+            const p1Id = req.params.p1Id;
+            const p2Id = req.params.p2Id;
+            const result = await this.clubCase.changeStartingXI(clubId, p1Id, p2Id);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
 }
 
 export default ClubController;

@@ -56,5 +56,6 @@ router.put('/editManager', protect, ImageUpload.single('image'), (req, res) => c
 router.post('/addPlayer', protect, ImageUpload.single('image'), (req, res) => controller.addNewPlayer(req, res));
 router.put('/editPlayer', protect, ImageUpload.single('image'), (req, res) => controller.editPlayer(req, res));
 router.delete('/deletePlayer/:id', protect, (req, res) => controller.deletePlayer(req, res));
+router.put('/changeXI/:p1Id/:p2Id', protect, (req, res) => controller.changeStartingXI(req, res));
 
 export default router;

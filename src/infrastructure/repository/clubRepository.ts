@@ -137,6 +137,27 @@ class ClubRepository implements ClubRepo {
         );
         return updatedPlayer;
     }
+
+    async swapStartingXI(clubId: string, player1Id: string, player2Id: string): Promise<any> {
+        await ClubModel.findOneAndUpdate(
+            { _id: clubId, 'team.players._id': player1Id },
+            {
+                $set: {
+                    'team.players.$.startingXI': true
+                }
+            }
+        );
+        const player2Update = await ClubModel.findOneAndUpdate(
+            { _id: clubId, 'team.players._id': player2Id },
+            {
+                $set: {
+                    'team.players.$.startingXI': false
+                }
+            },
+            { new: true }
+        );
+        return player2Update;
+    }
 }
 
 export default ClubRepository;

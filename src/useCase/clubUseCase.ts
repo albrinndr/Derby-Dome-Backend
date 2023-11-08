@@ -233,7 +233,22 @@ class ClubUseCase {
         } else {
             return {
                 status: 400,
-                data: "An error occurred"
+                data: { message: "An error occurred" }
+            };
+        }
+    }
+
+    async changeStartingXI(clubId: string, plId: string, p2Id: string) {
+        const result = await this.ClubRepository.swapStartingXI(clubId, plId, p2Id);
+        if (result) {
+            return {
+                status: 200,
+                data: result
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: "An error occurred!" }
             };
         }
     }
