@@ -1,18 +1,21 @@
 import Fixture from "../domain/fixture";
 import ClubRepository from "../infrastructure/repository/clubRepository";
 import FixtureRepository from "../infrastructure/repository/fixtureRepository";
+import PaymentRepository from "../infrastructure/repository/paymentRepository";
 import StadiumRepository from "../infrastructure/repository/stadiumRepository";
 
 class FixtureUseCase {
     private FixtureRepository: FixtureRepository;
     private ClubRepository: ClubRepository;
     private StadiumRepository: StadiumRepository;
+    private PaymentRepository: PaymentRepository;
     constructor(FixtureRepository: FixtureRepository, ClubRepository: ClubRepository
-        , StadiumRepository: StadiumRepository
+        , StadiumRepository: StadiumRepository, PaymentRepository: PaymentRepository
     ) {
         this.FixtureRepository = FixtureRepository;
         this.ClubRepository = ClubRepository;
         this.StadiumRepository = StadiumRepository;
+        this.PaymentRepository = PaymentRepository;
     }
 
     async fixtureContent(date: Date, clubId: string) {
@@ -21,6 +24,7 @@ class FixtureUseCase {
 
         let allClubs = await this.ClubRepository.findAllClubs();
         let allTimes = await this.StadiumRepository.findAllTime();
+
 
         if (allClubs) allClubs = allClubs.filter((club: any) => club._id != clubId.toString());
 
@@ -52,6 +56,7 @@ class FixtureUseCase {
             });
         }
 
+
         const clubXIExists = await this.ClubRepository.findTeamPlayerCount(clubId);
 
 
@@ -67,7 +72,40 @@ class FixtureUseCase {
         };
     }
 
+    async paymentGenerate(data: Fixture) {
+        if (data.awayTeamId) {
+            const club = await this.ClubRepository.findById(data.awayTeamId);
+            if (!club) {
+                return {
+                    status: 400,
+                    data: { message: 'Select a valid club!' }
+                };
+            } else {
+                const price = data.price || 100;
+                const fixtureName = `${data.title} against ${club.name} at ${data.time}`;
+                
+                const stripeId = await this.PaymentRepository.confirmPayment(price, fixtureName);
+
+                return {
+                    status: 200,
+                    data: { stripeSessionId: stripeId }
+                };
+            }
+        } else {
+            const price = data.price || 100;
+            const fixtureName = `${data.title} against ${data.awayTeam} at ${data.time}`;
+
+            const stripeId = await this.PaymentRepository.confirmPayment(price, fixtureName);
+
+            return {
+                status: 200,
+                data: { stripeSessionId: stripeId }
+            };
+        }
+    }
+
     async addNewFixture(data: Fixture) {
+
         if (data.awayTeamId) {
             const club = await this.ClubRepository.findById(data.awayTeamId);
             if (!club) {
@@ -83,8 +121,10 @@ class FixtureUseCase {
                 clubId: data.clubId
             };
             const newFixture = await this.FixtureRepository.saveFixture(fixture);
+
             return {
                 status: 200,
+                // data: newFixture
                 data: newFixture
             };
         } else {
@@ -93,8 +133,10 @@ class FixtureUseCase {
                 clubId: data.clubId
             };
             const newFixture = await this.FixtureRepository.saveFixture(fixture);
+
             return {
                 status: 200,
+                // data: newFixture
                 data: newFixture
             };
         }

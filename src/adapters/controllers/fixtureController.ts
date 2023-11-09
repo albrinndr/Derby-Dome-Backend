@@ -2,14 +2,12 @@ import { Request, Response } from "express";
 import FixtureUseCase from "../../useCase/fixtureUseCase";
 import CloudinaryUpload from "../../infrastructure/utils/cloudinaryUpload";
 
-
 class FixtureController {
     private FixtureCase: FixtureUseCase;
     private CloudinaryUpload: CloudinaryUpload;
     constructor(FixtureCase: FixtureUseCase, CloudinaryUpload: CloudinaryUpload) {
         this.FixtureCase = FixtureCase;
         this.CloudinaryUpload = CloudinaryUpload;
-
     }
 
     async getFixtureFormContent(req: Request, res: Response) {
@@ -30,8 +28,11 @@ class FixtureController {
             if (req.file) {
                 const imageUrl = await this.CloudinaryUpload.upload(req.file.path, 'matchday-posters');
                 const formData = { ...req.body, clubId: req.clubId, poster: imageUrl.secure_url };
-
-                const fixture = await this.FixtureCase.addNewFixture(formData);
+                req.app.locals.paymentData = {
+                    user: 'club',
+                    data: formData
+                };
+                const fixture = await this.FixtureCase.paymentGenerate(formData);
                 res.status(fixture.status).json(fixture.data);
             } else {
                 res.status(400).json({ message: 'Upload a matchday Poster' });

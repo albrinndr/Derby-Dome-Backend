@@ -14,11 +14,12 @@ import FixtureRepository from '../repository/fixtureRepository';
 import StadiumRepository from '../repository/stadiumRepository';
 import FixtureUseCase from '../../useCase/fixtureUseCase';
 import FixtureController from '../../adapters/controllers/fixtureController';
-
+import PaymentRepository from '../repository/paymentRepository';
 
 const repository = new ClubRepository();
 const fixtureRepository = new FixtureRepository();
 const stadiumRepository = new StadiumRepository();
+const paymentRepository = new PaymentRepository();
 
 const encrypt = new Encrypt();
 const token = new JWTToken();
@@ -27,7 +28,7 @@ const email = new GenerateEmail();
 const cloudinary = new CloudinaryUpload();
 
 const clubCase = new ClubUseCase(repository, encrypt, token);
-const fixtureCase = new FixtureUseCase(fixtureRepository, repository, stadiumRepository);
+const fixtureCase = new FixtureUseCase(fixtureRepository, repository, stadiumRepository, paymentRepository);
 
 const controller = new ClubController(clubCase, email, otp, cloudinary);
 const fixtureController = new FixtureController(fixtureCase, cloudinary);
