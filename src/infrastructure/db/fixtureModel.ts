@@ -22,7 +22,7 @@ const FixtureSchema = new Schema<Fixture>({
     clubId: { type: Schema.Types.ObjectId, required: true, ref: 'Club' },
     awayTeamId: { type: Schema.Types.ObjectId, ref: 'Club' },
     awayTeam: { type: String },
-    awayTeamLogo: { type: String, default: 'https://res.cloudinary.com/ddzzicdji/image/upload/v1699098949/club-logos/uejuc5ybw3wqd9ivewom.png' },
+    awayTeamLogo: { type: String, default: 'https://res.cloudinary.com/ddzzicdji/image/upload/v1699593473/DEFAULT/ilfncp844ygtb7komklz.png' },
     date: { type: Date, required: true },
     time: { type: String, required: true },
     dateTime: { type: Date },

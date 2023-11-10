@@ -2,16 +2,28 @@ import User from "../domain/user";
 import Encrypt from "../infrastructure/services/bcryptPassword";
 import UserRepository from "../infrastructure/repository/userRepository";
 import JWTToken from "../infrastructure/services/generateToken";
+import BannerRepository from "../infrastructure/repository/bannerRepository";
+import FixtureRepository from "../infrastructure/repository/fixtureRepository";
+import StadiumRepository from "../infrastructure/repository/stadiumRepository";
 
 class UserUseCase {
     private UserRepository: UserRepository;
     private Encrypt: Encrypt;
     private JWTToken: JWTToken;
+    private BannerRepository: BannerRepository;
+    private FixtureRepository: FixtureRepository;
+    private StadiumRepository: StadiumRepository;
 
-    constructor(UserRepository: UserRepository, Encrypt: Encrypt, JWTToken: JWTToken) {
+    constructor(UserRepository: UserRepository, Encrypt: Encrypt, JWTToken: JWTToken,
+        BannerRepository: BannerRepository, FixtureRepository: FixtureRepository,
+        StadiumRepository: StadiumRepository
+    ) {
         this.UserRepository = UserRepository;
         this.Encrypt = Encrypt;
         this.JWTToken = JWTToken;
+        this.BannerRepository = BannerRepository;
+        this.FixtureRepository = FixtureRepository;
+        this.StadiumRepository = StadiumRepository;
 
     }
 
@@ -135,6 +147,24 @@ class UserUseCase {
                 data: { message: 'User not found' }
             };
         }
+    }
+
+    async userHome() {
+        const banners = await this.BannerRepository.findAll();
+        const fixtures = (await this.FixtureRepository.findAllFixtures()).reverse();
+        const seats = await this.StadiumRepository.getAllSeats();
+        const prices = seats.map((seat: any) => seat.price);
+        prices.sort((a, b) => a - b);
+
+        const minPrice = prices[0] ? prices[0] : 0;
+
+        let fixtureData = [];
+        if (fixtures.length > 3) fixtureData = fixtures.slice(0, 3);
+        else fixtureData = fixtures;
+        return {
+            status: 200,
+            data: { banners: banners, fixtures: fixtureData,minPrice }
+        };
     }
 }
 

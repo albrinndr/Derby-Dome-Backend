@@ -15,10 +15,10 @@ class BannerRepository implements BannerRepo {
         return newData;
     }
 
-    async findAll(): Promise<{}[] | null> {
+    async findAll(): Promise<{}[]> {
         const data = await BannerModel.find();
         if (data) return data;
-        return null;
+        return [];
     }
 }
 

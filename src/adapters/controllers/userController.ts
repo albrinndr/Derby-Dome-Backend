@@ -145,6 +145,16 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
+    async userHomeContent(req: Request, res: Response) {
+        try {
+            const result = await this.userCase.userHome();
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default UserController;

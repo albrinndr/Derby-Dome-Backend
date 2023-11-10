@@ -124,7 +124,7 @@ class StadiumRepository implements StadiumRepo {
 
     }
 
-    async getAllSeats(): Promise<any> {
+    async getAllSeats(): Promise<[]> {
         const seats = await StadiumModel.aggregate([{ $project: { _id: 0, seats: 1 } }]);
         if (seats && seats[0] && seats[0].seats) {
             return seats[0].seats;

@@ -4,7 +4,7 @@ import FixtureModel from "../db/fixtureModel";
 
 class FixtureRepository implements FixtureRepo {
     async findAllFixtures(): Promise<{}[]> {
-        const data = await FixtureModel.find({}).populate('awayTeamId');
+        const data = await FixtureModel.find({}).populate('awayTeamId').populate('clubId')
         if (data && data.length > 0) return data;
         return [];
     }
