@@ -155,6 +155,16 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
+    async fixtureContent(req: Request, res: Response){
+        try {
+            const result = await this.userCase.allFixtures();
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default UserController;

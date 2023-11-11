@@ -14,6 +14,7 @@ interface Fixture extends Document {
     status: string;
     rescheduled: boolean;
     price: number;
+    checkDate?: Date;
 }
 
 
@@ -29,7 +30,8 @@ const FixtureSchema = new Schema<Fixture>({
     poster: { type: String },
     status: { type: String, default: 'active' },
     rescheduled: { type: Boolean, default: false },
-    price: { type: Number, required: true }
+    price: { type: Number, required: true },
+    checkDate: { type: Date }
 }, {
     timestamps: true
 });

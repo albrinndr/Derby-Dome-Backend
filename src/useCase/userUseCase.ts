@@ -5,6 +5,7 @@ import JWTToken from "../infrastructure/services/generateToken";
 import BannerRepository from "../infrastructure/repository/bannerRepository";
 import FixtureRepository from "../infrastructure/repository/fixtureRepository";
 import StadiumRepository from "../infrastructure/repository/stadiumRepository";
+import ClubRepository from "../infrastructure/repository/clubRepository";
 
 class UserUseCase {
     private UserRepository: UserRepository;
@@ -13,10 +14,11 @@ class UserUseCase {
     private BannerRepository: BannerRepository;
     private FixtureRepository: FixtureRepository;
     private StadiumRepository: StadiumRepository;
+    private ClubRepository: ClubRepository;
 
     constructor(UserRepository: UserRepository, Encrypt: Encrypt, JWTToken: JWTToken,
         BannerRepository: BannerRepository, FixtureRepository: FixtureRepository,
-        StadiumRepository: StadiumRepository
+        StadiumRepository: StadiumRepository, ClubRepository: ClubRepository
     ) {
         this.UserRepository = UserRepository;
         this.Encrypt = Encrypt;
@@ -24,6 +26,7 @@ class UserUseCase {
         this.BannerRepository = BannerRepository;
         this.FixtureRepository = FixtureRepository;
         this.StadiumRepository = StadiumRepository;
+        this.ClubRepository = ClubRepository;
 
     }
 
@@ -163,7 +166,25 @@ class UserUseCase {
         else fixtureData = fixtures;
         return {
             status: 200,
-            data: { banners: banners, fixtures: fixtureData,minPrice }
+            data: { banners: banners, fixtures: fixtureData, minPrice }
+        };
+    }
+
+    async allFixtures() {
+        let fixtures = (await this.FixtureRepository.findAllFixtures()).reverse();
+        const clubs = await this.ClubRepository.findAllClubs();
+
+
+
+        const currentDate = new Date().setHours(0, 0, 0, 0);
+        fixtures = fixtures.filter((fixture: any) => currentDate < (new Date(fixture.date).setHours(0, 0, 0, 0)));
+
+        return {
+            status: 200,
+            data: {
+                fixtures: fixtures,
+                clubs: clubs
+            }
         };
     }
 }

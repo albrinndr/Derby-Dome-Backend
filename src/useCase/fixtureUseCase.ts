@@ -83,7 +83,7 @@ class FixtureUseCase {
             } else {
                 const price = data.price || 100;
                 const fixtureName = `${data.title} against ${club.name} at ${data.time}`;
-                
+
                 const stripeId = await this.PaymentRepository.confirmPayment(price, fixtureName);
 
                 return {
@@ -114,11 +114,14 @@ class FixtureUseCase {
                     data: { message: 'Select a valid club!' }
                 };
             }
+            let checkDate = new Date();
+            checkDate.setDate(checkDate.getDate() + 2);
             const fixture = {
                 ...data,
                 awayTeam: club.name,
                 awayTeamLogo: club.image,
-                clubId: data.clubId
+                clubId: data.clubId,
+                checkDate: checkDate
             };
             const newFixture = await this.FixtureRepository.saveFixture(fixture);
 
@@ -128,9 +131,12 @@ class FixtureUseCase {
                 data: newFixture
             };
         } else {
+            let checkDate = new Date();
+            checkDate.setDate(checkDate.getDate() + 2);
             const fixture = {
                 ...data,
-                clubId: data.clubId
+                clubId: data.clubId,
+                checkDate: checkDate
             };
             const newFixture = await this.FixtureRepository.saveFixture(fixture);
 

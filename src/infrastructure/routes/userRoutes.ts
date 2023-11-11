@@ -15,6 +15,7 @@ import BannerController from '../../adapters/controllers/bannerController';
 import CloudinaryUpload from '../utils/cloudinaryUpload';
 import FixtureRepository from '../repository/fixtureRepository';
 import StadiumRepository from '../repository/stadiumRepository';
+import ClubRepository from '../repository/clubRepository';
 
 
 const encrypt = new Encrypt();
@@ -27,8 +28,9 @@ const repository = new UserRepository();
 const bannerRepository = new BannerRepository();
 const fixtureRepository = new FixtureRepository();
 const stadiumRepository = new StadiumRepository();
+const clubRepository = new ClubRepository();
 
-const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository,stadiumRepository);
+const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
@@ -46,7 +48,9 @@ router.post('/logout', (req, res) => controller.logout(req, res));
 router.get('/profile', protect, (req, res) => controller.profile(req, res));
 router.put('/profile', protect, ImageUpload.single('profilePic'), (req, res) => controller.updateProfile(req, res));
 
-router.get('/banner', (req, res) => bannerController.getBanners(req, res));
 router.get('/home', (req, res) => controller.userHomeContent(req, res));
+router.get('/fixtures', (req, res) => controller.fixtureContent(req, res));
+
+
 
 export default router;
