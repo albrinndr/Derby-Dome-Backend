@@ -11,6 +11,7 @@ interface Fixture {
     status?: string;
     rescheduled?: boolean;
     price?: number;
+    checkDate?: Date;
 }
 
 export default Fixture;
