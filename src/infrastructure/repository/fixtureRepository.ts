@@ -4,7 +4,7 @@ import FixtureModel from "../db/fixtureModel";
 
 class FixtureRepository implements FixtureRepo {
     async findAllFixtures(): Promise<{}[]> {
-        const data = await FixtureModel.find({}).populate('awayTeamId').populate('clubId')
+        const data = await FixtureModel.find({}).populate('awayTeamId').populate('clubId');
         if (data && data.length > 0) return data;
         return [];
     }
@@ -26,6 +26,17 @@ class FixtureRepository implements FixtureRepo {
         if (result) return true;
         return false;
     }
+
+    async findByIdNotCancelled(id: string): Promise<any | null> {
+        try {
+            const result = await FixtureModel.findOne({ _id: id, status: { $ne: 'cancelled' } }).populate('clubId').populate('awayTeamId');
+            if (result) return result;
+            return null;
+        } catch (error) {
+            return null;
+        }
+    }
+
 }
 
 export default FixtureRepository;

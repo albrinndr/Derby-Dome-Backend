@@ -51,6 +51,7 @@ router.put('/profile', protect, ImageUpload.single('profilePic'), (req, res) => 
 router.get('/home', (req, res) => controller.userHomeContent(req, res));
 router.get('/fixtures', (req, res) => controller.fixtureContent(req, res));
 router.get('/search', (req, res) => controller.userSearch(req, res));
+router.get('/fixtureDetails', (req, res) => controller.fixtureDetails(req, res));
 
 
 

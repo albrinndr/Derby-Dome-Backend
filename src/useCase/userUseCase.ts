@@ -220,7 +220,7 @@ class UserUseCase {
                 return today > checkDate;
             }
         });
-       
+
         return {
             status: 200,
             data: {
@@ -229,6 +229,14 @@ class UserUseCase {
             }
         };
 
+    }
+
+    async fixtureDetails(id: string) {
+        const result = await this.FixtureRepository.findByIdNotCancelled(id);
+        return {
+            status: 200,
+            data: result
+        };
     }
 }
 

@@ -5,6 +5,7 @@ interface FixtureRepo {
     saveFixture(fixture: Fixture): Promise<any>;
     findFixturesByClubId(id: string): Promise<{}[]>;
     findFixtureByIdAndCancel(id: string): Promise<boolean>;
+    findByIdNotCancelled(id: string): Promise<any | null>;
 }
 
 export default FixtureRepo;
