@@ -186,6 +186,17 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
+    async clubDetails(req: Request, res: Response) {
+        try {
+            const id = req.query.id as string;
+            const result = await this.userCase.clubDetails(id);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default UserController;

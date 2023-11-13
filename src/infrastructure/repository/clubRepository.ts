@@ -15,8 +15,13 @@ class ClubRepository implements ClubRepo {
     }
 
     async findById(_id: string): Promise<Club | null> {
-        const club = await ClubModel.findById({ _id });
-        return club;
+        try {
+            const club = await ClubModel.findById({ _id });
+            if (club) return club;
+            return null;
+        } catch (error) {
+            return null;
+        }
     }
 
     async findAllClubs(): Promise<{}[] | null> {

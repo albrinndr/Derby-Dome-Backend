@@ -238,6 +238,33 @@ class UserUseCase {
             data: result
         };
     }
+
+    async clubDetails(id: string) {
+        const club = await this.ClubRepository.findById(id);
+        let fixtures = await this.FixtureRepository.findFixturesByClubId(id);
+        const currentDate = new Date().setHours(0, 0, 0, 0);
+        fixtures = fixtures.filter((fixture: any) => currentDate < (new Date(fixture.date).setHours(0, 0, 0, 0)));
+
+        fixtures = fixtures.filter((fixture: Fixture) => {
+            if (fixture.checkDate) {
+                const today = new Date();
+                const checkDate = new Date(fixture.checkDate);
+                today.setHours(0, 0, 0, 0);
+                checkDate.setHours(0, 0, 0, 0);
+                return today > checkDate;
+            }
+        });
+
+        let slicedFixtures = fixtures.length > 3 ? fixtures.slice(0, 3) : fixtures;
+
+        return {
+            status: 200,
+            data: {
+                club,
+                fixtures:slicedFixtures
+            }
+        };
+    }
 }
 
 export default UserUseCase;

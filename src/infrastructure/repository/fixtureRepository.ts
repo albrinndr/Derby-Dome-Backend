@@ -16,9 +16,13 @@ class FixtureRepository implements FixtureRepo {
     }
 
     async findFixturesByClubId(id: string): Promise<{}[]> {
-        const fixtures = await FixtureModel.find({ clubId: id, status: 'active' });
-        if (fixtures && fixtures.length > 0) return fixtures;
-        return [];
+        try {
+            const fixtures = await FixtureModel.find({ clubId: id, status: 'active' }).populate('clubId');
+            if (fixtures && fixtures.length > 0) return fixtures;
+            return [];
+        } catch (error) {
+            return [];
+        }
     }
 
     async findFixtureByIdAndCancel(id: string): Promise<boolean> {
