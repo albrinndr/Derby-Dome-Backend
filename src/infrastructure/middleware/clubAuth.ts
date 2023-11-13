@@ -25,7 +25,11 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
             const club = await clubRepo.findById(decoded.userId as string);
             if (club) {
                 req.clubId = club._id;
-                next();
+                if (club.isBlocked) {
+                    return res.status(401).json({ message: 'Club have been blocked by admin!' });
+                } else {
+                    next();
+                }
             } else {
                 return res.status(401).json({ message: 'Not authorized, invalid token' });
             }
