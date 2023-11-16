@@ -16,6 +16,9 @@ import CloudinaryUpload from '../utils/cloudinaryUpload';
 import FixtureRepository from '../repository/fixtureRepository';
 import StadiumRepository from '../repository/stadiumRepository';
 import ClubRepository from '../repository/clubRepository';
+import ChatRepository from '../repository/chatRepository';
+import ChatUseCase from '../../useCase/chatUseCase';
+import ChatController from '../../adapters/controllers/chatController';
 
 
 const encrypt = new Encrypt();
@@ -29,13 +32,15 @@ const bannerRepository = new BannerRepository();
 const fixtureRepository = new FixtureRepository();
 const stadiumRepository = new StadiumRepository();
 const clubRepository = new ClubRepository();
+const chatRepository = new ChatRepository();
 
 const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
+const chatCase = new ChatUseCase(chatRepository);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
-
+const chatController = new ChatController(chatCase);
 
 const router = express.Router();
 
@@ -53,5 +58,8 @@ router.get('/fixtures', (req, res) => controller.fixtureContent(req, res));
 router.get('/search', (req, res) => controller.userSearch(req, res));
 router.get('/fixtureDetails', (req, res) => controller.fixtureDetails(req, res));
 router.get('/clubDetails', (req, res) => controller.clubDetails(req, res));
+
+router.post('/message', protect, (req, res) => chatController.sendMessage(req, res));
+router.get('/message', protect, (req, res) => chatController.getMessages(req, res));
 
 export default router;

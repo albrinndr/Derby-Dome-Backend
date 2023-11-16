@@ -1,0 +1,15 @@
+import ChatModel from "../db/ChatModel";
+
+class ChatRepository implements ChatRepo {
+    async sendMessage(data: Chat): Promise<{}> {
+        const message = new ChatModel(data);
+        await message.save();
+        return message;
+    }
+    async getMessages(): Promise<any> {
+        const messages = await ChatModel.find().populate('senderId')
+        return messages;
+    }
+}
+
+export default ChatRepository;

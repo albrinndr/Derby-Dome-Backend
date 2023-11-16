@@ -157,9 +157,15 @@ class UserUseCase {
         const banners = await this.BannerRepository.findAll();
         const fixtures = (await this.FixtureRepository.findAllFixtures()).reverse();
         const seats = await this.StadiumRepository.getAllSeats();
+        let clubs = await this.ClubRepository.findAllClubs();
+
+        if (clubs && clubs.length > 0) {
+            clubs = clubs?.filter((club: any) => club.isBlocked === false);
+            if (clubs.length > 4) clubs = clubs.slice(0, 4);
+        }
+
         const prices = seats.map((seat: any) => seat.price);
         prices.sort((a, b) => a - b);
-
         const minPrice = prices[0] ? prices[0] : 0;
 
         let fixtureData: Fixture[] = [];
@@ -184,7 +190,7 @@ class UserUseCase {
 
         return {
             status: 200,
-            data: { banners: banners, fixtures: fixtureData, minPrice }
+            data: { banners: banners, fixtures: fixtureData, minPrice, clubs }
         };
     }
 
@@ -261,7 +267,7 @@ class UserUseCase {
             status: 200,
             data: {
                 club,
-                fixtures:slicedFixtures
+                fixtures: slicedFixtures
             }
         };
     }
