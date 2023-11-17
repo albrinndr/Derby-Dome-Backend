@@ -155,7 +155,8 @@ class UserUseCase {
 
     async userHome() {
         const banners = await this.BannerRepository.findAll();
-        const fixtures = (await this.FixtureRepository.findAllFixtures()).reverse();
+        let fixtures = (await this.FixtureRepository.findAllFixtures()).reverse();
+        fixtures = fixtures.filter((fixture: any) => fixture.status === 'active');
         const seats = await this.StadiumRepository.getAllSeats();
         let clubs = await this.ClubRepository.findAllClubs();
 
@@ -196,6 +197,7 @@ class UserUseCase {
 
     async allFixtures() {
         let fixtures = (await this.FixtureRepository.findAllFixtures()).reverse();
+        fixtures = fixtures.filter((fixture: any) => fixture.status === 'active');
         const clubs = await this.ClubRepository.findAllClubs();
 
         const currentDate = new Date().setHours(0, 0, 0, 0);
@@ -212,6 +214,8 @@ class UserUseCase {
 
     async userSearch() {
         let fixtures: Fixture[] = (await this.FixtureRepository.findAllFixtures()).reverse();
+        fixtures = fixtures.filter((fixture: any) => fixture.status === 'active');
+        
         const clubs = await this.ClubRepository.findAllClubs();
 
         const currentDate = new Date().setHours(0, 0, 0, 0);
