@@ -165,7 +165,7 @@ class UserUseCase {
             if (clubs.length > 4) clubs = clubs.slice(0, 4);
         }
 
-        const prices = seats.map((seat: any) => seat.price);
+        const prices = seats.map((seat: any) => seat.price.economy);
         prices.sort((a, b) => a - b);
         const minPrice = prices[0] ? prices[0] : 0;
 

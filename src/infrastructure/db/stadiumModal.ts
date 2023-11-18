@@ -9,7 +9,11 @@ const StadiumSchema: Schema = new Schema<Stadium & Document>({
     }],
     seats: [{
         stand: { type: String },
-        price: { type: Number }
+        price: {
+            vip: { type: Number },
+            premium: { type: Number },
+            economy: { type: Number }
+        }
     }]
 }, {
     timestamps: true

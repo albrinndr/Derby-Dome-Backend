@@ -75,8 +75,8 @@ class StadiumUseCase {
 
     }
 
-    async setSeatPrice(seatData: Seats) {
-        await this.StadiumRepository.seatPriceSave(seatData.stand, seatData.price);
+    async setSeatPrice(seatData: any) {
+        await this.StadiumRepository.seatPriceSave(seatData.stand,seatData.seatName,seatData.price);
         return {
             status: 200,
             data: { message: 'Seat price updated!' }

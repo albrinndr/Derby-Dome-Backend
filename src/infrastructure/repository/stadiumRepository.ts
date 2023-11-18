@@ -5,26 +5,26 @@ import StadiumModel from "../db/stadiumModal";
 class StadiumRepository implements StadiumRepo {
     async saveTime(time: Time): Promise<any> {
         const stadium = await StadiumModel.findOne();
+
         if (stadium) {
             stadium.timings.push({
                 time: time.time,
                 price: time.price,
-                // newPrice: time.price,
-                // delete: time.delete,
                 showDate: time.showDate,
             });
+
             await stadium.save();
             return stadium;
+
         } else {
             const stadium = new StadiumModel({
                 timings: [{
                     time: time.time,
                     price: time.price,
-                    // newPrice: time.price,
-                    // delete: time.delete,
                     showDate: time.showDate,
                 }]
             });
+            
             await stadium.save();
             return stadium;
         }
@@ -38,7 +38,6 @@ class StadiumRepository implements StadiumRepo {
 
     async findAllTime(): Promise<{}[] | null> {
         const matchTimings = await StadiumModel.aggregate([{ $project: { _id: 0, timings: 1 } }]);
-        // return matchTimings[0].timings;
         if (matchTimings && matchTimings[0] && matchTimings[0].timings) {
             return matchTimings[0].timings;
         } else {
@@ -52,17 +51,6 @@ class StadiumRepository implements StadiumRepo {
         return null;
     }
 
-    // async updateNewPrice(id: string, price: number): Promise<any> {
-    //     await StadiumModel.findOneAndUpdate(
-    //         { 'timings._id': id },
-    //         {
-    //             $set: {
-    //                 'timings.$.newPrice': price,
-    //                 'timings.$.showDate': new Date(new Date().setDate(new Date().getDate() + 12))
-    //             }
-    //         }
-    //     );
-    // }
 
     async updatePrice(id: string, price: number): Promise<any> {
         await StadiumModel.findOneAndUpdate(
@@ -71,18 +59,6 @@ class StadiumRepository implements StadiumRepo {
         );
     }
 
-    // async setMatchDelete(id: string): Promise<any> {
-    //     await StadiumModel.findOneAndUpdate(
-    //         { 'timings._id': id },
-    //         {
-    //             $set: {
-    //                 'timings.$.delete': true,
-    //                 'timings.$.showDate': new Date(new Date().setDate(new Date().getDate() + 12))
-
-    //             }
-    //         }
-    //     );
-    // }
 
     async deleteMatchTime(id: string): Promise<any> {
         await StadiumModel.updateOne(
@@ -92,37 +68,54 @@ class StadiumRepository implements StadiumRepo {
 
     }
 
-    //////////////////////////////////seat price///////////////
+    /////////////////////seat price///////////////
 
-    async seatPriceSave(stand: string, price: number): Promise<any> {
+    async seatPriceSave( stand: string,seatName: string, price: number): Promise<any> {
         const stadium = await StadiumModel.findOne();
+
         if (stadium) {
+            const query: any = { 'seats.stand': stand };
+            query[`seats.price.${seatName}`] = price;
+
             const result = await StadiumModel.findOne({ 'seats.stand': stand });
+
             if (result) {
+                const updateQuery: any = {};
+                updateQuery[`seats.$.price.${seatName}`] = price;
+
                 await StadiumModel.updateOne(
                     { 'seats.stand': stand },
-                    { $set: { 'seats.$.price': price } }
+                    { $set: updateQuery }
                 );
             } else {
-                await StadiumModel.updateOne({},
-                    {
-                        $push: {
-                            seats: { stand: stand, price: price }
-                        }
+                const newStand = {
+                    stand,
+                    price: {
+                        [seatName]: price
                     }
+                };
+
+                await StadiumModel.updateOne(
+                    {},
+                    { $push: { seats: newStand } }
                 );
             }
+
         } else {
             const stadium = new StadiumModel({
+                timings: [],
                 seats: [{
-                    stand: stand,
-                    price: price
+                    stand,
+                    price: {
+                        [seatName]: price
+                    }
                 }]
             });
+
             await stadium.save();
         }
-
     }
+
 
     async getAllSeats(): Promise<[]> {
         const seats = await StadiumModel.aggregate([{ $project: { _id: 0, seats: 1 } }]);
