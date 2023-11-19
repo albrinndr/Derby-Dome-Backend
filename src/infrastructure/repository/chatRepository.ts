@@ -1,4 +1,4 @@
-import ChatModel from "../db/ChatModel";
+import ChatModel from "../db/chatModel";
 
 class ChatRepository implements ChatRepo {
     async sendMessage(data: Chat): Promise<{}> {

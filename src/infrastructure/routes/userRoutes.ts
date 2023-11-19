@@ -19,6 +19,10 @@ import ClubRepository from '../repository/clubRepository';
 import ChatRepository from '../repository/chatRepository';
 import ChatUseCase from '../../useCase/chatUseCase';
 import ChatController from '../../adapters/controllers/chatController';
+import CartController from '../../adapters/controllers/cartController';
+import CartUseCase from '../../useCase/cartUseCase';
+import GenerateSeats from '../services/generateSeats';
+import CartRepository from '../repository/cartRepository';
 
 
 const encrypt = new Encrypt();
@@ -26,6 +30,7 @@ const jwt = new JWTToken();
 const otp = new GenerateOtp();
 const email = new GenerateEmail();
 const cloudinary = new CloudinaryUpload();
+const generateSeats = new GenerateSeats();
 
 const repository = new UserRepository();
 const bannerRepository = new BannerRepository();
@@ -33,14 +38,17 @@ const fixtureRepository = new FixtureRepository();
 const stadiumRepository = new StadiumRepository();
 const clubRepository = new ClubRepository();
 const chatRepository = new ChatRepository();
+const cartRepository = new CartRepository();
 
 const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 const chatCase = new ChatUseCase(chatRepository);
+const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
 const chatController = new ChatController(chatCase);
+const cartController = new CartController(cartCase);
 
 const router = express.Router();
 
@@ -61,5 +69,9 @@ router.get('/clubDetails', (req, res) => controller.clubDetails(req, res));
 
 router.post('/message', protect, (req, res) => chatController.sendMessage(req, res));
 router.get('/message', protect, (req, res) => chatController.getMessages(req, res));
+
+router.get('/booking', protect, (req, res) => controller.bookingPage(req, res));
+
+router.post('/addToCart', protect, (req, res) => cartController.addToCart(req, res));
 
 export default router;

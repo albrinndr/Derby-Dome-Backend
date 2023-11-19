@@ -6,6 +6,9 @@ export interface Time {
 }
 
 export interface Seats {
+    // vip: number;
+    // premium: number;
+    // economy: number;
     stand: string,
     price: {
         vip: number;
@@ -20,6 +23,15 @@ interface Stadium {
         price: number,
         showDate?: Date;
     }],
+    // seats: {
+    //     north: Seats;
+    //     south: Seats;
+    //     east: Seats;
+    //     west: {
+    //         vip: number;
+    //         premium: number;
+    //     };
+    // };
     seats: [{
         stand: string,
         price: {

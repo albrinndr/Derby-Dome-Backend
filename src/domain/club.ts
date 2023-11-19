@@ -37,8 +37,6 @@ interface Club {
     image?: string;
     password: string;
     isBlocked?: boolean;
-    cart?: {
-    }[];
     wallet?: number | null;
     contactPerson?: string,
     address?: string,

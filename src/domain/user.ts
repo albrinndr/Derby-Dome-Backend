@@ -5,8 +5,6 @@ interface User {
     password: string;
     phone?: string;
     isBlocked?: boolean;
-    cart?: {
-    }[];
     wallet?: number | null;
     isGoogle?: boolean;
     profilePic?:string

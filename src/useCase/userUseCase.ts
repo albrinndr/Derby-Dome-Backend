@@ -275,6 +275,18 @@ class UserUseCase {
             }
         };
     }
+
+    async bookingPage(id: string) {
+        const fixture = await this.FixtureRepository.findByIdNotCancelled(id);
+        const seats = await this.StadiumRepository.getAllSeats();
+        return {
+            status: 200,
+            data: {
+                fixture,
+                seats
+            }
+        };
+    }
 }
 
 export default UserUseCase;

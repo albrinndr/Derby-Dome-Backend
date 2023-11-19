@@ -1,5 +1,5 @@
 import mongoose, { ObjectId, Schema, Document } from "mongoose";
-import { TransformStreamDefaultController } from "stream/web";
+import { FixtureSeats } from "../../domain/fixture";
 
 interface Fixture extends Document {
     title: string;
@@ -15,8 +15,32 @@ interface Fixture extends Document {
     rescheduled: boolean;
     price: number;
     checkDate?: Date;
+    seats?: FixtureSeats;
 }
 
+const SeatDataSchema = {
+    seats: [{
+        seatNo: { type: Number },
+        status: { type: String }
+    }],
+    count: { type: Number, default: 50 }
+
+};
+
+const StandSeatsSchema = {
+    vip: {
+        A: SeatDataSchema,
+        B: SeatDataSchema
+    },
+    premium: {
+        C: { type: Number, default: 100 },
+        D: { type: Number, default: 100 }
+    },
+    economy: {
+        E: { type: Number, default: 100 },
+        F: { type: Number, default: 100 }
+    }
+};
 
 const FixtureSchema = new Schema<Fixture>({
     title: { type: String, required: true },
@@ -31,7 +55,16 @@ const FixtureSchema = new Schema<Fixture>({
     status: { type: String, default: 'active' },
     rescheduled: { type: Boolean, default: false },
     price: { type: Number, required: true },
-    checkDate: { type: Date }
+    checkDate: { type: Date },
+    seats: {
+        north: StandSeatsSchema,
+        south: StandSeatsSchema,
+        east: StandSeatsSchema,
+        west: {
+            vip: StandSeatsSchema.vip,
+            premium: StandSeatsSchema.premium,
+        },
+    }
 }, {
     timestamps: true
 });

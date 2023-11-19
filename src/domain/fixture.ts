@@ -1,3 +1,42 @@
+export interface SeatData {
+    seats: [{
+        seatNo: { type: number; },
+        status: { type: string; };
+    }],
+    count: 50;
+}
+
+export interface StandSeats {
+    vip: {
+        A: SeatData[];
+        B: SeatData[];
+    };
+    premium: {
+        C: 100;
+        D: 100;
+    };
+    economy: {
+        E: 100;
+        F: 100;
+    };
+}
+
+export interface FixtureSeats {
+    north: StandSeats;
+    south: StandSeats;
+    east: StandSeats;
+    west: {
+        vip: {
+            A: SeatData[];
+            B: SeatData[];
+        };
+        premium: {
+            C: 100;
+            D: 100;
+        };
+    };
+}
+
 interface Fixture {
     title?: string;
     clubId?: string;
@@ -12,6 +51,7 @@ interface Fixture {
     rescheduled?: boolean;
     price?: number;
     checkDate?: Date;
+    seats?: FixtureSeats;
 }
 
 export default Fixture;

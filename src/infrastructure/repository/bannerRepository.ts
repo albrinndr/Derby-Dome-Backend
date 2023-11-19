@@ -1,5 +1,5 @@
 import Banner from "../../domain/banner";
-import BannerModel from "../db/BannerModel";
+import BannerModel from "../db/bannerModel";
 import BannerRepo from "../../useCase/interface/bannerRepo";
 
 class BannerRepository implements BannerRepo {

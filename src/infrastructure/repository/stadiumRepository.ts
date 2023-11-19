@@ -24,7 +24,7 @@ class StadiumRepository implements StadiumRepo {
                     showDate: time.showDate,
                 }]
             });
-            
+
             await stadium.save();
             return stadium;
         }
@@ -70,9 +70,11 @@ class StadiumRepository implements StadiumRepo {
 
     /////////////////////seat price///////////////
 
-    async seatPriceSave( stand: string,seatName: string, price: number): Promise<any> {
+    async seatPriceSave(stand: string, seatName: string, price: number): Promise<any> {
+        // const updateQuery: any = { $set: {} };
+        // updateQuery.$set[`seats.${stand}.${seatName}`] = price;
+        // await StadiumModel.updateOne({}, updateQuery, { upsert: true });
         const stadium = await StadiumModel.findOne();
-
         if (stadium) {
             const query: any = { 'seats.stand': stand };
             query[`seats.price.${seatName}`] = price;
@@ -123,6 +125,20 @@ class StadiumRepository implements StadiumRepo {
             return seats[0].seats;
         } else {
             return [];
+        }
+    }
+
+    async getSeatPrices(): Promise<{}> {
+        const seats = await StadiumModel.aggregate([{ $project: { _id: 0, seats: 1 } }]);
+        if (seats && seats[0] && seats[0].seats) {
+            const priceObj: any = {};
+
+            seats[0].seats.forEach((seat: any) => {
+                priceObj[seat.stand] = seat.price;
+            });
+            return priceObj;
+        } else {
+            return {};
         }
     }
 }

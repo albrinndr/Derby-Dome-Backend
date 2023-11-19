@@ -9,8 +9,6 @@ const userSchema: Schema = new Schema<Club & Document>({
     image: { type: String, required: true },
     password: { type: String, required: true },
     isBlocked: { type: Boolean, default: false },
-    cart: [{
-    }],
     wallet: { type: Number, default: 0 },
     address: { type: String, required: true },
     contactPerson: { type: String, required: true },

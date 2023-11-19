@@ -7,7 +7,8 @@ interface StadiumRepo {
     updatePrice(id: string, price: number): Promise<any>;
     findTimeById(id: string): Promise<Stadium | null>;
     deleteMatchTime(id: string): Promise<any>;
-    seatPriceSave(stand:string,seatName: string, price: number): Promise<any>;
+    seatPriceSave(stand: string, seatName: string, price: number): Promise<any>;
     getAllSeats(): Promise<[]>;
+    getSeatPrices(): Promise<{}>;
 }
 export default StadiumRepo;
