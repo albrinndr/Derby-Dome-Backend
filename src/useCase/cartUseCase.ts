@@ -80,6 +80,30 @@ class CartUseCase {
             data: cart
         };
     }
+
+    async addToCartPremium(bookingData: CartI) {
+        const seatsPrices = await this.StadiumRepository.getSeatPrices();
+        const stadiumStandPrice = seatsPrices[bookingData.stand as keyof typeof seatsPrices];
+        const stadiumSeatPrice = stadiumStandPrice[bookingData.section];
+        const cartData = {
+            userId: bookingData.userId,
+            fixtureId: bookingData.fixtureId,
+            stand: bookingData.stand,
+            section: bookingData.section,
+            seats: bookingData.seats,
+            ticketCount: bookingData.ticketCount,
+            price: bookingData.ticketCount * stadiumSeatPrice
+        };
+
+        await this.CartRepository.deleteByUserId(bookingData.userId);
+        const cart: any = await this.CartRepository.save(cartData);
+        await this.ScheduleTask.removeFromCart(() => this.CartRepository.deleteByCartId(cart._id));
+
+        return {
+            status: 200,
+            data: cart
+        };
+    }
 }
 
 export default CartUseCase;

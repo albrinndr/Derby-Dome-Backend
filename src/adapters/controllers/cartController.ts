@@ -10,16 +10,31 @@ class CartController {
 
     async addToCart(req: Request, res: Response) {
         try {
-            const data: CartI = {
-                userId: req.userId || '',
-                fixtureId: req.body.fixtureId,
-                stand: req.body.stand,
-                section: req.body.section,
-                ticketCount: req.body.ticketCount
-            };
+            if (req.body.type === 'normal') {
+                const data: CartI = {
+                    userId: req.userId || '',
+                    fixtureId: req.body.fixtureId,
+                    stand: req.body.stand,
+                    section: req.body.section,
+                    ticketCount: req.body.ticketCount
+                };
 
-            const result = await this.cartCase.addToCart(data);
-            res.status(result.status).json(result.data);
+                const result = await this.cartCase.addToCart(data);
+                res.status(result.status).json(result.data);
+
+            } else if (req.body.type === 'vip') {
+                const data: CartI = {
+                    userId: req.userId || '',
+                    fixtureId: req.body.fixtureId,
+                    stand: req.body.stand,
+                    section: req.body.section,
+                    ticketCount: req.body.ticketCount,
+                    seats: req.body.seats
+                };
+                const result = await this.cartCase.addToCartPremium(data);
+                res.status(result.status).json(result.data);
+            }
+
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);

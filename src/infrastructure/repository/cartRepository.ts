@@ -21,6 +21,7 @@ class CartRepository implements CartRepo {
     }
 
     async cartDataForBooking(userId: string, fixtureId: string): Promise<any> {
+        //normal finding for the total counting
         const documents = await CartModel.find({ userId: { $ne: userId }, fixtureId })
             .select('stand section ticketCount seats')
             .lean()
@@ -43,7 +44,51 @@ class CartRepository implements CartRepo {
                 standCounts[stand][section] += ticketCount;
             }
         });
-        return standCounts;
+
+
+        const vipDocuments = await CartModel.find({ userId: { $ne: userId }, fixtureId })
+            .select('stand section seats')
+            .lean()
+            .exec();
+
+        const vipCartSeats: Record<string, any> = {
+            north: { A: [], B: [] },
+            south: { A: [], B: [] },
+            east: { A: [], B: [] },
+            west: { A: [], B: [] },
+        };
+
+        vipDocuments.forEach((doc: any) => {
+            const { stand, section, seats } = doc;
+
+            if (stand === 'north') {
+                seats.forEach((seat: any) => {
+                    if (seat.row === 'A') vipCartSeats.north.A = seat.userSeats;
+                    if (seat.row === 'B') vipCartSeats.north.B = seat.userSeats;
+                });
+            }
+            if (stand === 'east') {
+                seats.forEach((seat: any) => {
+                    if (seat.row === 'A') vipCartSeats.east.A = seat.userSeats;
+                    if (seat.row === 'B') vipCartSeats.east.B = seat.userSeats;
+                });
+            }
+            if (stand === 'south') {
+                seats.forEach((seat: any) => {
+                    if (seat.row === 'A') vipCartSeats.south.A = seat.userSeats;
+                    if (seat.row === 'B') vipCartSeats.south.B = seat.userSeats;
+                });
+            }
+            if (stand === 'west') {
+                seats.forEach((seat: any) => {
+                    if (seat.row === 'A') vipCartSeats.west.A = seat.userSeats;
+                    if (seat.row === 'B') vipCartSeats.west.B = seat.userSeats;
+                });
+            }
+        });
+
+
+        return { standCounts, vipCartSeats };
     }
 
 

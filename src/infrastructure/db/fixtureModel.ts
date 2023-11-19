@@ -19,10 +19,7 @@ interface Fixture extends Document {
 }
 
 const SeatDataSchema = {
-    seats: [{
-        seatNo: { type: Number },
-        status: { type: String }
-    }],
+    seats: [{type:Number}],
     count: { type: Number, default: 50 }
 
 };

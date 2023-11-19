@@ -15,7 +15,7 @@ class ScheduleTask implements ScheduleI {
     }
     async removeFromCart(execFn: () => Promise<any>): Promise<any> {
         const execTime = new Date();
-        execTime.setMinutes(execTime.getMinutes() + 1);
+        execTime.setMinutes(execTime.getMinutes() + 10);
         schedule.scheduleJob(execTime, async () => {
             await execFn();
         });

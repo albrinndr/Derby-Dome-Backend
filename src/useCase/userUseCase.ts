@@ -283,14 +283,15 @@ class UserUseCase {
     async bookingPage(id: string, userId: string) {
         const fixture = await this.FixtureRepository.findByIdNotCancelled(id);
         const seats = await this.StadiumRepository.getAllSeats();
-        const cartData = await this.CartRepository.cartDataForBooking(userId,id);
-        
+        const cartData = await this.CartRepository.cartDataForBooking(userId, id);
+
         return {
             status: 200,
             data: {
                 fixture,
                 seats,
-                cartData
+                cartData: cartData.standCounts,
+                vipCartSeats:cartData.vipCartSeats
             }
         };
     }
