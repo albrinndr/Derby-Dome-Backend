@@ -201,7 +201,8 @@ class UserController {
     async bookingPage(req: Request, res: Response) {
         try {
             const id = req.query.id as string;
-            const result = await this.userCase.bookingPage(id);
+            const userId = req.userId || '';
+            const result = await this.userCase.bookingPage(id, userId);
             res.status(result.status).json(result.data);
         } catch (error) {
             const err: Error = error as Error;

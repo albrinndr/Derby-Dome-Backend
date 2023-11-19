@@ -7,6 +7,7 @@ import FixtureRepository from "../infrastructure/repository/fixtureRepository";
 import StadiumRepository from "../infrastructure/repository/stadiumRepository";
 import ClubRepository from "../infrastructure/repository/clubRepository";
 import Fixture from "../domain/fixture";
+import CartRepository from "../infrastructure/repository/cartRepository";
 
 class UserUseCase {
     private UserRepository: UserRepository;
@@ -16,10 +17,12 @@ class UserUseCase {
     private FixtureRepository: FixtureRepository;
     private StadiumRepository: StadiumRepository;
     private ClubRepository: ClubRepository;
+    private CartRepository: CartRepository;
 
     constructor(UserRepository: UserRepository, Encrypt: Encrypt, JWTToken: JWTToken,
         BannerRepository: BannerRepository, FixtureRepository: FixtureRepository,
-        StadiumRepository: StadiumRepository, ClubRepository: ClubRepository
+        StadiumRepository: StadiumRepository, ClubRepository: ClubRepository,
+        CartRepository: CartRepository
     ) {
         this.UserRepository = UserRepository;
         this.Encrypt = Encrypt;
@@ -28,6 +31,7 @@ class UserUseCase {
         this.FixtureRepository = FixtureRepository;
         this.StadiumRepository = StadiumRepository;
         this.ClubRepository = ClubRepository;
+        this.CartRepository = CartRepository;
 
     }
 
@@ -215,7 +219,7 @@ class UserUseCase {
     async userSearch() {
         let fixtures: Fixture[] = (await this.FixtureRepository.findAllFixtures()).reverse();
         fixtures = fixtures.filter((fixture: any) => fixture.status === 'active');
-        
+
         const clubs = await this.ClubRepository.findAllClubs();
 
         const currentDate = new Date().setHours(0, 0, 0, 0);
@@ -276,14 +280,17 @@ class UserUseCase {
         };
     }
 
-    async bookingPage(id: string) {
+    async bookingPage(id: string, userId: string) {
         const fixture = await this.FixtureRepository.findByIdNotCancelled(id);
         const seats = await this.StadiumRepository.getAllSeats();
+        const cartData = await this.CartRepository.cartDataForBooking(userId,id);
+        
         return {
             status: 200,
             data: {
                 fixture,
-                seats
+                seats,
+                cartData
             }
         };
     }
