@@ -3,6 +3,7 @@ import CartRepository from "../infrastructure/repository/cartRepository";
 import FixtureRepository from "../infrastructure/repository/fixtureRepository";
 import StadiumRepository from "../infrastructure/repository/stadiumRepository";
 import GenerateSeats from "../infrastructure/services/generateSeats";
+import ScheduleTask from "../infrastructure/services/scheduleTask";
 
 interface FixtureSeatCount {
     row1?: string;
@@ -11,22 +12,24 @@ interface FixtureSeatCount {
     count2?: number;
 }
 
-
 class CartUseCase {
     private GenerateSeats: GenerateSeats;
     private StadiumRepository: StadiumRepository;
     private FixtureRepository: FixtureRepository;
     private CartRepository: CartRepository;
+    private ScheduleTask: ScheduleTask;
     constructor(
         GenerateSeats: GenerateSeats,
         StadiumRepository: StadiumRepository,
         FixtureRepository: FixtureRepository,
-        CartRepository: CartRepository
+        CartRepository: CartRepository,
+        ScheduleTask: ScheduleTask
     ) {
         this.GenerateSeats = GenerateSeats;
         this.StadiumRepository = StadiumRepository;
         this.FixtureRepository = FixtureRepository;
         this.CartRepository = CartRepository;
+        this.ScheduleTask = ScheduleTask;
     }
 
 
@@ -68,7 +71,9 @@ class CartUseCase {
             price: bookingData.ticketCount * stadiumSeatPrice
         };
 
-        const cart = await this.CartRepository.save(cartData);
+        await this.CartRepository.deleteByUserId(bookingData.userId);
+        const cart: any = await this.CartRepository.save(cartData);
+        await this.ScheduleTask.removeFromCart(() => this.CartRepository.deleteByCartId(cart._id));
 
         return {
             status: 200,

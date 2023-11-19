@@ -23,6 +23,7 @@ import CartController from '../../adapters/controllers/cartController';
 import CartUseCase from '../../useCase/cartUseCase';
 import GenerateSeats from '../services/generateSeats';
 import CartRepository from '../repository/cartRepository';
+import ScheduleTask from '../services/scheduleTask';
 
 
 const encrypt = new Encrypt();
@@ -31,6 +32,7 @@ const otp = new GenerateOtp();
 const email = new GenerateEmail();
 const cloudinary = new CloudinaryUpload();
 const generateSeats = new GenerateSeats();
+const scheduleTask = new ScheduleTask();
 
 const repository = new UserRepository();
 const bannerRepository = new BannerRepository();
@@ -40,10 +42,10 @@ const clubRepository = new ClubRepository();
 const chatRepository = new ChatRepository();
 const cartRepository = new CartRepository();
 
-const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository);
+const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository, cartRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 const chatCase = new ChatUseCase(chatRepository);
-const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository);
+const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository,scheduleTask);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
