@@ -45,7 +45,7 @@ const cartRepository = new CartRepository();
 const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository, cartRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 const chatCase = new ChatUseCase(chatRepository);
-const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository,scheduleTask);
+const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository, scheduleTask);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
@@ -75,5 +75,6 @@ router.get('/message', protect, (req, res) => chatController.getMessages(req, re
 router.get('/booking', protect, (req, res) => controller.bookingPage(req, res));
 
 router.post('/addToCart', protect, (req, res) => cartController.addToCart(req, res));
+router.get('/checkout', protect, (req, res) => controller.checkoutPage(req, res));
 
 export default router;

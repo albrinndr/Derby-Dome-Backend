@@ -113,6 +113,16 @@ class CartRepository implements CartRepo {
 
         }
     }
+
+    async cartDataForCheckout(userId: string): Promise<any> {
+        try {
+            const cart = await CartModel.findOne({ userId }).populate('userId')
+            if (cart) return cart;
+            return null;
+        } catch (error) {
+            return null;
+        }
+    }
 }
 
 export default CartRepository;

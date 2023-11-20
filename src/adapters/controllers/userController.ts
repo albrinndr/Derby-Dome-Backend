@@ -209,6 +209,17 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
+    async checkoutPage(req: Request, res: Response) {
+        try {
+            const id = req.userId || '';
+            const result = await this.userCase.getCartDataForCheckout(id);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default UserController;

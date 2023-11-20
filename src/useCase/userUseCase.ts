@@ -291,7 +291,22 @@ class UserUseCase {
                 fixture,
                 seats,
                 cartData: cartData.standCounts,
-                vipCartSeats:cartData.vipCartSeats
+                vipCartSeats: cartData.vipCartSeats
+            }
+        };
+    }
+
+    async getCartDataForCheckout(userId: string) {
+        const cart = await this.CartRepository.cartDataForCheckout(userId);
+        let fixture = {};
+        if (cart) {
+            fixture = await this.FixtureRepository.findByIdNotCancelled(cart.fixtureId);
+        }
+        return {
+            status: 200,
+            data: {
+                cart,
+                fixture
             }
         };
     }
