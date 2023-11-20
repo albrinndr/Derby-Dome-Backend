@@ -28,7 +28,7 @@ class FixtureController {
             if (req.file) {
                 const imageUrl = await this.CloudinaryUpload.upload(req.file.path, 'matchday-posters');
                 const formData = { ...req.body, clubId: req.clubId, poster: imageUrl.secure_url };
-                req.app.locals.paymentData = {
+                req.app.locals.paymentDataClub = {
                     user: 'club',
                     data: formData
                 };

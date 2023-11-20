@@ -11,9 +11,10 @@ class PaymentController {
         let event = req.body;
 
         if (event.type === 'checkout.session.completed') {
-            const paymentData = req.app.locals.paymentData;
-            if (paymentData?.user === 'club') {
-                await this.FixtureCase.addNewFixture(paymentData.data);
+            const paymentDataClub = req.app.locals.paymentDataClub;
+            if (paymentDataClub != null) {
+                await this.FixtureCase.addNewFixture(paymentDataClub.data);
+                req.app.locals.paymentDataClub = null;
             }
             return;
         }

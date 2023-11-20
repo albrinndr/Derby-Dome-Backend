@@ -41,6 +41,38 @@ class FixtureRepository implements FixtureRepo {
         }
     }
 
+    async updateNormalSeats(fixtureId: string, stand: string, section: string, row: string, count: number): Promise<any> {
+        try {
+            const fixture = await FixtureModel.findOne({ _id: fixtureId });
+            if (fixture && fixture.seats) {
+                const rowCount = fixture.seats[stand][section][row];
+                fixture.seats[stand][section][row] = rowCount - count;
+                await fixture.save();
+                return true;
+            }
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async updateVipSeats(fixtureId: string, stand: string, row: string, count: number, seats: number[]): Promise<any> {
+        try {
+            const fixture = await FixtureModel.findOne({ _id: fixtureId });
+            if (fixture && fixture.seats) {
+                const rowCount = fixture.seats[stand]['vip'][row].count;
+                const rowSeatsArr = fixture.seats[stand]['vip'][row].seats;
+                fixture.seats[stand]['vip'][row].count = rowCount - count;
+                fixture.seats[stand]['vip'][row].seats = [...rowSeatsArr, ...seats];
+
+                await fixture.save();
+                return true;
+            }
+            return false;
+        } catch (error) {
+            return false;
+        }
+    }
+
 }
 
 export default FixtureRepository;

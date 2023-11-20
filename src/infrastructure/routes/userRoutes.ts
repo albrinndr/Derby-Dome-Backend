@@ -24,6 +24,10 @@ import CartUseCase from '../../useCase/cartUseCase';
 import GenerateSeats from '../services/generateSeats';
 import CartRepository from '../repository/cartRepository';
 import ScheduleTask from '../services/scheduleTask';
+import TicketController from '../../adapters/controllers/ticketController';
+import TicketUseCase from '../../useCase/ticketUseCase';
+import TicketRepository from '../repository/ticketRepository';
+import GenerateQRCode from '../services/generateQrCode';
 
 
 const encrypt = new Encrypt();
@@ -33,6 +37,7 @@ const email = new GenerateEmail();
 const cloudinary = new CloudinaryUpload();
 const generateSeats = new GenerateSeats();
 const scheduleTask = new ScheduleTask();
+const generateQrCode = new GenerateQRCode();
 
 const repository = new UserRepository();
 const bannerRepository = new BannerRepository();
@@ -41,16 +46,19 @@ const stadiumRepository = new StadiumRepository();
 const clubRepository = new ClubRepository();
 const chatRepository = new ChatRepository();
 const cartRepository = new CartRepository();
+const ticketRepository = new TicketRepository();
 
 const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository, cartRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 const chatCase = new ChatUseCase(chatRepository);
 const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository, scheduleTask);
+const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
 const chatController = new ChatController(chatCase);
 const cartController = new CartController(cartCase);
+const ticketController = new TicketController(ticketCase);
 
 const router = express.Router();
 
@@ -76,5 +84,7 @@ router.get('/booking', protect, (req, res) => controller.bookingPage(req, res));
 
 router.post('/addToCart', protect, (req, res) => cartController.addToCart(req, res));
 router.get('/checkout', protect, (req, res) => controller.checkoutPage(req, res));
+
+router.post('/ticket', protect, (req, res) => ticketController.createMatchTicket(req, res));
 
 export default router;
