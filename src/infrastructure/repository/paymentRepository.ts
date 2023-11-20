@@ -18,8 +18,8 @@ class PaymentRepository implements Payment {
                 },
             ],
             mode: 'payment',
-            success_url: `${CLIENT_URL}/club/paymentSuccess`,
-            cancel_url: `${CLIENT_URL}/club/paymentFailed`,
+            success_url: `${CLIENT_URL}/paymentSuccess`,
+            cancel_url: `${CLIENT_URL}/paymentFailed`,
         });
 
         return session.id;

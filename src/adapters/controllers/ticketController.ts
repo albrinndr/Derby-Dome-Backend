@@ -19,9 +19,15 @@ class TicketController {
                 paymentType: req.body.paymentType,
                 coupon: req.body.coupon
             };
-            const result = await this.TicketCase.addNewTicket(data);
-
-            res.status(result.status).json(result.data);
+            
+            if (req.body.paymentType === 'online') {
+                const result = await this.TicketCase.verifyOnlinePayment(data.userId, data.fixtureId,data.price);
+                req.app.locals.paymentDataUser = data;
+                res.status(result.status).json(result.data);
+            } else {
+                const result = await this.TicketCase.addNewTicket(data);
+                res.status(result.status).json(result.data);
+            }
 
         } catch (error) {
             const err: Error = error as Error;

@@ -13,6 +13,6 @@ interface TicketI {
     coupon: boolean;
     qrCode?: string;
     isCancelled?: boolean;
-    cancelledDate: Date;
+    cancelledDate?: Date;
 }
 export default TicketI;

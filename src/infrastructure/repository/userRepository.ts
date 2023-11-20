@@ -24,6 +24,22 @@ class UserRepository implements UserRepo {
         return users;
     }
 
+    async updateWalletBalance(userId: string, price: number, actionType: string): Promise<boolean> {
+        try {
+            const user = await this.findById(userId);
+            if (user && user.wallet) {
+                const walletBalance = user.wallet;
+                const newWalletBalance = actionType === 'increment' ? walletBalance + price : walletBalance - price;
+                const updated = await UserModel.updateOne({ _id: userId }, { $set: { wallet: newWalletBalance } });
+                if (updated) return true;
+            }
+            return false;
+        } catch (error) {
+            return false;
+        }
+
+    }
+
 }
 
 export default UserRepository;

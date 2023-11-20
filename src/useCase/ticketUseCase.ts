@@ -3,23 +3,32 @@ import CartRepository from "../infrastructure/repository/cartRepository";
 import FixtureRepository from "../infrastructure/repository/fixtureRepository";
 import TicketRepository from "../infrastructure/repository/ticketRepository";
 import GenerateQRCode from "../infrastructure/services/generateQrCode";
+import PaymentRepository from "../infrastructure/repository/paymentRepository";
+import UserRepository from "../infrastructure/repository/userRepository";
+
 
 class TicketUseCase {
     private TicketRepository: TicketRepository;
     private FixtureRepository: FixtureRepository;
     private CartRepository: CartRepository;
     private GenerateQRCode: GenerateQRCode;
+    private PaymentRepository: PaymentRepository;
+    private UserRepository: UserRepository;
 
     constructor(
         TicketRepository: TicketRepository,
         FixtureRepository: FixtureRepository,
         CartRepository: CartRepository,
         GenerateQRCode: GenerateQRCode,
+        PaymentRepository: PaymentRepository,
+        UserRepository: UserRepository
     ) {
-        this.TicketRepository = TicketRepository,
-            this.FixtureRepository = FixtureRepository,
-            this.CartRepository = CartRepository,
-            this.GenerateQRCode = GenerateQRCode;
+        this.TicketRepository = TicketRepository;
+        this.FixtureRepository = FixtureRepository;
+        this.CartRepository = CartRepository;
+        this.GenerateQRCode = GenerateQRCode;
+        this.PaymentRepository = PaymentRepository;
+        this.UserRepository = UserRepository;
     }
 
     async addNewTicket(data: TicketI) {
@@ -35,7 +44,7 @@ class TicketUseCase {
             } else {
                 data.seats.forEach(async (seat) => {
                     await this.FixtureRepository.updateVipSeats(
-                        data.fixtureId, data.stand, seat.row, seat.userSeats.length,seat.userSeats);
+                        data.fixtureId, data.stand, seat.row, seat.userSeats.length, seat.userSeats);
                 });
             }
 
@@ -61,6 +70,11 @@ class TicketUseCase {
             };
             const QRCode = await this.GenerateQRCode.generateQR(qrData);
 
+            //updating user wallet
+            if (data.paymentType === 'wallet') {
+                await this.UserRepository.updateWalletBalance(data.userId, data.price, 'decrement');
+            }
+
             //saving ticket
             const ticketSaveData = { ...data, qrCode: QRCode };
             const ticket = await this.TicketRepository.save(ticketSaveData);
@@ -76,6 +90,29 @@ class TicketUseCase {
             return {
                 status: 400,
                 data: { message: 'An error occurred! Please try again' }
+            };
+        }
+    }
+
+    async verifyOnlinePayment(userId: string, fixtureId: string, price: number) {
+        const verifyCart = await this.CartRepository.cartDataForCheckout(userId);
+
+
+        if (verifyCart && verifyCart.fixtureId.toString() === fixtureId) {
+            const fixtureData = await this.FixtureRepository.findByIdNotCancelled(fixtureId);
+            const paymentText = `${fixtureData.clubId.name} vs ${fixtureData.awayTeam}`;
+
+            const stripeId = await this.PaymentRepository.confirmPayment(price, paymentText);
+
+            return {
+                status: 200,
+                data: { stripeSessionId: stripeId }
+            };
+
+        } else {
+            return {
+                status: 400,
+                data: { message: 'An error occurred! Please try again later.' }
             };
         }
     }

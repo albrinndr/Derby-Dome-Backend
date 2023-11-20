@@ -28,6 +28,7 @@ import TicketController from '../../adapters/controllers/ticketController';
 import TicketUseCase from '../../useCase/ticketUseCase';
 import TicketRepository from '../repository/ticketRepository';
 import GenerateQRCode from '../services/generateQrCode';
+import PaymentRepository from '../repository/paymentRepository';
 
 
 const encrypt = new Encrypt();
@@ -47,12 +48,13 @@ const clubRepository = new ClubRepository();
 const chatRepository = new ChatRepository();
 const cartRepository = new CartRepository();
 const ticketRepository = new TicketRepository();
+const paymentRepository = new PaymentRepository();
 
 const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository, cartRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 const chatCase = new ChatUseCase(chatRepository);
 const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository, scheduleTask);
-const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode);
+const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository,repository);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
