@@ -5,6 +5,7 @@ import TicketRepository from "../infrastructure/repository/ticketRepository";
 import GenerateQRCode from "../infrastructure/services/generateQrCode";
 import PaymentRepository from "../infrastructure/repository/paymentRepository";
 import UserRepository from "../infrastructure/repository/userRepository";
+import GenerateEmail from "../infrastructure/services/sendMail";
 
 
 class TicketUseCase {
@@ -14,6 +15,7 @@ class TicketUseCase {
     private GenerateQRCode: GenerateQRCode;
     private PaymentRepository: PaymentRepository;
     private UserRepository: UserRepository;
+    private GenerateEmail: GenerateEmail;
 
     constructor(
         TicketRepository: TicketRepository,
@@ -21,7 +23,8 @@ class TicketUseCase {
         CartRepository: CartRepository,
         GenerateQRCode: GenerateQRCode,
         PaymentRepository: PaymentRepository,
-        UserRepository: UserRepository
+        UserRepository: UserRepository,
+        GenerateEmail: GenerateEmail
     ) {
         this.TicketRepository = TicketRepository;
         this.FixtureRepository = FixtureRepository;
@@ -29,6 +32,7 @@ class TicketUseCase {
         this.GenerateQRCode = GenerateQRCode;
         this.PaymentRepository = PaymentRepository;
         this.UserRepository = UserRepository;
+        this.GenerateEmail = GenerateEmail;
     }
 
     async addNewTicket(data: TicketI) {
@@ -81,6 +85,34 @@ class TicketUseCase {
 
             //deleting user cart
             await this.CartRepository.deleteByUserId(data.userId);
+
+            // -------------sending email to user---------
+            const email = verifyCart.userId.email;
+            const gameName = `${fixtureData.clubId.name} vs ${fixtureData.awayTeam}`;
+            const seats = `${data.stand} stand - ( ${formattedSeats} )`;
+            const price = data.price;
+            const qrCode = QRCode;
+
+            //convert data
+            const dateString = fixtureData.date as string;
+            const dateChanged = new Date(dateString);
+            const monthAndDay = dateChanged.toLocaleDateString('en-US', {
+                month: 'long', // or 'long' for full month name
+                day: 'numeric',
+            });
+            const year = dateChanged.getUTCFullYear();
+            const date = `${monthAndDay} - ${year}`;
+
+            //convert time
+            const originalTime: string = fixtureData.time as string;
+            const [hours, minutes] = originalTime.split(":");
+            const formattedTime = new Date(0, 0, 0, parseInt(hours, 10), parseInt(minutes, 10)).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+            });
+
+            await this.GenerateEmail.sendTicket(email,gameName,formattedTime,date,seats,price,qrCode);
 
             return {
                 status: 200,
@@ -147,7 +179,7 @@ class TicketUseCase {
                     seat.userSeats.length, seat.userSeats
                 );
             }
-           const userUpdated = await this.UserRepository.updateWalletBalance(ticket.userId, ticket.price, 'increment');
+            const userUpdated = await this.UserRepository.updateWalletBalance(ticket.userId, ticket.price, 'increment');
             return {
                 status: 200,
                 data: 'success'

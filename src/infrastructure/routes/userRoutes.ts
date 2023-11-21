@@ -39,6 +39,7 @@ const cloudinary = new CloudinaryUpload();
 const generateSeats = new GenerateSeats();
 const scheduleTask = new ScheduleTask();
 const generateQrCode = new GenerateQRCode();
+const generateEmail = new GenerateEmail();
 
 const repository = new UserRepository();
 const bannerRepository = new BannerRepository();
@@ -54,7 +55,7 @@ const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fix
 const bannerCase = new BannerUseCase(bannerRepository);
 const chatCase = new ChatUseCase(chatRepository);
 const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository, scheduleTask);
-const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, repository);
+const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, repository, generateEmail);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
