@@ -20,7 +20,7 @@ class PaymentController {
                 await this.FixtureCase.addNewFixture(paymentDataClub.data);
                 req.app.locals.paymentDataClub = null;
             }
-            if (paymentDataUser !== null) {
+            if (paymentDataUser != null) {
                 await this.TicketCase.addNewTicket(paymentDataUser);
                 req.app.locals.paymentDataUser=null
             }

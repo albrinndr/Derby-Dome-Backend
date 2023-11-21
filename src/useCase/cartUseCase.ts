@@ -39,23 +39,31 @@ class CartUseCase {
         const fixtureData = fixtureFullData.seats;
         const sectionData = fixtureData[bookingData.stand][bookingData.section];
 
-        //setting up the seats
-        const fixtureSeat: FixtureSeatCount = {};
-        let count = 1 as 1 | 2;
-        for (const row in sectionData) {
-            if (sectionData.hasOwnProperty(row)) {
-                const key = count === 1 ? `row1` : `row2`;
-                const value = count === 1 ? `count1` : `count2`;
-                fixtureSeat[key] = row;
-                fixtureSeat[value] = sectionData[row];
-                count++;
-            }
-        }
+        // setting up the seats
+        // const fixtureSeat: FixtureSeatCount = {};
+        // let count = 1 as 1 | 2;
+        // for (const row in sectionData) {
+        //     if (sectionData.hasOwnProperty(row)) {
+        //         const key = count === 1 ? `row1` : `row2`;
+        //         const value = count === 1 ? `count1` : `count2`;
+        //         fixtureSeat[key] = row;
+        //         fixtureSeat[value] = sectionData[row];
+        //         count++;
+        //     }
+        // }
+        
+        const totalSeats = bookingData.section == 'premium' ?
+            this.GenerateSeats.generateSeatNumbers(
+                'C', sectionData.C.count || 0, 'D', sectionData.D.count || 0, bookingData.ticketCount,
+                sectionData.C.seats, sectionData.D.seats) : this.GenerateSeats.generateSeatNumbers(
+                    'E', sectionData.E.count || 0, 'F', sectionData.F.count || 0, bookingData.ticketCount,
+                    sectionData.E.seats, sectionData.F.seats);
 
-        const totalSeats = this.GenerateSeats.generateSeatNumbers(
-            fixtureSeat.row1 || 'A', fixtureSeat.count1 || 0,
-            fixtureSeat.row2 || 'B', fixtureSeat.count2 || 0, bookingData.ticketCount);
 
+        // const totalSeats = this.GenerateSeats.generateSeatNumbers(
+        //     fixtureSeat.row1 || 'A', fixtureSeat.count1 || 0,
+        //     fixtureSeat.row2 || 'B', fixtureSeat.count2 || 0, bookingData.ticketCount);
+        // const totalSeats = this.GenerateSeats.generateSeatNumbers(sectionData,bookingData.section)
 
         //user seat price
         const stadiumStandPrice = seatsPrices[bookingData.stand as keyof typeof seatsPrices];

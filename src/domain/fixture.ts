@@ -2,6 +2,10 @@ export interface SeatData {
     seats: number[],
     count: 50;
 }
+export interface NormalSeatData {
+    seats: number[];
+    count: 100;
+}
 
 export interface StandSeats {
     vip: {
@@ -9,12 +13,12 @@ export interface StandSeats {
         B: SeatData;
     };
     premium: {
-        C: 100;
-        D: 100;
+        C: NormalSeatData;
+        D: NormalSeatData;
     };
     economy: {
-        E: 100;
-        F: 100;
+        E: NormalSeatData;
+        F: NormalSeatData;
     };
 }
 
@@ -28,8 +32,8 @@ export interface FixtureSeats {
             B: SeatData;
         };
         premium: {
-            C: 100;
-            D: 100;
+            C: NormalSeatData;
+            D: NormalSeatData;
         };
     };
 }

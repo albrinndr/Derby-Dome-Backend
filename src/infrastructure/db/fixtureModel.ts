@@ -19,9 +19,12 @@ interface Fixture extends Document {
 }
 
 const SeatDataSchema = {
-    seats: [{type:Number}],
+    seats: [{ type: Number }],
     count: { type: Number, default: 50 }
-
+};
+const NormalSeatDataSchema = {
+    seats: [{ type: Number }],
+    count: { type: Number, default: 100 }
 };
 
 const StandSeatsSchema = {
@@ -30,12 +33,12 @@ const StandSeatsSchema = {
         B: SeatDataSchema
     },
     premium: {
-        C: { type: Number, default: 100 },
-        D: { type: Number, default: 100 }
+        C: NormalSeatDataSchema,
+        D: NormalSeatDataSchema
     },
     economy: {
-        E: { type: Number, default: 100 },
-        F: { type: Number, default: 100 }
+        E: NormalSeatDataSchema,
+        F: NormalSeatDataSchema
     }
 };
 

@@ -39,7 +39,7 @@ class TicketUseCase {
             if (data.section !== 'vip') {
                 data.seats.forEach(async (seat) => {
                     await this.FixtureRepository.updateNormalSeats(
-                        data.fixtureId, data.stand, data.section, seat.row, seat.userSeats.length);
+                        data.fixtureId, data.stand, data.section, seat.row, seat.userSeats.length,seat.userSeats);
                 });
             } else {
                 data.seats.forEach(async (seat) => {
