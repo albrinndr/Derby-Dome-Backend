@@ -39,7 +39,7 @@ class TicketUseCase {
             if (data.section !== 'vip') {
                 data.seats.forEach(async (seat) => {
                     await this.FixtureRepository.updateNormalSeats(
-                        data.fixtureId, data.stand, data.section, seat.row, seat.userSeats.length,seat.userSeats);
+                        data.fixtureId, data.stand, data.section, seat.row, seat.userSeats.length, seat.userSeats);
                 });
             } else {
                 data.seats.forEach(async (seat) => {
@@ -136,7 +136,31 @@ class TicketUseCase {
         };
     }
 
-    
+    async cancelTicket(ticketId: string) {
+        const ticketUpdated = await this.TicketRepository.cancelTicket(ticketId);
+        if (ticketUpdated) {
+            const ticket: TicketI = await this.TicketRepository.findOneById(ticketId);
+
+            for (const seat of ticket.seats) {
+                await this.FixtureRepository.updateSeatsOnCancel(
+                    ticket.fixtureId, ticket.stand, ticket.section, seat.row,
+                    seat.userSeats.length, seat.userSeats
+                );
+            }
+           const userUpdated = await this.UserRepository.updateWalletBalance(ticket.userId, ticket.price, 'increment');
+            return {
+                status: 200,
+                data: 'success'
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: 'Invalid operation!' }
+            };
+        }
+    }
+
+
 }
 
 export default TicketUseCase;

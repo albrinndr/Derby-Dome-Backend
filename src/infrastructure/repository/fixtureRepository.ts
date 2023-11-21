@@ -41,7 +41,7 @@ class FixtureRepository implements FixtureRepo {
         }
     }
 
-    async updateNormalSeats(fixtureId: string, stand: string, section: string, row: string, count: number,seats: number[]): Promise<any> {
+    async updateNormalSeats(fixtureId: string, stand: string, section: string, row: string, count: number, seats: number[]): Promise<any> {
         try {
             const fixture = await FixtureModel.findOne({ _id: fixtureId });
             const rowSeatsArr = fixture.seats[stand][section][row].seats;
@@ -65,6 +65,26 @@ class FixtureRepository implements FixtureRepo {
                 const rowSeatsArr = fixture.seats[stand]['vip'][row].seats;
                 fixture.seats[stand]['vip'][row].count = rowCount - count;
                 fixture.seats[stand]['vip'][row].seats = [...rowSeatsArr, ...seats];
+
+                await fixture.save();
+                return true;
+            }
+            return false;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async updateSeatsOnCancel(fixtureId: string, stand: string, section: string, row: string, count: number, seats: number[]): Promise<boolean> {
+        try {
+            const fixture = await FixtureModel.findOne({ _id: fixtureId });
+            if (fixture && fixture.seats) {
+                const rowCount = fixture.seats[stand][section][row].count;
+                const rowSeatsArr = fixture.seats[stand][section][row].seats;
+                fixture.seats[stand][section][row].count = rowCount + count;
+
+                const updatedSeats = rowSeatsArr.filter((seat: any) => !seats.includes(seat));
+                fixture.seats[stand][section][row].seats = updatedSeats;
 
                 await fixture.save();
                 return true;

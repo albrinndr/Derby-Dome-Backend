@@ -89,5 +89,5 @@ router.get('/checkout', protect, (req, res) => controller.checkoutPage(req, res)
 
 router.post('/ticket', protect, (req, res) => ticketController.createMatchTicket(req, res));
 router.get('/myTickets', protect, (req, res) => ticketController.getUserTickets(req, res));
-
+router.put('/cancelTicket', protect, (req, res) => ticketController.cancelTicket(req, res));
 export default router;
