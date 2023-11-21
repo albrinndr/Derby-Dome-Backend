@@ -116,6 +116,27 @@ class TicketUseCase {
             };
         }
     }
+
+    async getUserTickets(userId: string) {
+        const tickets = await this.TicketRepository.userTickets(userId);
+
+        const fixtures = new Set();
+        for (const ticket of tickets) {
+            const fixture = await this.FixtureRepository.findByIdNotCancelled(ticket.fixtureId);
+            fixtures.add(fixture);
+        }
+        const ticketFixtures = [...new Set(fixtures)];
+
+        return {
+            status: 200,
+            data: {
+                tickets,
+                ticketFixtures
+            }
+        };
+    }
+
+    
 }
 
 export default TicketUseCase;

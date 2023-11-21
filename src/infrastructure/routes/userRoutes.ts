@@ -54,7 +54,7 @@ const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fix
 const bannerCase = new BannerUseCase(bannerRepository);
 const chatCase = new ChatUseCase(chatRepository);
 const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository, scheduleTask);
-const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository,repository);
+const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, repository);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
@@ -88,5 +88,6 @@ router.post('/addToCart', protect, (req, res) => cartController.addToCart(req, r
 router.get('/checkout', protect, (req, res) => controller.checkoutPage(req, res));
 
 router.post('/ticket', protect, (req, res) => ticketController.createMatchTicket(req, res));
+router.get('/myTickets', protect, (req, res) => ticketController.getUserTickets(req, res));
 
 export default router;

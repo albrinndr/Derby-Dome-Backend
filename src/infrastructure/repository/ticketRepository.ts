@@ -8,5 +8,10 @@ class TicketRepository implements TicketRepo {
         await ticket.save();
         return ticket;
     }
+
+    async userTickets(userId: string): Promise<[] | any> {
+        const tickets = await TicketModel.find({ userId })
+        return tickets;
+    }
 }
 export default TicketRepository;

@@ -72,7 +72,6 @@ class FixtureRepository implements FixtureRepo {
             return false;
         }
     }
-
 }
 
 export default FixtureRepository;
