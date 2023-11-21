@@ -64,9 +64,9 @@ class GenerateEmail implements SENDMAIL {
         <body style="font-family: Arial, sans-serif; padding: 20px;">
             <h2 style="text-align: center;">Ticket Booking Details</h2>
             <p>Dear User,</p>
-            <p>Your movie ticket booking details for "${gameName}" are:</p>
+            <p>Your ticket booking details for "${gameName}" are:</p>
             <div style="padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
-                <p><strong>Movie:</strong> ${gameName}</p>
+                <p><strong>Match:</strong> ${gameName}</p>
                 <p><strong>Date:</strong> ${date}</p>
                 <p><strong>Time:</strong> ${time}</p>
                 <p><strong>Seats:</strong> ${seats}</p>
@@ -74,7 +74,7 @@ class GenerateEmail implements SENDMAIL {
             </div>
             <p>Please find your QR code below:</p>
             <img src="cid:unique_qr_code_cid" alt="QR Code" style="display: block; margin: 0 auto; padding: 20px; max-width: 200px;">
-            <p>Scan this QR code at the theater for entry.</p>
+            <p>Scan this QR code at the stadium for entry.</p>
             <p>If you have any questions or concerns, feel free to contact us.</p>
             <p>Thank you for booking with us!</p>
             <p>Derby Dome</p>
