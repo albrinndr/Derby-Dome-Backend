@@ -41,16 +41,30 @@ class TicketUseCase {
             //updating fixture seats
 
             if (data.section !== 'vip') {
-                data.seats.forEach(async (seat) => {
+                for (const seat of data.seats) {
                     await this.FixtureRepository.updateNormalSeats(
-                        data.fixtureId, data.stand, data.section, seat.row, seat.userSeats.length, seat.userSeats);
-                });
+                        data.fixtureId, data.stand, data.section, seat.row, seat.userSeats.length, seat.userSeats
+                    );
+                }
             } else {
-                data.seats.forEach(async (seat) => {
+                for (const seat of data.seats) {
                     await this.FixtureRepository.updateVipSeats(
-                        data.fixtureId, data.stand, seat.row, seat.userSeats.length, seat.userSeats);
-                });
+                        data.fixtureId, data.stand, seat.row, seat.userSeats.length, seat.userSeats
+                    );
+                }
             }
+
+            // if (data.section !== 'vip') {
+            //     data.seats.forEach(async (seat) => {
+            //         await this.FixtureRepository.updateNormalSeats(
+            //             data.fixtureId, data.stand, data.section, seat.row, seat.userSeats.length, seat.userSeats);
+            //     });
+            // } else {
+            //     data.seats.forEach(async (seat) => {
+            //         await this.FixtureRepository.updateVipSeats(
+            //             data.fixtureId, data.stand, seat.row, seat.userSeats.length, seat.userSeats);
+            //     });
+            // }
 
             //get fixture data
             const fixtureData = await this.FixtureRepository.findByIdNotCancelled(data.fixtureId);
@@ -112,7 +126,7 @@ class TicketUseCase {
                 hour12: true,
             });
 
-            await this.GenerateEmail.sendTicket(email,gameName,formattedTime,date,seats,price,qrCode);
+            const sentEmail = await this.GenerateEmail.sendTicket(email, gameName, formattedTime, date, seats, price, qrCode);
 
             return {
                 status: 200,
@@ -179,7 +193,20 @@ class TicketUseCase {
                     seat.userSeats.length, seat.userSeats
                 );
             }
-            const userUpdated = await this.UserRepository.updateWalletBalance(ticket.userId, ticket.price, 'increment');
+            const user = await this.UserRepository.findById(ticket.userId);
+
+            const wallet = user?.wallet || 0;
+
+            const newWallet = wallet + ticket.price;
+
+            if (user) {
+                user.wallet = newWallet;
+                await this.UserRepository.save(user);
+            }
+
+
+
+            // const userUpdated = await this.UserRepository.updateWalletBalance(ticket.userId, ticket.price, 'increment');
             return {
                 status: 200,
                 data: 'success'

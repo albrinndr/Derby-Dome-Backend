@@ -51,8 +51,8 @@ class GenerateEmail implements SENDMAIL {
 
     sendTicket(email: string, gameName: string, time: string,
         date: string, seats: string, price: number, qrCode: string) {
-
-        const mailData = `
+        try {
+            const mailData = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -82,38 +82,41 @@ class GenerateEmail implements SENDMAIL {
         </html>
     `;
 
-        const base64Image = qrCode;
 
-        let mailTransporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            requireTLS: true,
-            auth: {
-                user: process.env.EMAIL,
-                pass: process.env.PASSKEY
-            }
-        });
-
-        let details = {
-            from: process.env.EMAIL,
-            to: email,
-            subject: "Ticket Booking Success",
-            html: mailData,
-            attachments: [
-                {
-                    filename: 'qr_code.png',
-                    content: qrCode.split(';base64,').pop(), // Extract base64 content
-                    encoding: 'base64',
-                    cid: 'unique_qr_code_cid' // CID used in the email HTML img src
+            let mailTransporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                requireTLS: true,
+                auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.PASSKEY
                 }
-            ]
-        };
-        mailTransporter.sendMail(details, (err) => {
-            if (err) {
-                return console.log(err.message);
-            }
-        });
+            });
+
+            let details = {
+                from: process.env.EMAIL,
+                to: email,
+                subject: "Ticket Booking Success",
+                html: mailData,
+                attachments: [
+                    {
+                        filename: 'qr_code.png',
+                        content: qrCode.split(';base64,').pop(), // Extract base64 content
+                        encoding: 'base64',
+                        cid: 'unique_qr_code_cid' // CID used in the email HTML img src
+                    }
+                ]
+            };
+            mailTransporter.sendMail(details, (err) => {
+                if (err) {
+                    return console.log(err.message);
+                }
+                return true;
+            });
+        } catch (error) {
+            
+        }
     }
 }
 

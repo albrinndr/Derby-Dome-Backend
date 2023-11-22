@@ -9,9 +9,11 @@ import GenerateQRCode from '../services/generateQrCode';
 import TicketRepository from '../repository/ticketRepository';
 import CartRepository from '../repository/cartRepository';
 import TicketUseCase from '../../useCase/ticketUseCase';
+import GenerateEmail from '../services/sendMail';
+import UserRepository from '../repository/userRepository';
 
 const generateQrCode = new GenerateQRCode();
-
+const generateEmail = new GenerateEmail();
 
 const clubRepository = new ClubRepository();
 const fixtureRepository = new FixtureRepository();
@@ -20,13 +22,14 @@ const paymentRepository = new PaymentRepository();
 
 const ticketRepository = new TicketRepository();
 const cartRepository = new CartRepository();
+const userRepository = new UserRepository()
 
 
 const fixtureCase = new FixtureUseCase(fixtureRepository, clubRepository, stadiumRepository, paymentRepository);
-const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository);
+const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository,userRepository,generateEmail);
 
 
-const controller = new PaymentController(fixtureCase,ticketCase);
+const controller = new PaymentController(fixtureCase, ticketCase);
 
 
 const router = express.Router();
