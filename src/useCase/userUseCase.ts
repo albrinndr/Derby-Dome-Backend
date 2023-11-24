@@ -8,6 +8,7 @@ import StadiumRepository from "../infrastructure/repository/stadiumRepository";
 import ClubRepository from "../infrastructure/repository/clubRepository";
 import Fixture from "../domain/fixture";
 import CartRepository from "../infrastructure/repository/cartRepository";
+import CouponRepository from "../infrastructure/repository/couponRepository";
 
 class UserUseCase {
     private UserRepository: UserRepository;
@@ -18,11 +19,12 @@ class UserUseCase {
     private StadiumRepository: StadiumRepository;
     private ClubRepository: ClubRepository;
     private CartRepository: CartRepository;
+    private CouponRepository: CouponRepository;
 
     constructor(UserRepository: UserRepository, Encrypt: Encrypt, JWTToken: JWTToken,
         BannerRepository: BannerRepository, FixtureRepository: FixtureRepository,
         StadiumRepository: StadiumRepository, ClubRepository: ClubRepository,
-        CartRepository: CartRepository
+        CartRepository: CartRepository, CouponRepository: CouponRepository
     ) {
         this.UserRepository = UserRepository;
         this.Encrypt = Encrypt;
@@ -32,6 +34,7 @@ class UserUseCase {
         this.StadiumRepository = StadiumRepository;
         this.ClubRepository = ClubRepository;
         this.CartRepository = CartRepository;
+        this.CouponRepository = CouponRepository;
 
     }
 
@@ -302,11 +305,13 @@ class UserUseCase {
         if (cart) {
             fixture = await this.FixtureRepository.findByIdNotCancelled(cart.fixtureId);
         }
+        const coupons = await this.CouponRepository.findAvailableCoupons();
         return {
             status: 200,
             data: {
                 cart,
-                fixture
+                fixture,
+                coupons
             }
         };
     }

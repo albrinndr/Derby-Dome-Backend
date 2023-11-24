@@ -84,5 +84,38 @@ class CouponUseCase {
             };
         }
     }
+
+    async couponValidateForCheckout(userId: string, name: string, price: number) {
+        const coupon: CouponI = await this.CouponRepository.findByNameForCheckout(name);
+        if (coupon) {
+            if ((new Date(coupon.startingDate) > new Date()) || (new Date() > new Date(coupon.endingDate))) {
+                return {
+                    status: 400,
+                    data: { message: 'Coupon expired!' }
+                };
+            }
+            else if (coupon.users && coupon.users.includes(userId)) {
+                return {
+                    status: 400,
+                    data: { message: 'Coupon already used!' }
+                };
+            } else if (price < coupon.minPrice) {
+                return {
+                    status: 400,
+                    data: { message: `Minimum purchase should be ₹${coupon.minPrice}` }
+                };
+            } else {
+                return {
+                    status: 200,
+                    data: coupon
+                };
+            }
+        } else {
+            return {
+                status: 400,
+                data: { message: "Coupon doesn't exist!" }
+            };
+        }
+    }
 }
 export default CouponUseCase;

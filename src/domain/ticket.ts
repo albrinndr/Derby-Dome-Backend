@@ -10,7 +10,7 @@ interface TicketI {
     }];
     price: number;
     paymentType: string;
-    coupon: boolean;
+    coupon: boolean | string;
     qrCode?: string;
     isCancelled?: boolean;
     cancelledDate?: Date;

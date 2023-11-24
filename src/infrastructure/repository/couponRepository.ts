@@ -46,5 +46,39 @@ class CouponRepository implements CouponRepo {
             return false;
         }
     }
+
+    async findByNameForCheckout(name: string): Promise<any> {
+        try {
+            const coupon = await CouponModel.findOne({ name });
+            if (coupon) return coupon;
+            return false;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async applyCoupon(userId: string, name: string): Promise<boolean> {
+        try {
+            const coupon = await CouponModel.updateOne(
+                { name },
+                { $push: { users: userId } }
+            );
+            if (coupon) return true;
+            return false;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async findAvailableCoupons(): Promise<{}[]> {
+        const currDate = new Date();
+        const coupons = await CouponModel.find({
+            $and: [
+                { startingDate: { $lte: currDate } },
+                { endingDate: { $gte: currDate } }
+            ]
+        });
+        return coupons;
+    }
 }
 export default CouponRepository;

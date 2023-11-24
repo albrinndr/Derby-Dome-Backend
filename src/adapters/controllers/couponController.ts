@@ -46,5 +46,17 @@ class CouponController {
             res.status(400).json(err.message);
         }
     }
+
+    async validateCoupon(req: Request, res: Response) {
+        try {
+            const userId = req.userId || '';
+            const { coupon, price } = req.body;
+            const result = await this.CouponCase.couponValidateForCheckout(userId, coupon, price);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 export default CouponController;

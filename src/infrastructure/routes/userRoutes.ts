@@ -29,6 +29,9 @@ import TicketUseCase from '../../useCase/ticketUseCase';
 import TicketRepository from '../repository/ticketRepository';
 import GenerateQRCode from '../services/generateQrCode';
 import PaymentRepository from '../repository/paymentRepository';
+import CouponRepository from '../repository/couponRepository';
+import CouponUseCase from '../../useCase/couponUseCase';
+import CouponController from '../../adapters/controllers/couponController';
 
 
 const encrypt = new Encrypt();
@@ -50,18 +53,21 @@ const chatRepository = new ChatRepository();
 const cartRepository = new CartRepository();
 const ticketRepository = new TicketRepository();
 const paymentRepository = new PaymentRepository();
+const couponRepository = new CouponRepository();
 
-const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository, cartRepository);
+const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository, cartRepository,couponRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 const chatCase = new ChatUseCase(chatRepository);
 const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureRepository, cartRepository, scheduleTask);
-const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, repository, generateEmail);
+const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, repository, generateEmail,couponRepository);
+const couponCase = new CouponUseCase(couponRepository);
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
 const chatController = new ChatController(chatCase);
 const cartController = new CartController(cartCase);
 const ticketController = new TicketController(ticketCase);
+const couponController = new CouponController(couponCase);
 
 const router = express.Router();
 
@@ -91,4 +97,6 @@ router.get('/checkout', protect, (req, res) => controller.checkoutPage(req, res)
 router.post('/ticket', protect, (req, res) => ticketController.createMatchTicket(req, res));
 router.get('/myTickets', protect, (req, res) => ticketController.getUserTickets(req, res));
 router.put('/cancelTicket', protect, (req, res) => ticketController.cancelTicket(req, res));
+
+router.post('/validateCoupon', protect, (req, res) => couponController.validateCoupon(req, res));
 export default router;

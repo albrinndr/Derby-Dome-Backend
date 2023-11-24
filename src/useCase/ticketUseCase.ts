@@ -6,6 +6,7 @@ import GenerateQRCode from "../infrastructure/services/generateQrCode";
 import PaymentRepository from "../infrastructure/repository/paymentRepository";
 import UserRepository from "../infrastructure/repository/userRepository";
 import GenerateEmail from "../infrastructure/services/sendMail";
+import CouponRepository from "../infrastructure/repository/couponRepository";
 
 
 class TicketUseCase {
@@ -16,6 +17,7 @@ class TicketUseCase {
     private PaymentRepository: PaymentRepository;
     private UserRepository: UserRepository;
     private GenerateEmail: GenerateEmail;
+    private CouponRepository: CouponRepository;
 
     constructor(
         TicketRepository: TicketRepository,
@@ -24,7 +26,8 @@ class TicketUseCase {
         GenerateQRCode: GenerateQRCode,
         PaymentRepository: PaymentRepository,
         UserRepository: UserRepository,
-        GenerateEmail: GenerateEmail
+        GenerateEmail: GenerateEmail,
+        CouponRepository: CouponRepository
     ) {
         this.TicketRepository = TicketRepository;
         this.FixtureRepository = FixtureRepository;
@@ -33,11 +36,19 @@ class TicketUseCase {
         this.PaymentRepository = PaymentRepository;
         this.UserRepository = UserRepository;
         this.GenerateEmail = GenerateEmail;
+        this.CouponRepository = CouponRepository;
     }
 
     async addNewTicket(data: TicketI) {
         const verifyCart = await this.CartRepository.cartDataForCheckout(data.userId);
         if (verifyCart) {
+
+            //updating coupon
+            if (data.coupon) {
+                await this.CouponRepository.applyCoupon(data.userId, data.coupon as string);
+                data.coupon = true;
+            }
+
             //updating fixture seats
 
             if (data.section !== 'vip') {
