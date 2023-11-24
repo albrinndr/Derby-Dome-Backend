@@ -17,6 +17,9 @@ import { protect } from '../middleware/adminAuth';
 import { ImageUpload } from '../middleware/multer';
 import ScheduleTask from '../services/scheduleTask';
 import FixtureRepository from '../repository/fixtureRepository';
+import CouponRepository from '../repository/couponRepository';
+import CouponUseCase from '../../useCase/couponUseCase';
+import CouponController from '../../adapters/controllers/couponController';
 
 const encrypt = new Encrypt();
 const jwt = new JWTToken();
@@ -28,14 +31,17 @@ const clubRepository = new ClubRepository();
 const bannerRepository = new BannerRepository();
 const stadiumRepository = new StadiumRepository();
 const fixtureRepository = new FixtureRepository();
+const couponRepository = new CouponRepository();
 
 const adminCase = new AdminUseCase(adminRepository, encrypt, jwt, userRepository, clubRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 const stadiumCase = new StadiumUseCase(stadiumRepository, schedule, fixtureRepository);
+const couponCase = new CouponUseCase(couponRepository);
 
 const controller = new AdminController(adminCase);
 const bannerController = new BannerController(bannerCase, cloudinary);
 const stadiumController = new StadiumController(stadiumCase);
+const couponController = new CouponController(couponCase);
 const router = express.Router();
 
 router.post('/login', (req, res) => controller.login(req, res));
@@ -58,5 +64,9 @@ router.put('/deleteMatchPrice/:id', protect, (req, res) => stadiumController.del
 router.post('/seatPrice', protect, (req, res) => stadiumController.setSeatPrice(req, res));
 router.get('/getSeats', protect, (req, res) => stadiumController.getAllSeats(req, res));
 
+router.post('/coupon', protect, (req, res) => couponController.addFixture(req, res));
+router.get('/coupons', protect, (req, res) => couponController.getAllCoupons(req, res));
+router.put('/editCoupon', protect, (req, res) => couponController.editCoupon(req, res));
+router.delete('/coupon/:id', protect, (req, res) => couponController.deleteCoupon(req, res));
 
 export default router;
