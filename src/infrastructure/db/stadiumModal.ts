@@ -26,6 +26,12 @@ const StadiumSchema: Schema = new Schema<Stadium & Document>({
             premium: { type: Number },
             economy: { type: Number }
         }
+    }],
+    reviews: [{
+        userId: { type: Schema.Types.ObjectId, ref: 'User' },
+        rating: { type: Number },
+        review: { type: String },
+        createdAt: { type: Date, default: Date.now() }
     }]
 }, {
     timestamps: true

@@ -9,6 +9,7 @@ import ClubRepository from "../infrastructure/repository/clubRepository";
 import Fixture from "../domain/fixture";
 import CartRepository from "../infrastructure/repository/cartRepository";
 import CouponRepository from "../infrastructure/repository/couponRepository";
+import TicketRepository from "../infrastructure/repository/ticketRepository";
 
 class UserUseCase {
     private UserRepository: UserRepository;
@@ -20,11 +21,13 @@ class UserUseCase {
     private ClubRepository: ClubRepository;
     private CartRepository: CartRepository;
     private CouponRepository: CouponRepository;
+    private TicketRepository: TicketRepository;
+
 
     constructor(UserRepository: UserRepository, Encrypt: Encrypt, JWTToken: JWTToken,
         BannerRepository: BannerRepository, FixtureRepository: FixtureRepository,
         StadiumRepository: StadiumRepository, ClubRepository: ClubRepository,
-        CartRepository: CartRepository, CouponRepository: CouponRepository
+        CartRepository: CartRepository, CouponRepository: CouponRepository, TicketRepository: TicketRepository
     ) {
         this.UserRepository = UserRepository;
         this.Encrypt = Encrypt;
@@ -35,7 +38,7 @@ class UserUseCase {
         this.ClubRepository = ClubRepository;
         this.CartRepository = CartRepository;
         this.CouponRepository = CouponRepository;
-
+        this.TicketRepository = TicketRepository;
     }
 
     async signUp(email: string) {
@@ -314,6 +317,45 @@ class UserUseCase {
                 coupons
             }
         };
+    }
+
+
+    async allReviews() {
+        let reviews = await this.StadiumRepository.allReviews();
+        reviews = reviews.sort((a: any, b: any) => b.createdAt - a.createdAt);
+        return {
+            status: 200,
+            data: reviews
+        };
+    }
+
+    async singleUserReview(userId: string) {
+        const purchased = await this.TicketRepository.userTickets(userId);
+        if (purchased.length > 0) {
+            const review = await this.StadiumRepository.singleUserReview(userId);
+            if (review) {
+                return {
+                    status: 200,
+                    data: {
+                        purchased: true,
+                        review
+                    }
+                };
+            }
+            return {
+                status: 200,
+                data: {
+                    purchased: true,
+                }
+            };
+        } else {
+            return {
+                status: 200,
+                data: {
+                    purchased: false
+                }
+            };
+        }
     }
 }
 

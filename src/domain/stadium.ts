@@ -40,5 +40,13 @@ interface Stadium {
             economy: number;
         };
     }];
+    reviews: [
+        {
+            userId: string;
+            rating: number;
+            review: string;
+            createdAt:Date
+        }
+    ];
 }
 export default Stadium;

@@ -76,7 +76,7 @@ class StadiumUseCase {
     }
 
     async setSeatPrice(seatData: any) {
-        await this.StadiumRepository.seatPriceSave(seatData.stand,seatData.seatName,seatData.price);
+        await this.StadiumRepository.seatPriceSave(seatData.stand, seatData.seatName, seatData.price);
         return {
             status: 200,
             data: { message: 'Seat price updated!' }
@@ -89,6 +89,52 @@ class StadiumUseCase {
             status: 200,
             data: result
         };
+    }
+
+    async addUpdateReview(userId: string, rating: number, review: string) {
+        const result = await this.StadiumRepository.userReview(userId, rating, review);
+        if (result) {
+            return {
+                status: 200,
+                data: "Your review is submitted"
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: "An error occurred! Please try again!" }
+            };
+        }
+    }
+
+    async deleteReview(userId: string) {
+        const review = await this.StadiumRepository.removeReview(userId);
+        if (review) {
+            return {
+                status: 200,
+                data: "Your review is removed!"
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: "An error occurred! Please try again!" }
+            };
+        }
+    }
+
+    async reviewPageData(userId?: string) {
+        const reviews = await this.StadiumRepository.allReviews();
+        if (userId) {
+            const userReview = await this.StadiumRepository.singleUserReview(userId);
+            return {
+                status: 200,
+                data: { reviews, userReview }
+            };
+        } else {
+            return {
+                status: 200,
+                data: { reviews }
+            };
+        }
     }
 }
 

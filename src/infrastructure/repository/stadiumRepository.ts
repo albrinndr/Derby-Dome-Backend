@@ -111,7 +111,8 @@ class StadiumRepository implements StadiumRepo {
                     price: {
                         [seatName]: price
                     }
-                }]
+                }],
+                reviews: []
             });
 
             await stadium.save();
@@ -139,6 +140,82 @@ class StadiumRepository implements StadiumRepo {
             return priceObj;
         } else {
             return {};
+        }
+    }
+
+    async userReview(userId: string, rating: number, review: string): Promise<any> {
+        try {
+            const stadium = await StadiumModel.findOne({});
+            if (stadium) {
+                const userReview = await StadiumModel.findOne({ 'reviews.userId': userId });
+
+                if (userReview) {
+                    const filter = { 'reviews.userId': userId };
+                    const updated = await StadiumModel.updateOne(
+                        filter,
+                        { $set: { 'reviews.$.rating': rating, 'reviews.$.review': review } }
+                    );
+                    return updated;
+
+                } else {
+                    const newReview = { userId: userId, rating: rating, review: review };
+                    const newResult = await StadiumModel.updateOne(
+                        { $push: { reviews: newReview } }
+                    );
+
+                    return newResult;
+                }
+            } else {
+                const stadium = new StadiumModel({
+                    timings: [],
+                    seats: [],
+                    reviews: [{
+                        userId, rating, review
+                    }]
+                });
+                await stadium.save();
+                return stadium;
+            }
+        } catch (error) {
+            const err: Error = error as Error;
+            console.log(err.message);
+
+        }
+    }
+
+    async removeReview(userId: string): Promise<boolean> {
+        try {
+            const result = await StadiumModel.updateOne(
+                { $pull: { reviews: { userId: userId } } }
+            );
+            if (result) return true;
+            return false;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async allReviews(): Promise<{}[]> {
+        try {
+            const stadium = await StadiumModel.findOne().populate('reviews.userId');;
+            if (stadium && stadium.reviews) return stadium.reviews;
+            return [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async singleUserReview(userId: string): Promise<any> {
+        try {
+            const userReview = await StadiumModel.aggregate([
+                { $unwind: '$reviews' }, // Deconstructs the reviews array into separate documents
+                { $match: { 'reviews.userId': userId } }, // Matches the reviews with the given userId
+                { $replaceRoot: { newRoot: '$reviews' } } // Replaces the root with the matched review object
+            ]);
+
+            return userReview.length ? userReview[0] : null;
+        } catch (error) {
+            return null;
         }
     }
 }

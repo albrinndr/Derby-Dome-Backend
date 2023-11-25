@@ -66,6 +66,28 @@ class StadiumController {
             res.status(400).json(err.message);
         }
     }
+
+    async addUpdateReview(req: Request, res: Response) {
+        try {
+            const { rating, review } = req.body;
+            const userId = req.userId || '';
+            const result = await this.StadiumCase.addUpdateReview(userId, rating, review);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async deleteReview(req: Request, res: Response) {
+        try {
+            const result = await this.StadiumCase.deleteReview(req.userId || '');
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default StadiumController;

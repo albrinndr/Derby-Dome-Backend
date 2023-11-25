@@ -220,6 +220,27 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
+    async allReviews(req: Request, res: Response) {
+        try {
+            const result = await this.userCase.allReviews();
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async userReview(req: Request, res: Response) {
+        try {
+            const userId = req.userId || '';
+            const result = await this.userCase.singleUserReview(userId);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default UserController;
