@@ -28,7 +28,13 @@ const userSchema: Schema = new Schema<Club & Document>({
             }
         ]
     },
-    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    notifications: [{
+        fixtureId: { type: Schema.Types.ObjectId,ref:'Fixture' },
+        message: { type: String },
+        isRead: [{ type: String }],
+        date: { type: Date, default: new Date() }
+    }]
 }, {
     timestamps: true
 });

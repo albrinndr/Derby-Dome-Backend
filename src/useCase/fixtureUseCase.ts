@@ -1,21 +1,26 @@
+import { NotificationI } from "../domain/club";
 import Fixture from "../domain/fixture";
 import ClubRepository from "../infrastructure/repository/clubRepository";
 import FixtureRepository from "../infrastructure/repository/fixtureRepository";
 import PaymentRepository from "../infrastructure/repository/paymentRepository";
 import StadiumRepository from "../infrastructure/repository/stadiumRepository";
+import ScheduleTask from "../infrastructure/services/scheduleTask";
 
 class FixtureUseCase {
     private FixtureRepository: FixtureRepository;
     private ClubRepository: ClubRepository;
     private StadiumRepository: StadiumRepository;
     private PaymentRepository: PaymentRepository;
+    private ScheduleTask: ScheduleTask;
     constructor(FixtureRepository: FixtureRepository, ClubRepository: ClubRepository
-        , StadiumRepository: StadiumRepository, PaymentRepository: PaymentRepository
+        , StadiumRepository: StadiumRepository, PaymentRepository: PaymentRepository,
+        ScheduleTask: ScheduleTask
     ) {
         this.FixtureRepository = FixtureRepository;
         this.ClubRepository = ClubRepository;
         this.StadiumRepository = StadiumRepository;
         this.PaymentRepository = PaymentRepository;
+        this.ScheduleTask = ScheduleTask;
     }
 
     async fixtureContent(date: Date, clubId: string) {
@@ -125,6 +130,22 @@ class FixtureUseCase {
             };
             const newFixture = await this.FixtureRepository.saveFixture(fixture);
 
+            //notification task scheduling
+            const notificationData: NotificationI = {
+                fixtureId: newFixture._id as string,
+                message: `Book your tickets for the upcoming match against ${newFixture.awayTeam}`,
+                isRead: [],
+                date: new Date()
+            };
+
+            await this.ScheduleTask.notificationManagement(
+                newFixture.checkDate, newFixture.date, () => this.sendNotification(
+                    newFixture._id, data.clubId as string, notificationData
+                ), () => this.removeNotification(
+                    newFixture._id, data.clubId as string, notificationData
+                )
+            );
+
             return {
                 status: 200,
                 // data: newFixture
@@ -139,6 +160,23 @@ class FixtureUseCase {
                 checkDate: checkDate
             };
             const newFixture = await this.FixtureRepository.saveFixture(fixture);
+
+            //notification task scheduling
+            const notificationData: NotificationI = {
+                fixtureId: newFixture._id as string,
+                message: `Book your tickets for the upcoming match against ${newFixture.awayTeam}`,
+                isRead: [],
+                date: new Date()
+            };
+
+            await this.ScheduleTask.notificationManagement(
+                newFixture.checkDate, newFixture.date, () => this.sendNotification(
+                    newFixture._id, data.clubId as string, notificationData
+                ), () => this.removeNotification(
+                    newFixture._id, data.clubId as string, notificationData
+                )
+            );
+
 
             return {
                 status: 200,
@@ -168,6 +206,24 @@ class FixtureUseCase {
                 status: 400,
                 data: 'Invalid fixture'
             };
+        }
+    }
+
+    async sendNotification(fixtureId: string, clubId: string, notification: NotificationI) {
+        const fixture = await this.FixtureRepository.findByIdNotCancelled(fixtureId);
+        if (fixture) {
+            console.log('inside send');
+            
+            await this.ClubRepository.sendNotification(clubId, notification);
+        }
+    }
+
+    async removeNotification(fixtureId: string, clubId: string, notification: NotificationI) {
+        const fixture = await this.FixtureRepository.findByIdNotCancelled(fixtureId);
+        if (fixture) {
+            console.log('inside remove');
+            
+            await this.ClubRepository.removeNotification(fixtureId, clubId);
         }
     }
 }

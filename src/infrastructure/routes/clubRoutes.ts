@@ -15,6 +15,7 @@ import StadiumRepository from '../repository/stadiumRepository';
 import FixtureUseCase from '../../useCase/fixtureUseCase';
 import FixtureController from '../../adapters/controllers/fixtureController';
 import PaymentRepository from '../repository/paymentRepository';
+import ScheduleTask from '../services/scheduleTask';
 
 const repository = new ClubRepository();
 const fixtureRepository = new FixtureRepository();
@@ -26,9 +27,10 @@ const token = new JWTToken();
 const otp = new GenerateOtp();
 const email = new GenerateEmail();
 const cloudinary = new CloudinaryUpload();
+const schedule = new ScheduleTask()
 
 const clubCase = new ClubUseCase(repository, encrypt, token);
-const fixtureCase = new FixtureUseCase(fixtureRepository, repository, stadiumRepository, paymentRepository);
+const fixtureCase = new FixtureUseCase(fixtureRepository, repository, stadiumRepository, paymentRepository,schedule);
 
 const controller = new ClubController(clubCase, email, otp, cloudinary);
 const fixtureController = new FixtureController(fixtureCase, cloudinary);

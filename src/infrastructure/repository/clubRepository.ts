@@ -1,4 +1,4 @@
-import Club, { Manager, Player, Team } from "../../domain/club";
+import Club, { Manager, NotificationI, Player, Team } from "../../domain/club";
 import ClubModel from "../db/clubModel";
 import ClubRepo from "../../useCase/interface/clubRepo";
 
@@ -196,6 +196,45 @@ class ClubRepository implements ClubRepo {
             return 'You have unfollowed!';
         } catch (error) {
             return false;
+        }
+    }
+
+    async sendNotification(clubId: string, notification: NotificationI): Promise<any> {
+        try {
+            const club = await ClubModel.findOne({ _id: clubId });
+
+            if (!club) {
+                return null;
+            }
+
+            club.notifications.push(notification);
+            const updatedClub = await club.save();
+            console.log('noti send');
+
+            return updatedClub;
+        } catch (error) {
+
+        }
+    }
+
+    async removeNotification(fixtureId: string, clubId: string): Promise<any> {
+        try {
+            const club = await ClubModel.findOne({ _id: clubId });
+
+            if (!club) {
+                return null;
+            }
+            
+            const updatedClub = await ClubModel.findOneAndUpdate(
+                { _id: clubId },
+                { $pull: { notifications: { fixtureId: fixtureId } } },
+                { new: true }
+            );
+            console.log('noti removed');
+            
+            return updatedClub;
+        } catch (error) {
+
         }
     }
 }

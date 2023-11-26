@@ -12,9 +12,11 @@ import TicketUseCase from '../../useCase/ticketUseCase';
 import GenerateEmail from '../services/sendMail';
 import UserRepository from '../repository/userRepository';
 import CouponRepository from '../repository/couponRepository';
+import ScheduleTask from '../services/scheduleTask';
 
 const generateQrCode = new GenerateQRCode();
 const generateEmail = new GenerateEmail();
+const schedule = new ScheduleTask();
 
 const clubRepository = new ClubRepository();
 const fixtureRepository = new FixtureRepository();
@@ -27,8 +29,8 @@ const cartRepository = new CartRepository();
 const userRepository = new UserRepository();
 
 
-const fixtureCase = new FixtureUseCase(fixtureRepository, clubRepository, stadiumRepository, paymentRepository);
-const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, userRepository, generateEmail,couponRepository);
+const fixtureCase = new FixtureUseCase(fixtureRepository, clubRepository, stadiumRepository, paymentRepository,schedule);
+const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, userRepository, generateEmail, couponRepository);
 
 
 const controller = new PaymentController(fixtureCase, ticketCase);

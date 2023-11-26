@@ -28,6 +28,13 @@ export interface Player {
     startingXI?: boolean;
 }
 
+export interface NotificationI {
+    fixtureId: string;
+    message: string;
+    isRead: string[];
+    date: Date;
+}
+
 
 interface Club {
     _id: string;
@@ -55,6 +62,12 @@ interface Club {
         }[];
     };
     followers: string[];
+    notifications: [{
+        fixtureId: string;
+        message: string;
+        isRead: string[];
+        date: Date;
+    }];
 }
 
 export default Club;

@@ -1,4 +1,4 @@
-import Club, { Manager, Player, Team } from "../../domain/club";
+import Club, { Manager, NotificationI, Player, Team } from "../../domain/club";
 
 
 interface ClubRepo {
@@ -15,6 +15,8 @@ interface ClubRepo {
     swapStartingXI(clubId: string, player1Id: string, player2Id: string): Promise<any>;
     findTeamPlayerCount(clubId: string): Promise<boolean>;
     followClub(userId: string, clubId: string): Promise<any>;
+    sendNotification(clubId: string, notification: NotificationI): Promise<any>;
+    removeNotification(fixtureId: string, clubId: string): Promise<any>
 }
 
 export default ClubRepo;
