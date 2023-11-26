@@ -109,4 +109,6 @@ router.delete('/review', protect, (req, res) => stadiumController.deleteReview(r
 
 router.get('/review', (req, res) => controller.allReviews(req, res));
 router.get('/userReview', protect, (req, res) => controller.userReview(req, res));
+
+router.post('/followClub', protect, (req, res) => controller.followClub(req, res));
 export default router;

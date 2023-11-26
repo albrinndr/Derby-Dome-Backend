@@ -357,6 +357,29 @@ class UserUseCase {
             };
         }
     }
+
+    async followClub(userId: string, clubId: string) {
+        if (userId && clubId) {
+            const follow = await this.ClubRepository.followClub(userId, clubId);
+            if (follow) {
+                return {
+                    status: 200,
+                    data: follow
+                };
+            } else {
+                return {
+                    status: 400,
+                    data: { message: 'An error occurred! Please try again.' }
+                };
+            }
+
+        } else {
+            return {
+                status: 400,
+                data: { message: 'An error occurred! Please try again.' }
+            };
+        }
+    }
 }
 
 export default UserUseCase;

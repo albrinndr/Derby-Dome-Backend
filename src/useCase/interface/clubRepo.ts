@@ -14,6 +14,7 @@ interface ClubRepo {
     deletePlayer(clubId: string, playerId: string): Promise<any>;
     swapStartingXI(clubId: string, player1Id: string, player2Id: string): Promise<any>;
     findTeamPlayerCount(clubId: string): Promise<boolean>;
+    followClub(userId: string, clubId: string): Promise<any>;
 }
 
 export default ClubRepo;

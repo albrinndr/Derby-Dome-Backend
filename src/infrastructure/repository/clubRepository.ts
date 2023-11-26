@@ -177,6 +177,27 @@ class ClubRepository implements ClubRepo {
         }
 
     }
+
+    async followClub(userId: string, clubId: string): Promise<any> {
+        try {
+            const club = await ClubModel.findOneAndUpdate(
+                { _id: clubId, followers: userId },
+                { $pull: { followers: userId } },
+                { new: true }
+            );
+
+            if (!club) {
+                await ClubModel.updateOne(
+                    { _id: clubId },
+                    { $addToSet: { followers: userId } }
+                );
+                return 'You are now following!';
+            }
+            return 'You have unfollowed!';
+        } catch (error) {
+            return false;
+        }
+    }
 }
 
 export default ClubRepository;

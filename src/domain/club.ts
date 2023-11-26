@@ -37,7 +37,6 @@ interface Club {
     image?: string;
     password: string;
     isBlocked?: boolean;
-    wallet?: number | null;
     contactPerson?: string,
     address?: string,
     description?: string;
@@ -55,6 +54,7 @@ interface Club {
             startingXI: boolean;
         }[];
     };
+    followers: string[];
 }
 
 export default Club;

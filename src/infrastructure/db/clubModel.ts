@@ -9,7 +9,6 @@ const userSchema: Schema = new Schema<Club & Document>({
     image: { type: String, required: true },
     password: { type: String, required: true },
     isBlocked: { type: Boolean, default: false },
-    wallet: { type: Number, default: 0 },
     address: { type: String, required: true },
     contactPerson: { type: String, required: true },
     description: { type: String, required: true },
@@ -28,7 +27,8 @@ const userSchema: Schema = new Schema<Club & Document>({
                 startingXI: { type: Boolean }
             }
         ]
-    }
+    },
+    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, {
     timestamps: true
 });
