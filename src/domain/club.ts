@@ -36,6 +36,19 @@ export interface NotificationI {
 }
 
 
+export interface AllNotificationsI {
+    clubName: string;
+    clubImage: string;
+    notification: {
+        date: string;
+        fixtureId: string;
+        isRead: string[];
+        message: string;
+    };
+    userId: string;
+}
+
+
 interface Club {
     _id: string;
     name?: string;

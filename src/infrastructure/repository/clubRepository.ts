@@ -1,6 +1,7 @@
-import Club, { Manager, NotificationI, Player, Team } from "../../domain/club";
+import Club, { AllNotificationsI, Manager, NotificationI, Player, Team } from "../../domain/club";
 import ClubModel from "../db/clubModel";
 import ClubRepo from "../../useCase/interface/clubRepo";
+import { Schema } from "mongoose";
 
 class ClubRepository implements ClubRepo {
     async save(club: Club): Promise<Club> {
@@ -224,15 +225,62 @@ class ClubRepository implements ClubRepo {
             if (!club) {
                 return null;
             }
-            
+
             const updatedClub = await ClubModel.findOneAndUpdate(
                 { _id: clubId },
                 { $pull: { notifications: { fixtureId: fixtureId } } },
                 { new: true }
             );
             console.log('noti removed');
-            
+
             return updatedClub;
+        } catch (error) {
+
+        }
+    }
+
+    async findUserNotifications(userId: string): Promise<AllNotificationsI[]> {
+        try {
+            const notifications = await ClubModel.aggregate([
+                // Match clubs where followers include the given userId
+                {
+                    $match: {
+                        followers: userId.toString()
+                    }
+                },
+                // Unwind the notifications array to work with individual notifications
+                {
+                    $unwind: "$notifications"
+                },
+                {
+                    $sort: {
+                        "notifications.date": -1
+                    }
+                },
+                // Project necessary fields and club information for notifications
+                {
+                    $project: {
+                        _id: 0,
+                        clubName: "$name",
+                        clubImage: "$image",
+                        notification: "$notifications",
+                        userId: userId
+                    }
+                }
+
+            ]);
+            return notifications;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async readNotification(userId: string): Promise<any> {
+        try {
+            await ClubModel.updateMany(
+                { followers: userId.toString() },
+                { $addToSet: { 'notifications.$.isRead': userId } }
+            );
         } catch (error) {
 
         }

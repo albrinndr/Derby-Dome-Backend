@@ -16,7 +16,9 @@ interface ClubRepo {
     findTeamPlayerCount(clubId: string): Promise<boolean>;
     followClub(userId: string, clubId: string): Promise<any>;
     sendNotification(clubId: string, notification: NotificationI): Promise<any>;
-    removeNotification(fixtureId: string, clubId: string): Promise<any>
+    removeNotification(fixtureId: string, clubId: string): Promise<any>;
+    findUserNotifications(userId: string): Promise<{}[]>;
+    readNotification(userId: string): Promise<any>;
 }
 
 export default ClubRepo;

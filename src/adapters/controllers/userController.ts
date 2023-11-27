@@ -253,6 +253,39 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
+    async userNotifications(req: Request, res: Response) {
+        try {
+            const userId = req.userId || '';
+            const notifications = await this.userCase.userNotifications(userId);
+            res.status(notifications.status).json(notifications.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async notificationCount(req: Request, res: Response) {
+        try {
+            const userId = req.userId || '';
+            const count = await this.userCase.newNotificationCount(userId);
+            res.status(count.status).json(count.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async readNotification(req: Request, res: Response) {
+        try {
+            const userId = req.userId || '';
+            const count = await this.userCase.readNotification(userId);
+            res.status(count.status).json(count.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default UserController;

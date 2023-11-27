@@ -380,6 +380,34 @@ class UserUseCase {
             };
         }
     }
+
+    async userNotifications(userId: string) {
+        const notifications = await this.ClubRepository.findUserNotifications(userId);
+        return {
+            status: 200,
+            data: notifications
+        };
+    }
+
+    async newNotificationCount(userId: string) {
+        const notifications = await this.ClubRepository.findUserNotifications(userId);
+        let count = 0;
+        notifications.forEach((notification) => {
+            if (!notification.notification.isRead.includes(userId.toString())) count++
+        });
+        return {
+            status: 200,
+            data: count
+        };
+    }
+
+    async readNotification(userId: string) {
+        await this.ClubRepository.readNotification(userId);
+        return {
+            status: 200,
+            data: 'Success'
+        };
+    }
 }
 
 export default UserUseCase;

@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 import Club from '../../domain/club';
 
 
-const userSchema: Schema = new Schema<Club & Document>({
+const ClubSchema: Schema = new Schema<Club & Document>({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
@@ -28,9 +28,9 @@ const userSchema: Schema = new Schema<Club & Document>({
             }
         ]
     },
-    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    followers: [{ type: String }],
     notifications: [{
-        fixtureId: { type: Schema.Types.ObjectId,ref:'Fixture' },
+        fixtureId: { type: Schema.Types.ObjectId, ref: 'Fixture' },
         message: { type: String },
         isRead: [{ type: String }],
         date: { type: Date, default: new Date() }
@@ -39,7 +39,7 @@ const userSchema: Schema = new Schema<Club & Document>({
     timestamps: true
 });
 
-const ClubModel: Model<Club & Document> = mongoose.model<Club & Document>('Club', userSchema);
+const ClubModel: Model<Club & Document> = mongoose.model<Club & Document>('Club', ClubSchema);
 
 export default ClubModel;
 

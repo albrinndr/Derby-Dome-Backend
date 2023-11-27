@@ -111,4 +111,7 @@ router.get('/review', (req, res) => controller.allReviews(req, res));
 router.get('/userReview', protect, (req, res) => controller.userReview(req, res));
 
 router.post('/followClub', protect, (req, res) => controller.followClub(req, res));
+router.get('/notifications', protect, (req, res) => controller.userNotifications(req, res));
+router.get('/notificationCount', protect, (req, res) => controller.notificationCount(req, res));
+router.put('/readNotification', protect, (req, res) => controller.readNotification(req, res));
 export default router;
