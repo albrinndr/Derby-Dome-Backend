@@ -70,7 +70,7 @@ class ClubUseCase {
             const passwordMatch = await this.Encrypt.compare(club.password, clubData.password);
             if (passwordMatch) {
                 const clubId = clubData?._id;
-                if (clubId) token = this.JWTToken.generateToken(clubId);
+                if (clubId) token = this.JWTToken.generateToken(clubId,'club');
                 return {
                     status: 200,
                     data: {

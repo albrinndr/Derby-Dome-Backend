@@ -51,7 +51,7 @@ class AdminUseCase {
         if (adminData) {
             const passwordMatch = await this.Encrypt.compare(admin.password, adminData.password);
             if (passwordMatch) {
-                const token = this.JWTToken.generateToken(adminData._id);
+                const token = this.JWTToken.generateToken(adminData._id,'admin');
                 return {
                     status: 200,
                     data: {

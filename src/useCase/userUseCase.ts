@@ -89,7 +89,7 @@ class UserUseCase {
 
             if (passwordMatch) {
                 const userId = userData?._id;
-                if (userId) token = this.JWTToken.generateToken(userId);
+                if (userId) token = this.JWTToken.generateToken(userId,'user');
                 return {
                     status: 200,
                     data: {

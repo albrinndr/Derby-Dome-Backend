@@ -23,7 +23,10 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
             const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
             const club = await clubRepo.findById(decoded.userId as string);
-            if (club) {
+            if (decoded && (!decoded.role || decoded.role != 'club')) {
+                return res.status(401).json({ message: 'Not authorized, invalid token' });
+            }
+            else if (club) {
                 req.clubId = club._id;
                 if (club.isBlocked) {
                     return res.status(401).json({ message: 'Club have been blocked by admin!' });

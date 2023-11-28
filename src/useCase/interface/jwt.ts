@@ -1,4 +1,4 @@
 interface JWT {
-    generateToken(userId: string): string;
+    generateToken(userId: string,role:string): string;
 }
 export default JWT;

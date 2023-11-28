@@ -20,6 +20,9 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
             const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
             if (decoded) {
+                if (!decoded.role || decoded.role !== 'admin') {
+                    return res.status(401).json({ message: 'Not authorized, invalid token' });
+                }
                 next();
             } else {
                 return res.status(401).json({ message: 'Not authorized, invalid token' });
