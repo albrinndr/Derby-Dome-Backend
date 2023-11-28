@@ -176,7 +176,7 @@ class TicketUseCase {
 
     async getUserTickets(userId: string) {
         const tickets = await this.TicketRepository.userTickets(userId);
-
+        tickets.sort((a: any, b: any) => b.createdAt - a.createdAt);
         const fixtures = new Set();
         for (const ticket of tickets) {
             const fixture = await this.FixtureRepository.findByIdNotCancelled(ticket.fixtureId);

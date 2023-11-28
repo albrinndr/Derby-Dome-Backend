@@ -188,6 +188,7 @@ class FixtureUseCase {
 
     async clubFixtures(id: string) {
         const fixtures = await this.FixtureRepository.findFixturesByClubId(id);
+        fixtures.sort((a:any,b:any)=>b.createdAt-a.createdAt)
         return {
             status: 200,
             data: fixtures
