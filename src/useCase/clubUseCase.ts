@@ -2,15 +2,22 @@ import Club, { Manager, Player } from "../domain/club";
 import ClubRepository from "../infrastructure/repository/clubRepository";
 import JWTToken from "../infrastructure/services/generateToken";
 import Encrypt from "../infrastructure/services/bcryptPassword";
+import FixtureRepository from "../infrastructure/repository/fixtureRepository";
+import TicketRepository from "../infrastructure/repository/ticketRepository";
 
 class ClubUseCase {
     private ClubRepository: ClubRepository;
     private Encrypt: Encrypt;
     private JWTToken: JWTToken;
-    constructor(ClubRepository: ClubRepository, Encrypt: Encrypt, JWTToken: JWTToken) {
+    private FixtureRepository: FixtureRepository;
+    private TicketRepository: TicketRepository;
+    constructor(ClubRepository: ClubRepository, Encrypt: Encrypt, JWTToken: JWTToken,
+        FixtureRepository: FixtureRepository, TicketRepository: TicketRepository) {
         this.ClubRepository = ClubRepository;
         this.Encrypt = Encrypt;
         this.JWTToken = JWTToken;
+        this.FixtureRepository = FixtureRepository;
+        this.TicketRepository = TicketRepository;
     }
 
 
@@ -252,6 +259,45 @@ class ClubUseCase {
             };
         }
     }
+
+    async clubDashboardSalesAndExpense(clubId: string, year?: string) {
+        const exp = await this.FixtureRepository.clubExpenditure(clubId, year);
+        const profit = await this.TicketRepository.clubTicketProfit(clubId, year);
+
+        return {
+            status: 200,
+            data: {
+                years: exp.displayYears,
+                exp: exp.totalPrices,
+                profit: profit,
+            }
+        };
+    };
+
+    async clubDashboardContent(clubId: string) {
+        const sectionCountData = await this.TicketRepository.clubTicketSectionCountForDashboard(clubId);
+        const club = await this.ClubRepository.findById(clubId);
+        const upcomingFixtures = await this.FixtureRepository.findUpcomingFixtures(clubId);
+        upcomingFixtures.sort((a: any, b: any) => a.createdAt - b.createdAt);
+        const salesArr: { [key: string]: number | undefined; } = {};
+
+        for (const fixture of upcomingFixtures) {
+            const salesPrice = await this.TicketRepository.fixtureTicketSales(fixture._id);
+            salesArr[fixture._id] = salesPrice;
+        }
+
+
+        return {
+            status: 200,
+            data: {
+                sectionCount: sectionCountData,
+                followers: club?.followers?.length || 0,
+                fixtures: upcomingFixtures,
+                fixtureSales: salesArr
+            }
+        };
+    }
+
 }
 
 export default ClubUseCase;

@@ -293,6 +293,30 @@ class ClubController {
         }
     }
 
+    async dashboardProfitAndExpenseContent(req: Request, res: Response) {
+        try {
+            const clubId = req.clubId || "";
+            const year = req.query.year as string;
+            const result = await this.clubCase.clubDashboardSalesAndExpense(clubId, year);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async dashboardContent(req: Request, res: Response) {
+        try {
+            const clubId = req.clubId || "";
+            const result = await this.clubCase.clubDashboardContent(clubId);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+
 }
 
 export default ClubController;

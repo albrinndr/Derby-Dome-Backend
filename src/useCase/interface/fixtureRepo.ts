@@ -9,6 +9,8 @@ interface FixtureRepo {
     updateNormalSeats(fixtureId: string, stand: string, section: string, row: string, count: number, seats: number[]): Promise<any>;
     updateVipSeats(fixtureId: string, stand: string, row: string, count: number, seats: number[]): Promise<any>;
     updateSeatsOnCancel(fixtureId: string, stand: string, section: string, row: string, count: number, seats: number[]): Promise<boolean>;
+    clubExpenditure(clubId: string, selectedYear?: string): Promise<any>;
+    findUpcomingFixtures(clubId: string): Promise<any>;
 }
 
 export default FixtureRepo;

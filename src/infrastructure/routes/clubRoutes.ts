@@ -16,21 +16,23 @@ import FixtureUseCase from '../../useCase/fixtureUseCase';
 import FixtureController from '../../adapters/controllers/fixtureController';
 import PaymentRepository from '../repository/paymentRepository';
 import ScheduleTask from '../services/scheduleTask';
+import TicketRepository from '../repository/ticketRepository';
 
 const repository = new ClubRepository();
 const fixtureRepository = new FixtureRepository();
 const stadiumRepository = new StadiumRepository();
 const paymentRepository = new PaymentRepository();
+const ticketRepository = new TicketRepository();
 
 const encrypt = new Encrypt();
 const token = new JWTToken();
 const otp = new GenerateOtp();
 const email = new GenerateEmail();
 const cloudinary = new CloudinaryUpload();
-const schedule = new ScheduleTask()
+const schedule = new ScheduleTask();
 
-const clubCase = new ClubUseCase(repository, encrypt, token);
-const fixtureCase = new FixtureUseCase(fixtureRepository, repository, stadiumRepository, paymentRepository,schedule);
+const clubCase = new ClubUseCase(repository, encrypt, token, fixtureRepository, ticketRepository);
+const fixtureCase = new FixtureUseCase(fixtureRepository, repository, stadiumRepository, paymentRepository, schedule);
 
 const controller = new ClubController(clubCase, email, otp, cloudinary);
 const fixtureController = new FixtureController(fixtureCase, cloudinary);
@@ -60,5 +62,8 @@ router.post('/addPlayer', protect, ImageUpload.single('image'), (req, res) => co
 router.put('/editPlayer', protect, ImageUpload.single('image'), (req, res) => controller.editPlayer(req, res));
 router.delete('/deletePlayer/:id', protect, (req, res) => controller.deletePlayer(req, res));
 router.put('/changeXI/:p1Id/:p2Id', protect, (req, res) => controller.changeStartingXI(req, res));
+
+router.get('/dashboard', protect, (req, res) => controller.dashboardProfitAndExpenseContent(req, res));
+router.get('/dashboard2', protect, (req, res) => controller.dashboardContent(req, res));
 
 export default router;

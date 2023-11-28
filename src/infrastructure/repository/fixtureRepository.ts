@@ -94,6 +94,77 @@ class FixtureRepository implements FixtureRepo {
             return false;
         }
     }
+
+    async clubExpenditure(clubId: string, selectedYear?: string): Promise<any> {
+        try {
+            let year = selectedYear ? parseInt(selectedYear) : 2023;
+
+
+            //total years list
+            const totalYears = await FixtureModel.aggregate([
+                { $match: { clubId: clubId, status: 'active' } },
+                { $group: { _id: { date: { $dateToString: { format: "%Y", date: "$createdAt" } } } } },
+                { $sort: { '_id.date': -1 } }
+            ]);
+
+            const displayYears: string[] = [];
+            totalYears.forEach((year) => { displayYears.push(year._id.date); });
+
+
+            // total expenditure
+            const result = await FixtureModel.aggregate([
+                {
+                    $match: {
+                        clubId: clubId,
+                        status: 'active',
+                        createdAt: { $gte: new Date(`${year}-01-01`), $lte: new Date(`${year}-12-31`) }
+                    }
+                },
+                {
+                    $group: {
+                        _id: { month: { $month: '$createdAt' } },
+                        totalPrice: { $sum: '$price' }
+                    }
+                },
+                {
+                    $sort: { '_id.month': 1 }
+                }
+            ]);
+
+            // Prepare the final array with total prices ordered by months
+            const totalPrices: number[] = Array.from({ length: 12 }, () => 0); // Initialize an array with zeros for each month
+
+            // Assign totalPrice at the correct index based on month
+            result.forEach((item) => {
+                totalPrices[item._id.month - 1] = item.totalPrice;
+            });
+
+            // Fill missing months with 0 if no data available
+            for (let i = 0; i < 12; i++) {
+                if (totalPrices[i] === undefined) {
+                    totalPrices[i] = 0;
+                }
+            }
+
+
+            return { displayYears, totalPrices };
+
+        } catch (error) {
+
+        }
+
+    };
+
+    async findUpcomingFixtures(clubId: string): Promise<any> {
+        try {
+            const currDate = new Date();
+            const fixtures = await FixtureModel.find({ clubId: clubId, date: { $gt: currDate }, status: 'active',checkDate:{$lt:currDate} }).populate('clubId');
+            return fixtures;
+        } catch (error) {
+
+        }
+
+    }
 }
 
 export default FixtureRepository;

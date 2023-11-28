@@ -74,8 +74,8 @@ interface Club {
             startingXI: boolean;
         }[];
     };
-    followers: string[];
-    notifications: [{
+    followers?: string[];
+    notifications?: [{
         fixtureId: string;
         message: string;
         isRead: string[];
