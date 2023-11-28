@@ -11,6 +11,8 @@ interface FixtureRepo {
     updateSeatsOnCancel(fixtureId: string, stand: string, section: string, row: string, count: number, seats: number[]): Promise<boolean>;
     clubExpenditure(clubId: string, selectedYear?: string): Promise<any>;
     findUpcomingFixtures(clubId: string): Promise<any>;
+    slotSaleAdminDashboard(selectedYear?: string): Promise<any>;
+    findAllFixturesNotCancelled(): Promise<{}[]>;
 }
 
 export default FixtureRepo;

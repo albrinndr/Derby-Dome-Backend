@@ -166,5 +166,102 @@ class TicketRepository implements TicketRepo {
 
         }
     }
+
+
+    async sectionSelectionCountAdminDashboard(): Promise<any> {
+        try {
+            const results = await TicketModel.aggregate([
+                {
+                    $match: {
+                        isCancelled: false // Consider only non-cancelled tickets
+                    }
+                },
+                {
+                    $group: {
+                        _id: '$section',
+                        count: { $sum: '$ticketCount' }
+                    }
+                }
+            ]);
+
+            // Initialize counts for each section
+            const seatCounts: { [key: string]: number; } = {
+                vip: 0,
+                premium: 0,
+                economy: 0
+            };
+
+            // Assign counts to respective sections
+            results.forEach((result: any) => {
+                seatCounts[result._id] = result.count;
+            });
+
+            return seatCounts;
+        } catch (error) {
+            return {};
+        }
+    }
+
+    async ticketsNotCancelled(): Promise<{}[]> {
+        try {
+            const tickets = await TicketModel.find({ isCancelled: false });
+            return tickets;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async ticketSalesDataAdminDashboard(selectedYear?: string): Promise<any> {
+        try {
+            let year = selectedYear ? parseInt(selectedYear) : 2023;
+
+            //total years list
+            const totalYears = await TicketModel.aggregate([
+                { $match: { isCancelled: false } },
+                { $group: { _id: { date: { $dateToString: { format: "%Y", date: "$createdAt" } } } } },
+                { $sort: { '_id.date': -1 } }
+            ]);
+
+            const displayYears: string[] = [];
+            totalYears.forEach((year) => { displayYears.push(year._id.date); });
+
+
+            // total ticket count
+            const result = await TicketModel.aggregate([
+                {
+                    $match: {
+                        isCancelled: false,
+                        createdAt: { $gte: new Date(`${year}-01-01`), $lte: new Date(`${year}-12-31`) }
+                    }
+                },
+                {
+                    $group: {
+                        _id: { month: { $month: '$createdAt' } },
+                        ticketCount: { $sum: '$ticketCount' }
+                    }
+                },
+                {
+                    $sort: { '_id.month': 1 }
+                }
+            ]);
+
+            const totalCounts: number[] = Array.from({ length: 12 }, () => 0); // Initialize an array with zeros for each month
+
+            // Assign count at the correct index based on month
+            result.forEach((item) => {
+                totalCounts[item._id.month - 1] = item.ticketCount;
+            });
+
+            // Fill missing months with 0 if no data available
+            for (let i = 0; i < 12; i++) {
+                if (totalCounts[i] === undefined) {
+                    totalCounts[i] = 0;
+                }
+            }
+            return { displayYears, totalCounts };
+        } catch (error) {
+
+        }
+    }
 }
 export default TicketRepository;

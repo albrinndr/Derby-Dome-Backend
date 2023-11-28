@@ -20,6 +20,7 @@ import FixtureRepository from '../repository/fixtureRepository';
 import CouponRepository from '../repository/couponRepository';
 import CouponUseCase from '../../useCase/couponUseCase';
 import CouponController from '../../adapters/controllers/couponController';
+import TicketRepository from '../repository/ticketRepository';
 
 const encrypt = new Encrypt();
 const jwt = new JWTToken();
@@ -32,8 +33,9 @@ const bannerRepository = new BannerRepository();
 const stadiumRepository = new StadiumRepository();
 const fixtureRepository = new FixtureRepository();
 const couponRepository = new CouponRepository();
+const ticketRepository = new TicketRepository();
 
-const adminCase = new AdminUseCase(adminRepository, encrypt, jwt, userRepository, clubRepository);
+const adminCase = new AdminUseCase(adminRepository, encrypt, jwt, userRepository, clubRepository, fixtureRepository, ticketRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
 const stadiumCase = new StadiumUseCase(stadiumRepository, schedule, fixtureRepository);
 const couponCase = new CouponUseCase(couponRepository);
@@ -68,5 +70,9 @@ router.post('/coupon', protect, (req, res) => couponController.addFixture(req, r
 router.get('/coupons', protect, (req, res) => couponController.getAllCoupons(req, res));
 router.put('/editCoupon', protect, (req, res) => couponController.editCoupon(req, res));
 router.delete('/coupon/:id', protect, (req, res) => couponController.deleteCoupon(req, res));
+
+router.get('/dashboardSlotSales', protect, (req, res) => controller.slotSaleDashboardData(req, res));
+router.get('/dashboardStaticContent', protect, (req, res) => controller.staticChartAndCardDashboardData(req, res));
+router.get('/dashboardTicketContend', protect, (req, res) => controller.ticketsSoldDashboardData(req, res));
 
 export default router;

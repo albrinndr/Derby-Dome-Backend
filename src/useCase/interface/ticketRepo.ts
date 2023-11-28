@@ -7,6 +7,9 @@ interface TicketRepo {
     clubTicketProfit(clubId: string, year?: string): Promise<any>;
     clubTicketSectionCountForDashboard(clubId: string): Promise<any>;
     fixtureTicketSales(fixtureId: string): Promise<any>;
+    sectionSelectionCountAdminDashboard(): Promise<any>;
+    ticketsNotCancelled(): Promise<any>;
+    ticketSalesDataAdminDashboard(selectedYear?: string): Promise<any>;
 }
 
 export default TicketRepo;

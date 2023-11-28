@@ -81,6 +81,38 @@ class AdminController {
         }
     }
 
+    async slotSaleDashboardData(req: Request, res: Response) {
+        try {
+            const year = req.query.year as string;
+            const result = await this.adminCase.dashboardSlotSaleData(year);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async staticChartAndCardDashboardData(req: Request, res: Response) {
+        try {
+            const result = await this.adminCase.dashboardChartAndCardContent();
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async ticketsSoldDashboardData(req: Request, res: Response) {
+        try {
+            const year = req.query.year as string;
+            const result = await this.adminCase.dashboardTicketSoldData(year);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
 }
 
 export default AdminController;

@@ -4,6 +4,8 @@ import ClubRepository from "../infrastructure/repository/clubRepository";
 import Admin from "../domain/admin";
 import Encrypt from "../infrastructure/services/bcryptPassword";
 import JWTToken from "../infrastructure/services/generateToken";
+import FixtureRepository from "../infrastructure/repository/fixtureRepository";
+import TicketRepository from "../infrastructure/repository/ticketRepository";
 
 type UserType = {
     _id: string;
@@ -23,12 +25,25 @@ class AdminUseCase {
     private ClubRepository: ClubRepository;
     private Encrypt: Encrypt;
     private JWTToken: JWTToken;
-    constructor(AdminRepository: AdminRepository, Encrypt: Encrypt, JWTToken: JWTToken, UserRepository: UserRepository, ClubRepository: ClubRepository) {
+    private FixtureRepository: FixtureRepository;
+    private TicketRepository: TicketRepository;
+
+    constructor(
+        AdminRepository: AdminRepository,
+        Encrypt: Encrypt, JWTToken: JWTToken,
+        UserRepository: UserRepository,
+        ClubRepository: ClubRepository,
+        FixtureRepository: FixtureRepository,
+        TicketRepository: TicketRepository
+    ) {
+
         this.AdminRepository = AdminRepository;
         this.UserRepository = UserRepository;
         this.ClubRepository = ClubRepository;
         this.Encrypt = Encrypt;
         this.JWTToken = JWTToken;
+        this.FixtureRepository = FixtureRepository;
+        this.TicketRepository = TicketRepository;
     }
 
     async login(admin: Admin) {
@@ -149,6 +164,48 @@ class AdminUseCase {
                 data: { message: 'Club not found!' }
             };
         }
+    }
+
+    async dashboardSlotSaleData(year?: string) {
+        const salesData = await this.FixtureRepository.slotSaleAdminDashboard(year);
+        return {
+            status: 200,
+            data: {
+                years: salesData.displayYears,
+                profits: salesData.totalPrices
+            }
+        };
+    };
+
+    async dashboardChartAndCardContent() {
+        const seatSections = await this.TicketRepository.sectionSelectionCountAdminDashboard();
+        const users = await this.UserRepository.findAllUsers();
+        const clubs = await this.ClubRepository.findAllClubs();
+        const tickets = await this.TicketRepository.ticketsNotCancelled();
+        const fixtures = await this.FixtureRepository.findAllFixturesNotCancelled();
+        const totalSales = fixtures.reduce((acc: any, curr: any) => acc += curr.price, 0);
+
+        return {
+            status: 200,
+            data: {
+                sectionData: seatSections,
+                users: users?.length || 0,
+                clubs: clubs?.length || 0,
+                tickets: tickets.length || 0,
+                totalSales
+            }
+        };
+    }
+
+    async dashboardTicketSoldData(year?: string) {
+        const ticketsSoldData = await this.TicketRepository.ticketSalesDataAdminDashboard(year);
+        return {
+            status: 200,
+            data: {
+                years: ticketsSoldData.displayYears,
+                count: ticketsSoldData.totalCounts
+            }
+        };
     }
 }
 
