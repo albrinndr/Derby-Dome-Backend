@@ -402,11 +402,18 @@ class UserUseCase {
     }
 
     async readNotification(userId: string) {
-        await this.ClubRepository.readNotification(userId);
-        return {
-            status: 200,
-            data: 'Success'
-        };
+        const result = await this.ClubRepository.readNotification(userId);
+        if (result) {
+            return {
+                status: 200,
+                data: 'Success'
+            };
+        }else{
+            return{
+                status:400,
+                data:"An error occurred"
+            }
+        }
     }
 
     // forget password

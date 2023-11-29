@@ -277,11 +277,17 @@ class ClubRepository implements ClubRepo {
 
     async readNotification(userId: string): Promise<any> {
         try {
-            await ClubModel.updateMany(
-                { followers: userId.toString() },
-                { $addToSet: { 'notifications.$.isRead': userId } }
+            const result = await ClubModel.updateMany({
+                followers: userId,
+                notifications: { $elemMatch: { isRead: { $ne: userId } } }
+            },
+                { $addToSet: { 'notifications.$[elem].isRead': userId.toString() } },
+                { arrayFilters: [{ 'elem.isRead': { $ne: userId } }] }
             );
+            return result;
         } catch (error) {
+            const err:Error = error as Error
+            console.log(err.message);
 
         }
     }
