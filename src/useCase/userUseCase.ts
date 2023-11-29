@@ -408,11 +408,11 @@ class UserUseCase {
                 status: 200,
                 data: 'Success'
             };
-        }else{
-            return{
-                status:400,
-                data:"An error occurred"
-            }
+        } else {
+            return {
+                status: 400,
+                data: "An error occurred"
+            };
         }
     }
 
@@ -456,6 +456,14 @@ class UserUseCase {
             };
         }
     }
+
+    async allFollowedClubs(userId: string) {
+        const clubs = await this.ClubRepository.userFollowedClubs(userId);
+        return {
+            status: 200,
+            data: clubs
+        };
+    };
 }
 
 export default UserUseCase;

@@ -179,7 +179,7 @@ class TicketUseCase {
         tickets.sort((a: any, b: any) => b.createdAt - a.createdAt);
         const fixtures = new Set();
         for (const ticket of tickets) {
-            const fixture = await this.FixtureRepository.findByIdNotCancelled(ticket.fixtureId);
+            const fixture = await this.FixtureRepository.findByIdNotCancelled(ticket.fixtureId._id);
             fixtures.add(fixture);
         }
         const ticketFixtures = [...new Set(fixtures)];

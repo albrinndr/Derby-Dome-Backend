@@ -19,6 +19,7 @@ interface ClubRepo {
     removeNotification(fixtureId: string, clubId: string): Promise<any>;
     findUserNotifications(userId: string): Promise<{}[]>;
     readNotification(userId: string): Promise<any>;
+    userFollowedClubs(userId: string): Promise<any>
 }
 
 export default ClubRepo;

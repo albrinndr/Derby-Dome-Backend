@@ -343,6 +343,17 @@ class UserController {
             res.status(400).json(err.message);
         }
     }
+
+    async allFollowedClubs(req: Request, res: Response) {
+        try {
+            const userId = req.userId || '';
+            const result = await this.userCase.allFollowedClubs(userId)
+            res.status(result.status).json(result.data)
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 }
 
 export default UserController;

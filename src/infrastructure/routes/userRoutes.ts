@@ -118,4 +118,6 @@ router.put('/readNotification', protect, (req, res) => controller.readNotificati
 router.post('/forgotPassword', (req, res) => controller.forgotPassword(req, res));
 router.post('/validateForgotOtp', (req, res) => controller.forgotOtpVerify(req, res));
 router.put('/forgotPassword', (req, res) => controller.forgotChangePassword(req, res));
+
+router.get('/followedClubs', protect, (req, res) => controller.allFollowedClubs(req, res));
 export default router;

@@ -286,9 +286,18 @@ class ClubRepository implements ClubRepo {
             );
             return result;
         } catch (error) {
-            const err:Error = error as Error
+            const err: Error = error as Error;
             console.log(err.message);
 
+        }
+    }
+
+    async userFollowedClubs(userId: string): Promise<any> {
+        try {
+            const clubs = await ClubModel.find({ followers: userId.toString() });
+            return clubs;
+        } catch (error) {
+            return [];
         }
     }
 }

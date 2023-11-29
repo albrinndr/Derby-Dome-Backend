@@ -10,7 +10,7 @@ class TicketRepository implements TicketRepo {
     }
 
     async userTickets(userId: string): Promise<[] | any> {
-        const tickets = await TicketModel.find({ userId });
+        const tickets = await TicketModel.find({ userId }).populate('fixtureId');
         return tickets;
     }
 
@@ -194,7 +194,7 @@ class TicketRepository implements TicketRepo {
             results.forEach((result: any) => {
                 seatCounts[result._id] = result.count;
             });
-            
+
             return seatCounts;
 
 
