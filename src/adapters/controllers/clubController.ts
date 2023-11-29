@@ -316,6 +316,53 @@ class ClubController {
         }
     }
 
+    async forgotPassword(req: Request, res: Response) {
+        try {
+            const email = req.body.email;
+            const result = await this.clubCase.forgotPassword(email);
+            if (result.data.status) {
+                req.session.forgotEmail = email;
+                const otp = this.GenerateOtp.createOtp();
+                req.session.forgotOtp = otp;
+                console.log(req.session.forgotOtp);
+                
+                this.GenerateEmail.sendMail(email, otp);
+            }
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async forgotOtpVerify(req: Request, res: Response) {
+        try {
+            const forgotOtp = req.session.forgotOtp;
+            const otp = req.body.otp;
+            if (forgotOtp == otp) {
+                res.status(200).json('Success');
+            } else {
+                res.status(400).json({ message: "Invalid OTP!" });
+            }
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async forgotChangePassword(req: Request, res: Response) {
+        try {
+            const forgotEmail = req.session.forgotEmail as string;
+            const password = req.body.password;
+
+            const result = await this.clubCase.forgotPasswordChange(forgotEmail, password);
+            res.status(result.status).json(result.data);
+
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
 
 }
 

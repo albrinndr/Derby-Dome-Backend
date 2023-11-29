@@ -8,6 +8,8 @@ declare module 'express-session' {
     interface SessionData {
         forgotEmail?: string;
         forgotOtp?: number;
+        forgotClubEmail?: string;
+        forgotClubOtp?: number;
         // Add other custom properties if needed
     }
 }
@@ -303,7 +305,7 @@ class UserController {
                 const otp = this.GenerateOtp.createOtp();
                 req.session.forgotOtp = otp;
                 console.log(req.session.forgotOtp);
-                
+
                 this.GenerateEmail.sendMail(email, otp);
             }
             res.status(result.status).json(result.data);

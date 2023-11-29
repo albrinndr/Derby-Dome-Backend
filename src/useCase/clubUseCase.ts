@@ -70,7 +70,7 @@ class ClubUseCase {
             const passwordMatch = await this.Encrypt.compare(club.password, clubData.password);
             if (passwordMatch) {
                 const clubId = clubData?._id;
-                if (clubId) token = this.JWTToken.generateToken(clubId,'club');
+                if (clubId) token = this.JWTToken.generateToken(clubId, 'club');
                 return {
                     status: 200,
                     data: {
@@ -296,6 +296,46 @@ class ClubUseCase {
                 fixtureSales: salesArr
             }
         };
+    }
+
+    //forgotPassword
+    async forgotPassword(email: string) {
+        const club = await this.ClubRepository.findByEmail(email);
+        if (!club) {
+            return {
+                status: 400,
+                data: { status: false, message: "Enter a valid email!" }
+            };
+        } else if (club.isBlocked) {
+            return {
+                status: 400,
+                data: { status: false, message: "You are blocked by admin. Sorry!" }
+            };
+        } else {
+            return {
+                status: 200,
+                data: { status: true, message: "Otp have been sent to your email!" }
+            };
+        }
+    }
+
+    async forgotPasswordChange(email: string, password: string) {
+        const club = await this.ClubRepository.findByEmail(email);
+
+        const hashedPassword = await this.Encrypt.generateHash(password);
+        if (club && club.password) {
+            club.password = hashedPassword;
+            await this.ClubRepository.save(club);
+            return {
+                status: 200,
+                data: club
+            };
+        } else {
+            return {
+                status: 200,
+                data: { message: "An error occurred. Please try again!" }
+            };
+        }
     }
 
 }

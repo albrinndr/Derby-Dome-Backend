@@ -66,4 +66,8 @@ router.put('/changeXI/:p1Id/:p2Id', protect, (req, res) => controller.changeStar
 router.get('/dashboard', protect, (req, res) => controller.dashboardProfitAndExpenseContent(req, res));
 router.get('/dashboard2', protect, (req, res) => controller.dashboardContent(req, res));
 
+router.post('/forgotPassword', (req, res) => controller.forgotPassword(req, res));
+router.post('/validateForgotOtp', (req, res) => controller.forgotOtpVerify(req, res));
+router.put('/forgotPassword', (req, res) => controller.forgotChangePassword(req, res));
+
 export default router;

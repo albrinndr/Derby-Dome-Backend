@@ -24,11 +24,11 @@ class ScheduleTask implements ScheduleI {
     async notificationManagement(date1: Date, date2: Date, execFn1: () => Promise<any>,execFn2: () => Promise<any>): Promise<any> {
         console.log('inside notification timer');
         
-        const execTime1 = new Date();
+        // const execTime1 = new Date();
         // const execTime2 = new Date();
-        execTime1.setMinutes(execTime1.getMinutes() + 1);
+        // execTime1.setMinutes(execTime1.getMinutes() + 1);
         // execTime2.setMinutes(execTime2.getMinutes() + 5);
-        // const execTime1 = new Date(date1);
+        const execTime1 = new Date(date1);
         const execTime2 = new Date(date2);
 
         schedule.scheduleJob(execTime1, async () => {
