@@ -173,7 +173,7 @@ class TicketRepository implements TicketRepo {
             const results = await TicketModel.aggregate([
                 {
                     $match: {
-                        isCancelled: false // Consider only non-cancelled tickets
+                        isCancelled: false
                     }
                 },
                 {
@@ -183,7 +183,6 @@ class TicketRepository implements TicketRepo {
                     }
                 }
             ]);
-
             // Initialize counts for each section
             const seatCounts: { [key: string]: number; } = {
                 vip: 0,
@@ -195,8 +194,10 @@ class TicketRepository implements TicketRepo {
             results.forEach((result: any) => {
                 seatCounts[result._id] = result.count;
             });
-
+            
             return seatCounts;
+
+
         } catch (error) {
             return {};
         }

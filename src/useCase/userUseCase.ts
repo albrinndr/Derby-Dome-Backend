@@ -87,9 +87,9 @@ class UserUseCase {
 
             const passwordMatch = await this.Encrypt.compare(user.password, userData.password);
 
-            if (passwordMatch) {
+            if (passwordMatch || user.isGoogle) {
                 const userId = userData?._id;
-                if (userId) token = this.JWTToken.generateToken(userId,'user');
+                if (userId) token = this.JWTToken.generateToken(userId, 'user');
                 return {
                     status: 200,
                     data: {
@@ -393,7 +393,7 @@ class UserUseCase {
         const notifications = await this.ClubRepository.findUserNotifications(userId);
         let count = 0;
         notifications.forEach((notification) => {
-            if (!notification.notification.isRead.includes(userId.toString())) count++
+            if (!notification.notification.isRead.includes(userId.toString())) count++;
         });
         return {
             status: 200,
@@ -407,6 +407,47 @@ class UserUseCase {
             status: 200,
             data: 'Success'
         };
+    }
+
+    // forget password
+
+    async forgotPassword(email: string) {
+        const user = await this.UserRepository.findByEmail(email);
+        if (!user) {
+            return {
+                status: 400,
+                data: { status: false, message: "Enter a valid email!" }
+            };
+        } else if (user.isBlocked) {
+            return {
+                status: 400,
+                data: { status: false, message: "You are blocked by admin. Sorry!" }
+            };
+        } else {
+            return {
+                status: 200,
+                data: { status: true, message: "Otp have been sent to your email!" }
+            };
+        }
+    };
+
+    async forgotPasswordChange(email: string, password: string) {
+        const user = await this.UserRepository.findByEmail(email);
+
+        const hashedPassword = await this.Encrypt.generateHash(password);
+        if (user && user.password) {
+            user.password = hashedPassword;
+            await this.UserRepository.save(user);
+            return {
+                status: 200,
+                data: user
+            };
+        } else {
+            return {
+                status: 200,
+                data: { message: "An error occurred. Please try again!" }
+            };
+        }
     }
 }
 
