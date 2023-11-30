@@ -207,12 +207,14 @@ class ClubRepository implements ClubRepo {
             if (!club) {
                 return null;
             }
+            if (club.notifications) {
+                club.notifications.push(notification);
+                const updatedClub = await club.save();
+                console.log('noti send');
 
-            club.notifications.push(notification);
-            const updatedClub = await club.save();
-            console.log('noti send');
-
-            return updatedClub;
+                return updatedClub;
+            }
+            return club
         } catch (error) {
 
         }

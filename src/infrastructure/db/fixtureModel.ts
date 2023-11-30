@@ -15,7 +15,7 @@ interface Fixture extends Document {
     rescheduled: boolean;
     price: number;
     checkDate?: Date;
-    seats?: FixtureSeats;
+    seats?: any;
 }
 
 const SeatDataSchema = {

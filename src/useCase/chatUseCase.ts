@@ -1,3 +1,4 @@
+import Chat from "../domain/chat";
 import ChatRepository from "../infrastructure/repository/chatRepository";
 
 class ChatUseCase {

@@ -20,6 +20,8 @@ export interface StandSeats {
         E: NormalSeatData;
         F: NormalSeatData;
     };
+    [key: string]: any;
+
 }
 
 export interface FixtureSeats {
@@ -35,6 +37,7 @@ export interface FixtureSeats {
             C: NormalSeatData;
             D: NormalSeatData;
         };
+        [key: string]: any;
     };
 }
 

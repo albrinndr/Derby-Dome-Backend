@@ -44,13 +44,17 @@ class FixtureRepository implements FixtureRepo {
     async updateNormalSeats(fixtureId: string, stand: string, section: string, row: string, count: number, seats: number[]): Promise<any> {
         try {
             const fixture = await FixtureModel.findOne({ _id: fixtureId });
-            const rowSeatsArr = fixture.seats[stand][section][row].seats;
             if (fixture && fixture.seats) {
-                const rowCount = fixture.seats[stand][section][row].count;
-                fixture.seats[stand][section][row].count = rowCount - count;
-                fixture.seats[stand][section][row].seats = [...rowSeatsArr, ...seats];
-                await fixture.save();
-                return true;
+                const rowSeatsArr = fixture.seats[stand][section][row].seats;
+                if (fixture && fixture.seats) {
+                    const rowCount = fixture.seats[stand][section][row].count;
+                    fixture.seats[stand][section][row].count = rowCount - count;
+                    fixture.seats[stand][section][row].seats = [...rowSeatsArr, ...seats];
+                    await fixture.save();
+                    return true;
+                }
+            }else{
+                return false
             }
         } catch (error) {
             return false;
