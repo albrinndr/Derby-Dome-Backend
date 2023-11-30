@@ -207,6 +207,15 @@ class AdminUseCase {
             }
         };
     }
+
+    
+    async allFixtures() {
+        const fixtures = await this.FixtureRepository.findAllFixtures();
+        return {
+            status: 200,
+            data: fixtures
+        };
+    }
 }
 
 export default AdminUseCase;

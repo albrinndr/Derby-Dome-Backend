@@ -188,7 +188,7 @@ class FixtureUseCase {
 
     async clubFixtures(id: string) {
         const fixtures = await this.FixtureRepository.findFixturesByClubId(id);
-        fixtures.sort((a:any,b:any)=>b.createdAt-a.createdAt)
+        fixtures.sort((a: any, b: any) => b.createdAt - a.createdAt);
         return {
             status: 200,
             data: fixtures
@@ -214,7 +214,7 @@ class FixtureUseCase {
         const fixture = await this.FixtureRepository.findByIdNotCancelled(fixtureId);
         if (fixture) {
             console.log('inside send');
-            
+
             await this.ClubRepository.sendNotification(clubId, notification);
         }
     }
@@ -223,7 +223,7 @@ class FixtureUseCase {
         const fixture = await this.FixtureRepository.findByIdNotCancelled(fixtureId);
         if (fixture) {
             console.log('inside remove');
-            
+
             await this.ClubRepository.removeNotification(fixtureId, clubId);
         }
     }

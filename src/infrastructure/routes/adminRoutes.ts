@@ -75,4 +75,6 @@ router.get('/dashboardSlotSales', protect, (req, res) => controller.slotSaleDash
 router.get('/dashboardStaticContent', protect, (req, res) => controller.staticChartAndCardDashboardData(req, res));
 router.get('/dashboardTicketContend', protect, (req, res) => controller.ticketsSoldDashboardData(req, res));
 
+router.get('/allFixtures', protect, (req, res) => controller.allFixtures(req, res));
+
 export default router;
