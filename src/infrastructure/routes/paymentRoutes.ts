@@ -29,7 +29,7 @@ const cartRepository = new CartRepository();
 const userRepository = new UserRepository();
 
 
-const fixtureCase = new FixtureUseCase(fixtureRepository, clubRepository, stadiumRepository, paymentRepository,schedule);
+const fixtureCase = new FixtureUseCase(fixtureRepository, clubRepository, stadiumRepository, paymentRepository,schedule,userRepository);
 const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, userRepository, generateEmail, couponRepository);
 
 

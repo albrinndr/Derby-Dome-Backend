@@ -19,7 +19,7 @@ class UserRepository implements UserRepo {
         return user;
     }
 
-    async findAllUsers(): Promise<{}[] | null> {
+    async findAllUsers(): Promise<{}[] | any> {
         const users = await UserModel.find({}).select('-password');
         return users;
     }

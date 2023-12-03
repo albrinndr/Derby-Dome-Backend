@@ -1,10 +1,13 @@
 import { NotificationI } from "../domain/club";
 import Fixture from "../domain/fixture";
+import User from "../domain/user";
 import ClubRepository from "../infrastructure/repository/clubRepository";
 import FixtureRepository from "../infrastructure/repository/fixtureRepository";
 import PaymentRepository from "../infrastructure/repository/paymentRepository";
 import StadiumRepository from "../infrastructure/repository/stadiumRepository";
+import UserRepository from "../infrastructure/repository/userRepository";
 import ScheduleTask from "../infrastructure/services/scheduleTask";
+import { TokenI } from "./interface/notificationI";
 
 class FixtureUseCase {
     private FixtureRepository: FixtureRepository;
@@ -12,15 +15,17 @@ class FixtureUseCase {
     private StadiumRepository: StadiumRepository;
     private PaymentRepository: PaymentRepository;
     private ScheduleTask: ScheduleTask;
+    private UserRepository: UserRepository;
     constructor(FixtureRepository: FixtureRepository, ClubRepository: ClubRepository
         , StadiumRepository: StadiumRepository, PaymentRepository: PaymentRepository,
-        ScheduleTask: ScheduleTask
+        ScheduleTask: ScheduleTask, UserRepository: UserRepository
     ) {
         this.FixtureRepository = FixtureRepository;
         this.ClubRepository = ClubRepository;
         this.StadiumRepository = StadiumRepository;
         this.PaymentRepository = PaymentRepository;
         this.ScheduleTask = ScheduleTask;
+        this.UserRepository = UserRepository;
     }
 
     async fixtureContent(date: Date, clubId: string) {
@@ -138,12 +143,29 @@ class FixtureUseCase {
                 date: new Date()
             };
 
+            //setting user notification tokens
+            const userBrowserTokens: TokenI[] = [];
+            const users: User[] = await this.UserRepository.findAllUsers();
+            const homeClub = await this.ClubRepository.findById(data.clubId as string);
+
+            if (users && homeClub) {
+                for (const user of users) {
+                    if (homeClub.followers?.includes(user._id) && !user.isBlocked) {
+                        userBrowserTokens.push({
+                            token: user.browserToken,
+                            club: homeClub.name as string,
+                            poster: data.poster as string
+                        });
+                    }
+                }
+            }
+
             await this.ScheduleTask.notificationManagement(
                 newFixture.checkDate, newFixture.date, () => this.sendNotification(
                     newFixture._id, data.clubId as string, notificationData
                 ), () => this.removeNotification(
                     newFixture._id, data.clubId as string, notificationData
-                )
+                ), userBrowserTokens
             );
 
             return {
@@ -169,12 +191,30 @@ class FixtureUseCase {
                 date: new Date()
             };
 
+            //setting user notification tokens
+            const userBrowserTokens: TokenI[] = [];
+            const users: User[] = await this.UserRepository.findAllUsers();
+            const homeClub = await this.ClubRepository.findById(data.clubId as string);
+
+            if (users && homeClub) {
+                for (const user of users) {
+                    if (homeClub.followers?.includes(user._id) && !user.isBlocked) {
+                        userBrowserTokens.push({
+                            token: user.browserToken,
+                            club: homeClub.name as string,
+                            poster: data.poster as string
+                        });
+                    }
+                }
+            }
+
+
             await this.ScheduleTask.notificationManagement(
                 newFixture.checkDate, newFixture.date, () => this.sendNotification(
                     newFixture._id, data.clubId as string, notificationData
                 ), () => this.removeNotification(
                     newFixture._id, data.clubId as string, notificationData
-                )
+                ), userBrowserTokens
             );
 
 
