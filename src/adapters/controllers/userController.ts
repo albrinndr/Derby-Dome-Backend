@@ -10,7 +10,6 @@ declare module 'express-session' {
         forgotOtp?: number;
         forgotClubEmail?: string;
         forgotClubOtp?: number;
-        // Add other custom properties if needed
     }
 }
 
@@ -347,8 +346,20 @@ class UserController {
     async allFollowedClubs(req: Request, res: Response) {
         try {
             const userId = req.userId || '';
-            const result = await this.userCase.allFollowedClubs(userId)
-            res.status(result.status).json(result.data)
+            const result = await this.userCase.allFollowedClubs(userId);
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
+    async setUserBrowserToken(req: Request, res: Response) {
+        try {
+            const userId = req.userId || '';
+            const browserToken = req.body.token;
+            const result = await this.userCase.setBrowserToken(userId, browserToken);
+            res.status(result.status).json(result.data);
         } catch (error) {
             const err: Error = error as Error;
             res.status(400).json(err.message);

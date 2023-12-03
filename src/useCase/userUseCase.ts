@@ -464,6 +464,24 @@ class UserUseCase {
             data: clubs
         };
     };
+
+    //firebase token for notification
+    async setBrowserToken(userId: string, token: string) {
+        const user = await this.UserRepository.findById(userId);
+        if (user) {
+            user.browserToken = token;
+            await this.UserRepository.save(user);
+            return {
+                status: 200,
+                data: user
+            };
+        } else {
+            return {
+                status: 400,
+                data: { message: 'An error occurred!' }
+            };
+        }
+    };
 }
 
 export default UserUseCase;

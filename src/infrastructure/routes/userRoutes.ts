@@ -34,6 +34,7 @@ import CouponUseCase from '../../useCase/couponUseCase';
 import CouponController from '../../adapters/controllers/couponController';
 import StadiumUseCase from '../../useCase/stadiumUseCase';
 import StadiumController from '../../adapters/controllers/stadiumController';
+import FirebaseNotification from '../services/firebaseNotification';
 
 
 const encrypt = new Encrypt();
@@ -120,4 +121,7 @@ router.post('/validateForgotOtp', (req, res) => controller.forgotOtpVerify(req, 
 router.put('/forgotPassword', (req, res) => controller.forgotChangePassword(req, res));
 
 router.get('/followedClubs', protect, (req, res) => controller.allFollowedClubs(req, res));
+
+router.post('/clientToken', protect, async (req, res) => controller.setUserBrowserToken(req, res));
+
 export default router;

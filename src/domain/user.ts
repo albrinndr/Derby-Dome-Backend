@@ -7,7 +7,8 @@ interface User {
     isBlocked?: boolean;
     wallet?: number | null;
     isGoogle?: boolean;
-    profilePic?:string
+    profilePic?: string;
+    browserToken:string
 }
 
 export default User;
