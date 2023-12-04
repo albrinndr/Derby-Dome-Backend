@@ -264,5 +264,16 @@ class TicketRepository implements TicketRepo {
 
         }
     }
+
+    async findAllTickets(): Promise<any> {
+        const tickets = await TicketModel.find({}).populate({
+            path: 'fixtureId',
+            populate: {
+                path: 'clubId', // Assuming 'clubId' exists in 'Fixture' model
+                model: 'Club'   // Replace 'Club' with the actual model name for 'clubId'
+            }
+        }).populate("userId");
+        return tickets;
+    }
 }
 export default TicketRepository;

@@ -10,6 +10,7 @@ interface TicketRepo {
     sectionSelectionCountAdminDashboard(): Promise<any>;
     ticketsNotCancelled(): Promise<any>;
     ticketSalesDataAdminDashboard(selectedYear?: string): Promise<any>;
+    findAllTickets(): Promise<any>;
 }
 
 export default TicketRepo;

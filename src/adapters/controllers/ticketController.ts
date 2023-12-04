@@ -56,6 +56,16 @@ class TicketController {
         }
     }
 
+    async getAllTickets(req: Request, res: Response) {
+        try {
+            const result = await this.TicketCase.getAllTicketsDetails();
+            res.status(result.status).json(result.data);
+        } catch (error) {
+            const err: Error = error as Error;
+            res.status(400).json(err.message);
+        }
+    }
+
 }
 
 export default TicketController;

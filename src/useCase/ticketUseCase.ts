@@ -231,6 +231,14 @@ class TicketUseCase {
     }
 
 
+    async getAllTicketsDetails() {
+        const tickets = await this.TicketRepository.findAllTickets();
+        tickets.sort((a: any, b: any) => b.fixtureId.date - a.fixtureId.date);
+        return {
+            status: 200,
+            data: tickets
+        };
+    }
 }
 
 export default TicketUseCase;
