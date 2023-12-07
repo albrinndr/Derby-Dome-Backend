@@ -101,6 +101,7 @@ class ClubController {
                 res.cookie('clubJWT', club.data.token, {
                     httpOnly: true,
                     sameSite: 'strict',
+                    secure: process.env.NODE_ENV !== 'development',
                     maxAge: 30 * 24 * 60 * 60 * 1000
                 });
             }
