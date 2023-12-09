@@ -39,12 +39,12 @@ class ScheduleTask {
     notificationManagement(date1, date2, execFn1, execFn2, notificationArray) {
         return __awaiter(this, void 0, void 0, function* () {
             // console.log('inside notification timer');
-            const execTime1 = new Date();
-            const execTime2 = new Date();
-            execTime1.setMinutes(execTime1.getMinutes() + 1);
-            execTime2.setMinutes(execTime2.getMinutes() + 5);
-            // const execTime1 = new Date(date1);
-            // const execTime2 = new Date(date2);
+            // const execTime1 = new Date();
+            // const execTime2 = new Date();
+            // execTime1.setMinutes(execTime1.getMinutes() + 1);
+            // execTime2.setMinutes(execTime2.getMinutes() + 5);
+            const execTime1 = new Date(date1);
+            const execTime2 = new Date(date2);
             node_schedule_1.default.scheduleJob(execTime1, () => __awaiter(this, void 0, void 0, function* () {
                 // console.log('working one');
                 firebaseNotification.sendWebPushNotification(notificationArray);
