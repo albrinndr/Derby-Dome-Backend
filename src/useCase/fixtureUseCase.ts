@@ -55,9 +55,25 @@ class FixtureUseCase {
         if (allFixtures.length) {
             allFixtures.forEach((fixture: any) => {
                 if (allClubs && fixture.awayTeamId && fixture.awayTeamId._id && fixture.status == "active") {
-                    allClubs = allClubs.filter((club: any) => {
-                        club._id.toString() != fixture.awayTeamId._id.toString();
-                    });
+                    // allClubs = allClubs.filter((club: any) => {
+                    //     club._id.toString() != fixture.awayTeamId._id.toString();
+                    // });
+                    
+                    for (let i = allClubs.length - 1; i >= 0; i--) {
+                        const club:any = allClubs[i];
+                        const existsInFixture = allFixtures.some((fixture: any) => {
+                            if (fixture.status === 'active' && (fixture.clubId?._id?.toString() === club._id.toString() || fixture.awayTeamId?._id?.toString() === club._id.toString())) {
+                                return true;
+                            }
+                            return false;
+                        });
+                    
+                        if (existsInFixture) {
+                            allClubs.splice(i, 1); // Remove club from allClubs array
+                        }
+                    }
+                    
+                    
                 }
 
                 if (allTimes && fixture.status == "active") {
