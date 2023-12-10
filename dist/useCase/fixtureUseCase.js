@@ -41,9 +41,22 @@ class FixtureUseCase {
             if (allFixtures.length) {
                 allFixtures.forEach((fixture) => {
                     if (allClubs && fixture.awayTeamId && fixture.awayTeamId._id && fixture.status == "active") {
-                        allClubs = allClubs.filter((club) => {
-                            club._id.toString() != fixture.awayTeamId._id.toString();
-                        });
+                        // allClubs = allClubs.filter((club: any) => {
+                        //     club._id.toString() != fixture.awayTeamId._id.toString();
+                        // });
+                        for (let i = allClubs.length - 1; i >= 0; i--) {
+                            const club = allClubs[i];
+                            const existsInFixture = allFixtures.some((fixture) => {
+                                var _a, _b, _c, _d;
+                                if (fixture.status === 'active' && (((_b = (_a = fixture.clubId) === null || _a === void 0 ? void 0 : _a._id) === null || _b === void 0 ? void 0 : _b.toString()) === club._id.toString() || ((_d = (_c = fixture.awayTeamId) === null || _c === void 0 ? void 0 : _c._id) === null || _d === void 0 ? void 0 : _d.toString()) === club._id.toString())) {
+                                    return true;
+                                }
+                                return false;
+                            });
+                            if (existsInFixture) {
+                                allClubs.splice(i, 1); // Remove club from allClubs array
+                            }
+                        }
                     }
                     if (allTimes && fixture.status == "active") {
                         allTimes = allTimes.filter((time) => time.time != fixture.time);
