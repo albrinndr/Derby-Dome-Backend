@@ -7,7 +7,7 @@ class CouponController {
         this.CouponCase = CouponCase;
     }
 
-    async addFixture(req: Request, res: Response) {
+    async addCoupon(req: Request, res: Response) {
         try {
             const result = await this.CouponCase.addCoupon(req.body);
             res.status(result.status).json(result.data);

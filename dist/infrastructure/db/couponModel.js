@@ -31,7 +31,10 @@ const CouponSchema = new mongoose_1.Schema({
     minPrice: { type: Number, required: true },
     startingDate: { type: Date, required: true },
     endingDate: { type: Date, required: true },
-    users: [{ type: String }]
+    users: [{ type: String }],
+    isLoyalty: { type: Boolean, default: false },
+    loyaltyId: { type: String },
+    loyaltyUsed: { type: Boolean, default: false }
 }, {
     timestamps: true
 });

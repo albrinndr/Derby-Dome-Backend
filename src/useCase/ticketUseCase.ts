@@ -1,4 +1,4 @@
-import TicketI from "../domain/ticket";
+import TicketI, { CheckoutTicketI } from "../domain/ticket";
 import CartRepository from "../infrastructure/repository/cartRepository";
 import FixtureRepository from "../infrastructure/repository/fixtureRepository";
 import TicketRepository from "../infrastructure/repository/ticketRepository";
@@ -39,14 +39,34 @@ class TicketUseCase {
         this.CouponRepository = CouponRepository;
     }
 
-    async addNewTicket(data: TicketI) {
+    async addNewTicket(data: CheckoutTicketI) {
         const verifyCart = await this.CartRepository.cartDataForCheckout(data.userId);
         if (verifyCart) {
 
             //updating coupon
-            if (data.coupon) {
-                await this.CouponRepository.applyCoupon(data.userId, data.coupon as string);
+            if (data.coupon.isApplied) {
+                if (data.coupon.isLoyalty) {
+                    await this.CouponRepository.applyLoyaltyCoupon(data.coupon.isApplied as string);
+                } else {
+                    await this.CouponRepository.applyCoupon(data.userId, data.coupon.isApplied as string);
+                }
                 data.coupon = true;
+            }
+
+            //update user coin
+            let COINS = 0;
+            if (data.section === 'vip') {
+                COINS = 15 * data.seats.length;
+            } else if (data.section === 'premium') {
+                COINS = 10 * data.seats.length;
+            } else {
+                COINS = 5 * data.seats.length;
+            }
+
+            const currUser = await this.UserRepository.findById(data.userId);
+            if (currUser) {
+                currUser.loyaltyCoins = currUser.loyaltyCoins + COINS;
+                await this.UserRepository.save(currUser);
             }
 
             //updating fixture seats

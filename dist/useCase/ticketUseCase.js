@@ -25,9 +25,30 @@ class TicketUseCase {
             const verifyCart = yield this.CartRepository.cartDataForCheckout(data.userId);
             if (verifyCart) {
                 //updating coupon
-                if (data.coupon) {
-                    yield this.CouponRepository.applyCoupon(data.userId, data.coupon);
+                if (data.coupon.isApplied) {
+                    if (data.coupon.isLoyalty) {
+                        yield this.CouponRepository.applyLoyaltyCoupon(data.coupon.isApplied);
+                    }
+                    else {
+                        yield this.CouponRepository.applyCoupon(data.userId, data.coupon.isApplied);
+                    }
                     data.coupon = true;
+                }
+                //update user coin
+                let COINS = 0;
+                if (data.section === 'vip') {
+                    COINS = 15 * data.seats.length;
+                }
+                else if (data.section === 'premium') {
+                    COINS = 10 * data.seats.length;
+                }
+                else {
+                    COINS = 5 * data.seats.length;
+                }
+                const currUser = yield this.UserRepository.findById(data.userId);
+                if (currUser) {
+                    currUser.loyaltyCoins = currUser.loyaltyCoins + COINS;
+                    yield this.UserRepository.save(currUser);
                 }
                 //updating fixture seats
                 if (data.section !== 'vip') {

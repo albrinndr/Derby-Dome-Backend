@@ -10,5 +10,10 @@ interface CouponRepo {
     findByNameForCheckout(name: string): Promise<any>;
     applyCoupon(userId: string, name: string): Promise<boolean>;
     findAvailableCoupons(): Promise<{}[]>;
+
+    //loyalty
+    findAllCouponsForLoyalty(): Promise<any>;
+    findUserAvailableLoyaltyCoupons(userId: string): Promise<any>;
+    applyLoyaltyCoupon(name: string): Promise<boolean>;
 }
 export default CouponRepo;

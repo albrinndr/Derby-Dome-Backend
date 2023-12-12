@@ -9,14 +9,63 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class CouponController {
-    constructor(CouponCase) {
-        this.CouponCase = CouponCase;
+class LoyaltyOfferController {
+    constructor(LoyaltyOfferCase) {
+        this.LoyaltyOfferCase = LoyaltyOfferCase;
     }
-    addCoupon(req, res) {
+    addNewOffer(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield this.CouponCase.addCoupon(req.body);
+                const offer = yield this.LoyaltyOfferCase.addNewOffer(req.body);
+                res.status(offer.status).json(offer.data);
+            }
+            catch (error) {
+                const err = error;
+                res.status(400).json(err.message);
+            }
+        });
+    }
+    editOffer(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id, discount, coins, minPrice } = req.body;
+                const offer = yield this.LoyaltyOfferCase.editOffer(id, discount, coins, minPrice);
+                res.status(offer.status).json(offer.data);
+            }
+            catch (error) {
+                const err = error;
+                res.status(400).json(err.message);
+            }
+        });
+    }
+    deleteOffer(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const offer = yield this.LoyaltyOfferCase.deleteOffer(req.params.id);
+                res.status(offer.status).json(offer.data);
+            }
+            catch (error) {
+                const err = error;
+                res.status(400).json(err.message);
+            }
+        });
+    }
+    allOffers(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const offer = yield this.LoyaltyOfferCase.allOffers();
+                res.status(offer.status).json(offer.data);
+            }
+            catch (error) {
+                const err = error;
+                res.status(400).json(err.message);
+            }
+        });
+    }
+    userCoinRedeem(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield this.LoyaltyOfferCase.userCoinRedeem(req.userId);
                 res.status(result.status).json(result.data);
             }
             catch (error) {
@@ -25,49 +74,12 @@ class CouponController {
             }
         });
     }
-    getAllCoupons(req, res) {
+    ;
+    createUserCoupon(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield this.CouponCase.findAllCoupons();
-                res.status(result.status).json(result.data);
-            }
-            catch (error) {
-                const err = error;
-                res.status(400).json(err.message);
-            }
-        });
-    }
-    editCoupon(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield this.CouponCase.editCoupon(req.body);
-                res.status(result.status).json(result.data);
-            }
-            catch (error) {
-                const err = error;
-                res.status(400).json(err.message);
-            }
-        });
-    }
-    deleteCoupon(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield this.CouponCase.deleteCoupon(req.params.id);
-                res.status(result.status).json(result.data);
-            }
-            catch (error) {
-                const err = error;
-                res.status(400).json(err.message);
-            }
-        });
-    }
-    validateCoupon(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const userId = req.userId || '';
-                const { coupon, price } = req.body;
-                const result = yield this.CouponCase.couponValidateForCheckout(userId, coupon, price);
-                res.status(result.status).json(result.data);
+                const coupon = yield this.LoyaltyOfferCase.createOfferCoupon(req.userId, req.body.id);
+                res.status(coupon.status).json(coupon.data);
             }
             catch (error) {
                 const err = error;
@@ -76,4 +88,4 @@ class CouponController {
         });
     }
 }
-exports.default = CouponController;
+exports.default = LoyaltyOfferController;

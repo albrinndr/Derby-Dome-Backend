@@ -35,6 +35,10 @@ import CouponController from '../../adapters/controllers/couponController';
 import StadiumUseCase from '../../useCase/stadiumUseCase';
 import StadiumController from '../../adapters/controllers/stadiumController';
 import FirebaseNotification from '../services/firebaseNotification';
+import GenerateCoupon from '../services/generateCoupon';
+import LoyaltyOfferRepository from '../repository/loyaltyOfferRepository';
+import LoyaltyOfferUseCase from '../../useCase/loyaltyOfferUseCase';
+import LoyaltyOfferController from '../../adapters/controllers/loyaltyOfferController';
 
 
 const encrypt = new Encrypt();
@@ -46,6 +50,7 @@ const generateSeats = new GenerateSeats();
 const scheduleTask = new ScheduleTask();
 const generateQrCode = new GenerateQRCode();
 const generateEmail = new GenerateEmail();
+const generateCoupon = new GenerateCoupon();
 
 const repository = new UserRepository();
 const bannerRepository = new BannerRepository();
@@ -57,6 +62,7 @@ const cartRepository = new CartRepository();
 const ticketRepository = new TicketRepository();
 const paymentRepository = new PaymentRepository();
 const couponRepository = new CouponRepository();
+const loyaltyOfferRepository = new LoyaltyOfferRepository();
 
 const userCase = new UserUseCase(repository, encrypt, jwt, bannerRepository, fixtureRepository, stadiumRepository, clubRepository, cartRepository, couponRepository, ticketRepository);
 const bannerCase = new BannerUseCase(bannerRepository);
@@ -65,6 +71,8 @@ const cartCase = new CartUseCase(generateSeats, stadiumRepository, fixtureReposi
 const ticketCase = new TicketUseCase(ticketRepository, fixtureRepository, cartRepository, generateQrCode, paymentRepository, repository, generateEmail, couponRepository);
 const couponCase = new CouponUseCase(couponRepository);
 const stadiumCase = new StadiumUseCase(stadiumRepository, scheduleTask, fixtureRepository);
+const loyaltyOfferCase = new LoyaltyOfferUseCase(loyaltyOfferRepository, couponRepository, generateCoupon,repository);
+
 
 const controller = new UserController(userCase, email, otp, cloudinary);
 const bannerController = new BannerController(bannerCase, cloudinary);
@@ -73,6 +81,8 @@ const cartController = new CartController(cartCase);
 const ticketController = new TicketController(ticketCase);
 const couponController = new CouponController(couponCase);
 const stadiumController = new StadiumController(stadiumCase);
+const loyaltyOfferController = new LoyaltyOfferController(loyaltyOfferCase);
+
 
 const router = express.Router();
 
@@ -123,5 +133,9 @@ router.put('/forgotPassword', (req, res) => controller.forgotChangePassword(req,
 router.get('/followedClubs', protect, (req, res) => controller.allFollowedClubs(req, res));
 
 router.post('/clientToken', protect, async (req, res) => controller.setUserBrowserToken(req, res));
+
+router.get('/getOffers', protect, async (req, res) => loyaltyOfferController.allOffers(req, res));
+router.get('/userRedeem', protect, async (req, res) => loyaltyOfferController.userCoinRedeem(req, res));
+router.post('/createUserCoupon', protect, async (req, res) => loyaltyOfferController.createUserCoupon(req, res));
 
 export default router;

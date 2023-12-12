@@ -19,7 +19,8 @@ class CouponRepository implements CouponRepo {
         }
     }
     async findAllCoupons(): Promise<{}[]> {
-        const coupons = await CouponModel.find();
+        let coupons = await CouponModel.find();
+        coupons = coupons.filter((coupon) => !coupon.isLoyalty);
         return coupons;
     }
 
@@ -72,13 +73,44 @@ class CouponRepository implements CouponRepo {
 
     async findAvailableCoupons(): Promise<{}[]> {
         const currDate = new Date();
-        const coupons = await CouponModel.find({
+        let coupons = await CouponModel.find({
             $and: [
                 { startingDate: { $lte: currDate } },
                 { endingDate: { $gte: currDate } }
             ]
         });
+        coupons = coupons.filter((coupon) => !coupon.isLoyalty);
         return coupons;
     }
+
+    // loyalty coupons
+    async findAllCouponsForLoyalty(): Promise<any> {
+        const coupons = await CouponModel.find();
+        return coupons;
+    }
+
+    async findUserAvailableLoyaltyCoupons(userId: string): Promise<any> {
+        try {
+            let coupons = await CouponModel.find({
+                isLoyalty: true, loyaltyId: userId.toString(), endingDate: { $gt: new Date() }
+            });
+            return coupons;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async applyLoyaltyCoupon(name: string): Promise<boolean> {
+        try {
+            const coupon = await CouponModel.deleteOne(
+                { name }
+            );
+            if (coupon) return true;
+            return false;
+        } catch (error) {
+            return false;
+        }
+    }
+
 }
 export default CouponRepository;

@@ -24,19 +24,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    phone: { type: String },
-    isBlocked: { type: Boolean, default: false },
-    wallet: { type: Number, default: 0 },
-    isGoogle: { type: Boolean, default: false },
-    profilePic: { type: String, default: 'https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375_640.png' },
-    browserToken: { type: String, default: '' },
-    loyaltyCoins: { type: Number, default: 0 }
+const LoyaltyOfferSchema = new mongoose_1.Schema({
+    minPrice: { type: Number, required: true },
+    discount: { type: Number, required: true },
+    coins: { type: Number, required: true }
 }, {
     timestamps: true
 });
-const UserModel = mongoose_1.default.model('User', userSchema);
-exports.default = UserModel;
+const LoyaltyOfferModel = mongoose_1.default.model('LoyaltyOffer', LoyaltyOfferSchema);
+exports.default = LoyaltyOfferModel;

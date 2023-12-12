@@ -8,7 +8,8 @@ interface User {
     wallet?: number | null;
     isGoogle?: boolean;
     profilePic?: string;
-    browserToken:string
+    browserToken: string;
+    loyaltyCoins: number;
 }
 
 export default User;

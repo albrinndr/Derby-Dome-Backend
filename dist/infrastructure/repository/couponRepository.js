@@ -36,7 +36,8 @@ class CouponRepository {
     }
     findAllCoupons() {
         return __awaiter(this, void 0, void 0, function* () {
-            const coupons = yield couponModel_1.default.find();
+            let coupons = yield couponModel_1.default.find();
+            coupons = coupons.filter((coupon) => !coupon.isLoyalty);
             return coupons;
         });
     }
@@ -101,13 +102,47 @@ class CouponRepository {
     findAvailableCoupons() {
         return __awaiter(this, void 0, void 0, function* () {
             const currDate = new Date();
-            const coupons = yield couponModel_1.default.find({
+            let coupons = yield couponModel_1.default.find({
                 $and: [
                     { startingDate: { $lte: currDate } },
                     { endingDate: { $gte: currDate } }
                 ]
             });
+            coupons = coupons.filter((coupon) => !coupon.isLoyalty);
             return coupons;
+        });
+    }
+    // loyalty coupons
+    findAllCouponsForLoyalty() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const coupons = yield couponModel_1.default.find();
+            return coupons;
+        });
+    }
+    findUserAvailableLoyaltyCoupons(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let coupons = yield couponModel_1.default.find({
+                    isLoyalty: true, loyaltyId: userId.toString(), endingDate: { $gt: new Date() }
+                });
+                return coupons;
+            }
+            catch (error) {
+                return [];
+            }
+        });
+    }
+    applyLoyaltyCoupon(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const coupon = yield couponModel_1.default.deleteOne({ name });
+                if (coupon)
+                    return true;
+                return false;
+            }
+            catch (error) {
+                return false;
+            }
         });
     }
 }

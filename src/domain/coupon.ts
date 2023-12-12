@@ -7,5 +7,8 @@ interface CouponI {
     startingDate: Date;
     endingDate: Date;
     users?: string[];
+    isLoyalty: boolean;
+    loyaltyId: string;
+    loyaltyUsed: boolean;
 }
 export default CouponI;

@@ -93,6 +93,16 @@ class CouponUseCase {
                     status: 400,
                     data: { message: 'Coupon expired!' }
                 };
+            } else if (coupon.isLoyalty && coupon.loyaltyId != userId) {
+                return {
+                    status: 400,
+                    data: { message: "Coupon doesn't exist!" }
+                };
+            }else if(coupon.isLoyalty && coupon.loyaltyId === userId && coupon.loyaltyUsed){
+                return {
+                    status: 400,
+                    data: { message: 'Coupon already used!' }
+                };
             }
             else if (coupon.users && coupon.users.includes(userId)) {
                 return {
