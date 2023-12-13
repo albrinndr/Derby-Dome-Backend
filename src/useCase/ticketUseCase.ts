@@ -42,7 +42,6 @@ class TicketUseCase {
     async addNewTicket(data: CheckoutTicketI) {
         const verifyCart = await this.CartRepository.cartDataForCheckout(data.userId);
         if (verifyCart) {
-
             //updating coupon
             if (data.coupon.isApplied) {
                 if (data.coupon.isLoyalty) {
@@ -51,6 +50,8 @@ class TicketUseCase {
                     await this.CouponRepository.applyCoupon(data.userId, data.coupon.isApplied as string);
                 }
                 data.coupon = true;
+            } else {
+                data.coupon = false;
             }
 
             //update user coin

@@ -34,6 +34,9 @@ class TicketUseCase {
                     }
                     data.coupon = true;
                 }
+                else {
+                    data.coupon = false;
+                }
                 //update user coin
                 let COINS = 0;
                 if (data.section === 'vip') {
