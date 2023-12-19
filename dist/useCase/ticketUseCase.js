@@ -40,13 +40,13 @@ class TicketUseCase {
                 //update user coin
                 let COINS = 0;
                 if (data.section === 'vip') {
-                    COINS = 15 * data.seats.length;
+                    COINS = 15 * data.seats[0].userSeats.length;
                 }
                 else if (data.section === 'premium') {
-                    COINS = 10 * data.seats.length;
+                    COINS = 10 * data.seats[0].userSeats.length;
                 }
                 else {
-                    COINS = 5 * data.seats.length;
+                    COINS = 5 * data.seats[0].userSeats.length;
                 }
                 const currUser = yield this.UserRepository.findById(data.userId);
                 if (currUser) {
@@ -188,8 +188,19 @@ class TicketUseCase {
                 const user = yield this.UserRepository.findById(ticket.userId);
                 const wallet = (user === null || user === void 0 ? void 0 : user.wallet) || 0;
                 const newWallet = wallet + ticket.price;
+                let coins = (user === null || user === void 0 ? void 0 : user.loyaltyCoins) || 0;
+                if (ticket.section === 'vip') {
+                    coins = coins - (ticket.ticketCount * 15);
+                }
+                else if (ticket.section === 'premium') {
+                    coins = coins - (ticket.ticketCount * 10);
+                }
+                else {
+                    coins = coins - (ticket.ticketCount * 5);
+                }
                 if (user) {
                     user.wallet = newWallet;
+                    user.loyaltyCoins = coins;
                     yield this.UserRepository.save(user);
                 }
                 // const userUpdated = await this.UserRepository.updateWalletBalance(ticket.userId, ticket.price, 'increment');

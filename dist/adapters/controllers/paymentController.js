@@ -28,7 +28,7 @@ class PaymentController {
                     yield this.TicketCase.addNewTicket(paymentDataUser);
                     req.app.locals.paymentDataUser = null;
                 }
-                return;
+                res.status(200);
             }
         });
     }
