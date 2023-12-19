@@ -22,9 +22,9 @@ class PaymentController {
             }
             if (paymentDataUser != null) {
                 await this.TicketCase.addNewTicket(paymentDataUser);
-                req.app.locals.paymentDataUser=null
+                req.app.locals.paymentDataUser = null;
             }
-            return;
+            res.status(200);
         }
     }
 }

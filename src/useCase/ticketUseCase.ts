@@ -57,11 +57,11 @@ class TicketUseCase {
             //update user coin
             let COINS = 0;
             if (data.section === 'vip') {
-                COINS = 15 * data.seats.length;
+                COINS = 15 * data.seats[0].userSeats.length;
             } else if (data.section === 'premium') {
-                COINS = 10 * data.seats.length;
+                COINS = 10 * data.seats[0].userSeats.length;
             } else {
-                COINS = 5 * data.seats.length;
+                COINS = 5 * data.seats[0].userSeats.length;
             }
 
             const currUser = await this.UserRepository.findById(data.userId);
@@ -231,8 +231,18 @@ class TicketUseCase {
 
             const newWallet = wallet + ticket.price;
 
+            let coins = user?.loyaltyCoins || 0;
+            if (ticket.section === 'vip') {
+                coins = coins - (ticket.ticketCount * 15);
+            } else if (ticket.section === 'premium') {
+                coins = coins - (ticket.ticketCount * 10);
+            } else {
+                coins = coins - (ticket.ticketCount * 5);
+            }
+
             if (user) {
                 user.wallet = newWallet;
+                user.loyaltyCoins = coins;
                 await this.UserRepository.save(user);
             }
 
