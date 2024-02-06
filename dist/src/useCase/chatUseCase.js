@@ -9,12 +9,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./src/infrastructure/config/app");
-const db_1 = require("./src/infrastructure/config/db");
-const PORT = process.env.PORT || 8000;
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.connectDB)();
-    const app = app_1.httpServer;
-    app === null || app === void 0 ? void 0 : app.listen(PORT, () => console.log("Server Started!"));
-});
-startServer();
+class ChatUseCase {
+    constructor(ChatRepository) {
+        this.ChatRepository = ChatRepository;
+    }
+    sendMessage(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const newMessage = yield this.ChatRepository.sendMessage(data);
+            return {
+                status: 200,
+                data: newMessage
+            };
+        });
+    }
+    allMessages() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const messages = yield this.ChatRepository.getMessages();
+            return {
+                status: 200,
+                data: messages
+            };
+        });
+    }
+}
+exports.default = ChatUseCase;

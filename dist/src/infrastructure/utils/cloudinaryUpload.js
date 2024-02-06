@@ -8,13 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./src/infrastructure/config/app");
-const db_1 = require("./src/infrastructure/config/db");
-const PORT = process.env.PORT || 8000;
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.connectDB)();
-    const app = app_1.httpServer;
-    app === null || app === void 0 ? void 0 : app.listen(PORT, () => console.log("Server Started!"));
-});
-startServer();
+const cloudinary_1 = __importDefault(require("../config/cloudinary"));
+const fs_1 = __importDefault(require("fs"));
+class CloudinaryUpload {
+    upload(filePath, folder) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield cloudinary_1.default.uploader.upload(filePath, { folder: folder });
+            fs_1.default.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                }
+            });
+            return result;
+        });
+    }
+}
+exports.default = CloudinaryUpload;

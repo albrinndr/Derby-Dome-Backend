@@ -8,13 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./src/infrastructure/config/app");
-const db_1 = require("./src/infrastructure/config/db");
-const PORT = process.env.PORT || 8000;
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.connectDB)();
-    const app = app_1.httpServer;
-    app === null || app === void 0 ? void 0 : app.listen(PORT, () => console.log("Server Started!"));
-});
-startServer();
+const chatModel_1 = __importDefault(require("../db/chatModel"));
+class ChatRepository {
+    sendMessage(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const message = new chatModel_1.default(data);
+            yield message.save();
+            return message;
+        });
+    }
+    getMessages() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const messages = yield chatModel_1.default.find().populate('senderId');
+            return messages;
+        });
+    }
+}
+exports.default = ChatRepository;

@@ -8,13 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./src/infrastructure/config/app");
-const db_1 = require("./src/infrastructure/config/db");
-const PORT = process.env.PORT || 8000;
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.connectDB)();
-    const app = app_1.httpServer;
-    app === null || app === void 0 ? void 0 : app.listen(PORT, () => console.log("Server Started!"));
-});
-startServer();
+const adminModel_1 = __importDefault(require("../db/adminModel"));
+class AdminRepository {
+    findByEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const admin = yield adminModel_1.default.findOne({ email });
+            return admin;
+        });
+    }
+}
+exports.default = AdminRepository;
